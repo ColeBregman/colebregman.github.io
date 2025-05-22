@@ -17,7 +17,7 @@ export interface Project {
   why: string;
   what: string;
   how: string;
-  story: {
+  story?: {
     challenge: string;
     approach: string;
     outcome: string;
@@ -120,6 +120,40 @@ export const projects: Project[] = [
       'Bookmarking capability',
       'Sleep timer'
     ]
+  },
+
+  {
+    id: 'Toy Car',
+    title: 'Toy Car',
+    description: 'Making a small toy car for a manufacturing class',
+    image: '/assets/toy car/carcover.JPG',
+    images: [
+      {
+        url: '/assets/toy car/carcover.JPG',
+        caption: 'Finished car'
+      },
+      {
+        url: '/assets/toy car/carprototypes.jpg',
+        caption: 'prototypes of the body'
+      },
+      {
+        url: '/assets/toy car/carmoldmachining.JPG',
+        caption: 'Machining the injection mold'
+      },
+      {
+        url: '/assets/toy car/carmoldfinished.JPG',
+        caption: 'Injection molds for wheels'
+      },
+      {
+        url: '/assets/toy car/carbodymold.JPG',
+        caption: 'Casting the body'
+      }
+    ],
+    link: '/project/ToyCar',
+    why: "Tasked with designing and manufacturing a 1920s style toy car for my Materials and Manufacturing class, I wanted to create a car that was not only functional but also aesthetically pleasing.",
+    what: "A silicon cast toy car body made with a 3D printed mold. Wheels made with injection molded PLA with a machined mold. 3D printed cockpit and axle holder.",
+    how: "Using Fusion360 to CAD the car as well as the CAM for the wheel molds. Wheel molds were machined out of aluminum using a Tormach 770M CNC mill.",
+    technologies: ['Fusion360', 'CAM', 'CAD', '3D printing', 'casting', 'design for manufacturability'],
   }
   
   // Add other projects here...

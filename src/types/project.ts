@@ -123,7 +123,7 @@ export const projects: Project[] = [
   },
 
   {
-    id: 'Toy Car',
+    id: 'ToyCar',
     title: 'Toy Car',
     description: 'Making a small toy car for a manufacturing class',
     image: '/assets/carcover.JPG',
@@ -141,7 +141,7 @@ export const projects: Project[] = [
         caption: 'Machining the injection mold'
       },
       {
-        url: '/assets/carmoldfinished.JPG',
+        url: '/assets/carmoldfinished.jpeg',
         caption: 'Injection molds for wheels'
       },
       {

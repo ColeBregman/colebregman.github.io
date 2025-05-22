@@ -2,7 +2,7 @@ import React from 'react';
 import { BookOpen } from 'lucide-react';
 
 interface ProjectStoryProps {
-  story: {
+  story?: {
     challenge: string;
     approach: string;
     outcome: string;
@@ -10,6 +10,9 @@ interface ProjectStoryProps {
 }
 
 export function ProjectStory({ story }: ProjectStoryProps) {
+  if (!story) {
+    return null; // Return nothing if story is not provided
+  }
   return (
     <section className="mt-24">
       <div className="flex items-center gap-3 mb-8">

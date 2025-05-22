@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, Lightbulb, Wrench, Cog } from 'lucide-react';
 import { projects } from '../types/project';
@@ -10,6 +10,12 @@ import { ProjectImages } from '../components/project/ProjectImages';
 export function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const project = projects.find(p => p.id === id);
+
+  // Scroll to top when the component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]); // Run this effect whenever the `id` changes
+
 
   if (!project) {
     return <div>Project not found</div>;
@@ -97,15 +103,6 @@ export function ProjectDetail() {
             </div>
           )}
 
-          <a
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-12 px-6 py-3 bg-black text-white hover:bg-gray-800 transition-colors"
-          >
-            View Live Project
-            <ExternalLink size={20} />
-          </a>
           
           {/* Next Project Navigation */}
           <div className="mt-24 pt-12 border-t border-gray-200">

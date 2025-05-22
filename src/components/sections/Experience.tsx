@@ -70,7 +70,7 @@ export function Experience() {
           {experiences.map((exp, index) => (
             <div key={index} className="relative mb-20">
               {/* Circle marker */}
-              <div className="absolute left-6 top-0 w-10 h-10 rounded-full bg-white border-4 border-gray-300 z-10"></div>
+              <div className="absolute left-0 top-0 w-10 h-10 rounded-full bg-white border-4 border-gray-300 z-10"></div>
               
               <div className="pl-16">
                 <h3 className="text-2xl font-bold mb-1">{exp.title} @ {exp.company}</h3>

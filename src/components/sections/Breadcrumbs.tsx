@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
 const images = [
+  "/assets/owlbook.jpeg",
+  "/assets/embroiderphone.jpeg",
   "/assets/lamp-q6TuXykl.png",
   "/assets/violin-BqRdxQ0W.png",
   "/assets/Rose-BvPnEJYy.png",
@@ -8,7 +10,7 @@ const images = [
   "/assets/chainsaw-L9O015hr.png",
   "/assets/archVis-Dn9hslr4.png",
   "/assets/chairs-C7I6Kj6j.png",
-  "/assets/initialmockup-B6cGBnij.png"
+  "/assets/initialmockup-B6cGBnij.png",
 ];
 
 const Breadcrumbs: React.FC = () => {

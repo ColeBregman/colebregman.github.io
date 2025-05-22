@@ -126,26 +126,26 @@ export const projects: Project[] = [
     id: 'Toy Car',
     title: 'Toy Car',
     description: 'Making a small toy car for a manufacturing class',
-    image: '/assets/toy car/carcover.JPG',
+    image: '/assets/carcover.JPG',
     images: [
       {
-        url: '/assets/toy car/carcover.JPG',
+        url: '/assets/carcover.JPG',
         caption: 'Finished car'
       },
       {
-        url: '/assets/toy car/carprototypes.jpg',
+        url: '/assets/carprototypes.jpg',
         caption: 'prototypes of the body'
       },
       {
-        url: '/assets/toy car/carmoldmachining.JPG',
+        url: '/assets/carmoldmachining.JPG',
         caption: 'Machining the injection mold'
       },
       {
-        url: '/assets/toy car/carmoldfinished.JPG',
+        url: '/assets/carmoldfinished.JPG',
         caption: 'Injection molds for wheels'
       },
       {
-        url: '/assets/toy car/carbodymold.JPG',
+        url: '/assets/carbodymold.JPG',
         caption: 'Casting the body'
       }
     ],

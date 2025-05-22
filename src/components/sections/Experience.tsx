@@ -11,26 +11,20 @@ interface ExperienceItem {
 
 const experiences: ExperienceItem[] = [
   {
-    title: 'Incoming MDE Intern',
+    title: 'Manufacturing Design Engineering Intern',
     company: 'Apple',
     location: 'Cupertino, California, United States',
-    date: 'Mar 2025 - Present',
+    date: 'May 2025 - Present',
     description: [],
   },
   {
-    title: 'MBL Lab Student Researcher',
+    title: 'Student Researcher',
     company: 'Columbia Engineering',
-    date: 'Sep 2024 - Present',
+    location: 'New York, New York, United States',
+    date: 'Feb 2024 - May 2025',
     description: [
-      'Designed CAD models for NITRO knee replacement and co-developed test rig for mechanical testing.'
-    ],
-  },
-  {
-    title: 'Creative Machines Lab Student Researcher',
-    company: 'Columbia Engineering',
-    date: 'Feb 2024 - Jan 2025',
-    description: [
-      'Worked on a self-diagnostic 3D-printing robot and a low-cost food 3D printer for a NYC restaurant.'
+      'MBL Lab: Designed CAD models for NITRO knee replacement and co-developed test rig for mechanical testing.',
+      'Creative Machines Lab: Developed a low-cost food 3D printer for a restaraunt and a self-diagnostic 3D-printing robot.'
     ],
   },
   {
@@ -70,13 +64,13 @@ export function Experience() {
         
         <div className="relative pl-12">
           {/* Vertical line */}
-          <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300 z-0"></div>
           
           {/* Experience items */}
           {experiences.map((exp, index) => (
             <div key={index} className="relative mb-20">
               {/* Circle marker */}
-              <div className="absolute left-5 top-0 w-10 h-10 rounded-full bg-white border-4 border-gray-300 z-10 -translate-x-1/2"></div>
+              <div className="absolute left-6 top-0 w-10 h-10 rounded-full bg-white border-4 border-gray-300 z-10"></div>
               
               <div className="pl-16">
                 <h3 className="text-2xl font-bold mb-1">{exp.title} @ {exp.company}</h3>

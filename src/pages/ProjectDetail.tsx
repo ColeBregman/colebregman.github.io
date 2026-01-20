@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Lightbulb, Wrench, Cog } from 'lucide-react';
+import { ArrowLeft, Lightbulb, Wrench, Cog } from 'lucide-react';
 import { projects } from '../types/project';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { ProjectSection } from '../components/project/ProjectSection';
 import { ProjectStory } from '../components/project/ProjectStory';
 import { ProjectImages } from '../components/project/ProjectImages';
+import { getNextProjectLink, getNextProjectTitle, getNextProjectImage } from '../utils/projectHelpers';
 
 export function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
@@ -13,12 +14,25 @@ export function ProjectDetail() {
 
   // Scroll to top when the component mounts
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [id]); // Run this effect whenever the `id` changes
-
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [id]);
 
   if (!project) {
-    return <div>Project not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center py-24 px-6">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
+          <p className="text-gray-600 mb-8">The project you're looking for doesn't exist.</p>
+          <Link
+            to="/#projects"
+            className="inline-flex items-center text-black hover:underline"
+          >
+            <ArrowLeft size={20} className="mr-2" />
+            Back to Projects
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -42,8 +56,9 @@ export function ProjectDetail() {
         <div className="mt-8">
           <img
             src={project.image}
-            alt={project.title}
-            className="w-full h-[400px] object-cover"
+            alt={`${project.title} cover image`}
+            className="w-full h-[400px] object-cover rounded-lg"
+            loading="eager"
           />
 
           <h1 className="text-4xl font-bold mt-8">{project.title}</h1>
@@ -87,14 +102,14 @@ export function ProjectDetail() {
 
           <ProjectStory story={project.story} />
 
-          {project.technologies && (
+          {project.technologies && project.technologies.length > 0 && (
             <div className="mt-12">
-              <h2 className="text-xl font-semibold mb-4">Technologies & Skills</h2>
-              <div className="flex flex-wrap gap-2">
+              <h2 className="text-2xl font-semibold mb-6">Technologies & Skills</h2>
+              <div className="flex flex-wrap gap-3">
                 {project.technologies.map((tech, index) => (
                   <span
                     key={index}
-                    className="px-4 py-2 bg-gray-100 text-gray-800 rounded-sm"
+                    className="px-4 py-2 bg-gray-100 text-gray-800 rounded-full font-medium hover:bg-gray-200 transition-colors"
                   >
                     {tech}
                   </span>
@@ -103,24 +118,29 @@ export function ProjectDetail() {
             </div>
           )}
 
-          
           {/* Next Project Navigation */}
           <div className="mt-24 pt-12 border-t border-gray-200">
-            <div className="flex justify-between items-center">
-              <div>Next Project</div>
+            <div className="flex justify-between items-center mb-4">
+              <div className="text-sm uppercase tracking-wider text-gray-600">Next Project</div>
               <Link
                 to={getNextProjectLink(id)}
-                className="flex items-center gap-2 text-xl font-semibold hover:underline"
+                className="flex items-center gap-2 text-xl font-semibold hover:underline group"
+                aria-label={`View ${getNextProjectTitle(id)} project`}
               >
                 {getNextProjectTitle(id)}
-                <div className="ml-2">→</div>
+                <div className="ml-2 transform group-hover:translate-x-1 transition-transform">→</div>
               </Link>
             </div>
-            <Link to={getNextProjectLink(id)} className="block mt-8">
+            <Link
+              to={getNextProjectLink(id)}
+              className="block overflow-hidden rounded-lg group"
+              aria-label={`Navigate to ${getNextProjectTitle(id)}`}
+            >
               <img
                 src={getNextProjectImage(id)}
-                alt={getNextProjectTitle(id)}
-                className="w-full h-[300px] object-cover"
+                alt={`${getNextProjectTitle(id)} preview`}
+                className="w-full h-[300px] object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
               />
             </Link>
           </div>
@@ -128,38 +148,4 @@ export function ProjectDetail() {
       </div>
     </div>
   );
-}
-
-// Helper functions to get the next project
-function getNextProjectLink(currentId: string | undefined): string {
-  if (!currentId) return '/#projects';
-  
-  const currentIndex = projects.findIndex(p => p.id === currentId);
-  if (currentIndex === -1 || currentIndex === projects.length - 1) {
-    return `/project/${projects[0].id}`;
-  }
-  
-  return `/project/${projects[currentIndex + 1].id}`;
-}
-
-function getNextProjectTitle(currentId: string | undefined): string {
-  if (!currentId) return '';
-  
-  const currentIndex = projects.findIndex(p => p.id === currentId);
-  if (currentIndex === -1 || currentIndex === projects.length - 1) {
-    return projects[0].title;
-  }
-  
-  return projects[currentIndex + 1].title;
-}
-
-function getNextProjectImage(currentId: string | undefined): string {
-  if (!currentId) return '';
-  
-  const currentIndex = projects.findIndex(p => p.id === currentId);
-  if (currentIndex === -1 || currentIndex === projects.length - 1) {
-    return projects[0].image;
-  }
-  
-  return projects[currentIndex + 1].image;
 }

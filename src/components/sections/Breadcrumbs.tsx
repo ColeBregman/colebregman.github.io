@@ -1,133 +1,120 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { smallProjects } from '../../data/smallProjects';
 
-const images = [
-  "/assets/owlbook.jpeg",
-  "/assets/embroiderphone.jpeg",
-  "/assets/lamp-q6TuXykl.png",
-  "/assets/violin-BqRdxQ0W.png",
-  "/assets/Rose-BvPnEJYy.png",
-  "/assets/bunny-B0hxmrp7.png",
-  "/assets/chainsaw-L9O015hr.png",
-  "/assets/archVis-Dn9hslr4.png",
-  "/assets/chairs-C7I6Kj6j.png",
-  "/assets/initialmockup-B6cGBnij.png",
-];
+// Generate random binary string (reused from Hero)
+const generateBinary = (length: number) => {
+  return Array.from({ length }, () => Math.random() > 0.5 ? '1' : '0').join('');
+};
 
-const Breadcrumbs = () => {
-  const trackRef = useRef<HTMLDivElement>(null);
-  
-  const mouseDownAt = useRef<number>(0);
-  const prevPercentage = useRef<number>(0);
-  const currentPercentage = useRef<number>(0);
-  const isMouseDown = useRef<boolean>(false);
+const generatePattern = (segmentCount: number) => {
+  const segments = [];
+  for (let i = 0; i < segmentCount; i++) {
+    segments.push(generateBinary(11));
+    if (i < segmentCount - 1) {
+      segments.push(' //////////////////////////////////////////// ');
+    }
+  }
+  return segments.join('');
+};
 
-  const handleOnDown = (clientX: number) => {
-    mouseDownAt.current = clientX;
-    isMouseDown.current = true;
-  };
-
-  const handleOnUp = () => {
-    isMouseDown.current = false;
-    prevPercentage.current = currentPercentage.current;
-  };
-
-  const handleOnMove = (clientX: number) => {
-    if (!isMouseDown.current || !trackRef.current) return;
-
-    const track = trackRef.current;
-    const mouseDelta = mouseDownAt.current - clientX;
-    const maxDelta = window.innerWidth / 2;
-
-    const percentage = (mouseDelta / maxDelta) * -150;
-    const totalImages = images.length;
-    const maxPercentage = -totalImages*100; // Adjust maxPercentage dynamically based on images
-    const nextPercentageUnconstrained = prevPercentage.current + percentage;
-    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), maxPercentage);
-
-    currentPercentage.current = nextPercentage;
-
-
-    // Animate the track
-    track.animate(
-      { transform: `translate(${nextPercentage}%, -50%)` },
-      { duration: 1200, fill: 'forwards' }
-    );
-
-    //Animate each image's objectPosition
-    const imgs = track.querySelectorAll('.image');
-    imgs.forEach((img) => {
-      const imageMovementPercentage = Math.max(
-        Math.min((nextPercentage / maxPercentage) * 100, 100),
-        0
-      );
-      (img as HTMLImageElement).animate(
-        { objectPosition: `${100-imageMovementPercentage}% center` },
-        { duration: 1200, fill: 'forwards' }
-      );
-
-  });
-
-    
-
-  };
+function BinaryBorder() {
+  const [pattern, setPattern] = useState('');
+  const [segmentCount, setSegmentCount] = useState(6);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => handleOnDown(e.clientX);
-    const handleMouseUp = () => handleOnUp();
-    const handleMouseMove = (e: MouseEvent) => handleOnMove(e.clientX);
-
-    const handleTouchStart = (e: TouchEvent) => handleOnDown(e.touches[0].clientX);
-    const handleTouchEnd = () => handleOnUp();
-    const handleTouchMove = (e: TouchEvent) => handleOnMove(e.touches[0].clientX);
-
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('mousemove', handleMouseMove);
-
-    window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchend', handleTouchEnd);
-    window.addEventListener('touchmove', handleTouchMove);
-
-    return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('mousemove', handleMouseMove);
-
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
-      window.removeEventListener('touchmove', handleTouchMove);
+    const calculateSegments = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const charWidth = 6.5;
+        const segmentWidth = 56 * charWidth;
+        const count = Math.floor(containerWidth / segmentWidth);
+        setSegmentCount(Math.max(count, 3));
+      }
     };
+
+    calculateSegments();
+    window.addEventListener('resize', calculateSegments);
+    return () => window.removeEventListener('resize', calculateSegments);
   }, []);
 
-  return (
-    <section id="breadcrumbs" className="px-8">
-      <div className="relative">
-        <h2 className="text-3xl font-bold mb-8">breadcrumbs</h2>
-        
-        <div className="w-screen relative py-[25vmin]">
-      <div
-        ref={trackRef}
-        id="image-track"
-        className="flex gap-[4vmin] absolute top-1/2 -translate-y-1/2 select-none md:pr-32"
-      >
-        {images.map((src, idx) => (
-          <img
-            key={idx}
-            className="image w-[50vmin] h-[50vmin] object-cover object-[100%_center] pointer-events-none"
-            src={src}
-            draggable="false"
-            alt="Sliding"
-          />
-        ))}
-      </div>
-      {/* White Block */}
-  <div className="absolute top-1/2 right-0 -translate-y-1/2 bg-white w-[20vmin] h-[50vmin] z-10">
-  </div>
+  useEffect(() => {
+    setPattern(generatePattern(segmentCount));
+    
+    const interval = setInterval(() => {
+      setPattern(generatePattern(segmentCount));
+    }, 50);
 
+    return () => clearInterval(interval);
+  }, [segmentCount]);
+
+  return (
+    <div 
+      ref={containerRef}
+      className="font-mono leading-tight py-2 opacity-60 whitespace-nowrap overflow-hidden w-full"
+    >
+      <div className="inline-block">
+        <span className="text-[8px]">{pattern}{pattern}</span>
+      </div>
     </div>
+  );
+}
+
+export default function Breadcrumbs() {
+  return (
+    <section id="breadcrumbs" className="py-32 px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Binary Border Top */}
+        <div className="w-full border-y-2 border-black mb-16">
+          <BinaryBorder />
+        </div>
+
+        <h2 className="text-5xl md:text-7xl font-black mb-16 uppercase">More Projects</h2>
+        
+        {/* Polaroid Grid with Numbers */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+          {smallProjects.map((project, index) => (
+            <div
+              key={project.id}
+              className="group cursor-pointer"
+            >
+              {/* Number Label */}
+              <div className="text-sm font-mono text-gray-500 mb-3">
+                #{String(index + 1).padStart(2, '0')}
+              </div>
+
+              {/* Polaroid Frame */}
+              <div className="border-8 border-white shadow-2xl bg-white hover:shadow-3xl transition-shadow duration-300">
+                {/* Image */}
+                <div className="aspect-square overflow-hidden bg-gray-100">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:blur-[0.5px] ${
+                      project.rotate ? 'rotate-90' : ''
+                    }`}
+                  />
+                </div>
+                
+                {/* Caption Area */}
+                <div className="p-4 bg-white border-t-2 border-gray-200">
+                  <h3 className="text-lg font-bold mb-1">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {project.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Binary Border Bottom */}
+        <div className="w-full border-y-2 border-black mt-16">
+          <BinaryBorder />
+        </div>
       </div>
     </section>
   );
 }
-
-export default Breadcrumbs;

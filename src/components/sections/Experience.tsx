@@ -1,9 +1,6 @@
-
-
 interface ExperienceItem {
   title: string;
   company: string;
-  location?: string;
   date: string;
   description: string[];
   logo?: string;
@@ -13,82 +10,91 @@ const experiences: ExperienceItem[] = [
   {
     title: 'Manufacturing Design Engineering Intern',
     company: 'Apple',
-    location: 'Cupertino, California, United States',
     date: 'May 2025 - Present',
-    description: [],
+    description: [
+      'Working on manufacturing design and engineering projects for upcoming products.',
+      'Collaborating with cross-functional teams to improve product manufacturability.'
+    ],
+    logo: '/assets/logos/Apple_logo_black.svg',
   },
   {
     title: 'Student Researcher',
     company: 'Columbia Engineering',
-    location: 'New York, New York, United States',
     date: 'Feb 2024 - May 2025',
     description: [
       'MBL Lab: Designed CAD models for NITRO knee replacement and co-developed test rig for mechanical testing.',
-      'Creative Machines Lab: Developed a low-cost food 3D printer for a restaraunt and a self-diagnostic 3D-printing robot.'
+      'Creative Machines Lab: Developed a low-cost food 3D printer for a restaurant and a self-diagnostic 3D-printing robot.'
     ],
+    logo: '/assets/logos/Vertical Left-aligned logo_blue.svg',
   },
   {
     title: 'Mechanical Engineering Intern',
     company: 'Eikon Therapeutics',
-    location: 'Hayward, California, United States',
     date: 'Jun 2024 - Aug 2024',
     description: [
       'Developed automated rig to increase laser precision and reduce testing time.'
     ],
+    logo: '/assets/logos/idckWeE-SI_logos.jpeg',
   },
   {
     title: 'Intern',
     company: 'Design Visionaries',
-    location: 'San Jose, California, United States',
     date: 'May 2023 - Aug 2023',
     description: [
       'Designed medical devices, trained interns in NX, and filed USPTO provisional patents for small businesses.'
     ],
+    logo: '/assets/logos/design visionaries logo.jpeg',
   },
   {
     title: 'Suzuki Lab intern',
     company: 'Stanford University',
-    location: 'Stanford, California, United States',
     date: 'Aug 2021 - Aug 2021',
     description: [
       'Determined minimum viable layer thickness for novel spintronic material.'
     ],
+    logo: '/assets/logos/Stanford_Cardinal_logo.svg',
   }
 ];
 
 export function Experience() {
   return (
-    <section id="experience" className="min-h-screen py-24 px-6 md:pr-32">
-      <div className="w-full">
-        <h2 className="text-4xl font-bold mb-16">Experience</h2>
+    <section id="experience" className="min-h-screen py-32 px-8">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-5xl md:text-7xl font-bold mb-16">Experience</h2>
         
-        <div className="relative pl-12">
-          {/* Vertical line */}
-          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300 z-0"></div>
-          
-          {/* Experience items */}
+        <div className="space-y-16">
           {experiences.map((exp, index) => (
-            <div key={index} className="relative mb-20">
-              {/* Circle marker */}
-              <div className="absolute left-0 top-0 w-10 h-10 rounded-full bg-white border-4 border-gray-300 z-10"></div>
-              
-              <div className="pl-16">
-                <h3 className="text-2xl font-bold mb-1">{exp.title} @ {exp.company}</h3>
-                <p className="text-gray-600 mb-2">{exp.date}</p>
-                {exp.location && <p className="text-gray-600 mb-3">{exp.location}</p>}
-                
-                {exp.description.length > 0 && (
-                  <ul className="list-disc pl-5 space-y-3">
-                    {exp.description.map((desc, i) => (
-                      <li key={i} className="text-gray-700">{desc}</li>
-                    ))}
-                  </ul>
+            <div key={index} className="border-b border-gray-200 pb-16 last:border-0">
+              <div className="flex items-start gap-6 mb-6">
+                {exp.logo && (
+                  <div className="w-16 h-16 flex-shrink-0">
+                    <img 
+                      src={exp.logo} 
+                      alt={`${exp.company} logo`}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                 )}
+                <div className="flex-1">
+                  <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                    {exp.title}
+                  </h3>
+                  <div className="text-xl text-gray-600 mb-2">{exp.company}</div>
+                  <div className="text-lg text-gray-500">{exp.date}</div>
+                </div>
               </div>
+              
+              {exp.description.length > 0 && (
+                <ul className="space-y-3 ml-22 text-lg text-gray-700">
+                  {exp.description.map((desc, i) => (
+                    <li key={i}>• {desc}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
         </div>
       </div>
     </section>
   );
-} 
+}

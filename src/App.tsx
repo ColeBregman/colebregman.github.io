@@ -1,4 +1,3 @@
-
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/sections/Hero';
@@ -27,17 +26,23 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-white">
         <Navigation />
-        <main className="w-screen mx-auto">
+        <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/project/:id" element={<ProjectDetail />} />
           </Routes>
         </main>
         
-        <footer className="border-t border-gray-200 py-12 px-6 md:pr-32">
-          <div className="max-w-6xl mx-auto text-center text-gray-600">
-            <p>© 2024 Cole Bregman. All rights reserved.</p>
-            <p className="mt-2">Built with React and Tailwind CSS</p>
+        <footer className="border-t border-gray-200 py-16 px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center">
+              <div className="text-sm text-gray-600">
+                © {new Date().getFullYear()} Cole Bregman
+              </div>
+              <div className="text-sm text-gray-600">
+                Built with React & TypeScript
+              </div>
+            </div>
           </div>
         </footer>
       </div>

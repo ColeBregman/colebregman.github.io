@@ -2,15 +2,163 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+@layer base {
+  html {
+    @apply antialiased scroll-smooth;
   }
   
-body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  body {
+    @apply bg-white text-black font-sans;
+    font-feature-settings: 'liga' 1, 'calt' 1, 'ss01' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 }
+
+@layer components {
+  /* Custom Scrollbar */
+  body {
+    scrollbar-width: thin;
+    scrollbar-color: #000 transparent;
+  }
   
+  body::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 3px;
+  }
+
+  body::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
+
+  /* Console Animation */
+  .console-line {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(14px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+@layer utilities {
+  /* Navigation Flicker Effect with Persistent Blur */
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: filter 0.2s ease;
+  }
+  
+  .nav-link:hover {
+    animation: flicker 0.15s ease-in-out 2;
+    filter: blur(0.5px);
+  }
+  
+  .nav-link::before {
+    content: '▸';
+    opacity: 0;
+    transform: translateX(4px);
+    transition: all 0.2s ease;
+    font-size: 0.75rem;
+  }
+  
+  .nav-link:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  @keyframes flicker {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+  
+  /* Icon Wipe Effect - Background Wipes Black, Icon Turns White */
+  .icon-wipe {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .icon-wipe::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+  }
+  
+  .icon-wipe:hover::before {
+    transform: scaleX(1);
+  }
+  
+  .icon-wipe svg {
+    position: relative;
+    z-index: 10;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .icon-wipe:hover svg {
+    color: white;
+  }
+
+  /* Scrolling Binary Animation */
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes scroll-right {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-scroll-left {
+    animation: scroll-left 30s linear infinite;
+  }
+
+  .animate-scroll-right {
+    animation: scroll-right 30s linear infinite;
+  }
+
+  /* Smooth page transitions */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}

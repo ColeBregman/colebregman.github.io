@@ -31,22 +31,22 @@ export const projects: Project[] = [
     id: 'Optics',
     title: 'Live Optical Alignment and Automated Lense Testing',
     description: 'Speeding up the microscope development for optical engineers',
-    image: '/assets/OpticsJig-Cl6gbkTQ.png',
+    image: '/assets/OpticsJig-Cl6gbkTQ.webp',
     images: [
       {
-        url: '/assets/GUI-D1tlHbqh.png',
+        url: '/assets/GUI-D1tlHbqh.webp',
         caption: 'Real-time Python GUI'
       },
       {
-        url: '/assets/PriorGUI-CfGspTeB.png',
+        url: '/assets/PriorGUI-CfGspTeB.webp',
         caption: 'Previous iteration showing live usage with laser'
       },
       {
-        url: '/assets/Data1-Cd0dS5nb.png',
+        url: '/assets/Data1-Cd0dS5nb.webp',
         caption: 'Generated data analysis to find focal point'
       },
       {
-        url: '/assets/Data2-BDjiV9sT.png',
+        url: '/assets/Data2-BDjiV9sT.webp',
         caption: 'Lense and Optic fiber reliability analysis'
       }
     ],
@@ -78,10 +78,10 @@ export const projects: Project[] = [
     id: 'AudiobookPlayer',
     title: 'Audiobook Player',
     description: 'Coming soon...',
-    image: '/assets/coverimage-DtUrAx8Y.png',
+    image: '/assets/coverimage-DtUrAx8Y.webp',
     images: [
       {
-        url: '/assets/coverimage-DtUrAx8Y.png',
+        url: '/assets/coverimage-DtUrAx8Y.webp',
         caption: 'Project overview'
       },
       {
@@ -89,11 +89,11 @@ export const projects: Project[] = [
         caption: 'Example of a menu screen'
       },
       {
-        url: '/assets/SpriteMap-D3pWvwDB.png',
+        url: '/assets/SpriteMap-D3pWvwDB.webp',
         caption: 'Spritemap to hold all GUI elements'
       },
       {
-        url: '/assets/initialmockup-B6cGBnij.png',
+        url: '/assets/initialmockup-B6cGBnij.webp',
         caption: 'Initial mockup in Photoshop'
       }
     ],
@@ -126,26 +126,26 @@ export const projects: Project[] = [
     id: 'ToyCar',
     title: 'Toy Car',
     description: 'Making a small toy car for a manufacturing class',
-    image: '/assets/carcover.JPG',
+    image: '/assets/carcover.webp',
     images: [
       {
-        url: '/assets/carcover.JPG',
+        url: '/assets/carcover.webp',
         caption: 'Finished car'
       },
       {
-        url: '/assets/carprototypes.jpg',
+        url: '/assets/carprototypes.webp',
         caption: 'prototypes of the body'
       },
       {
-        url: '/assets/carmoldmachining.JPG',
+        url: '/assets/carmoldmachining.webp',
         caption: 'Machining the injection mold'
       },
       {
-        url: '/assets/carmoldfinished.jpeg',
+        url: '/assets/carmoldfinished.webp',
         caption: 'Injection molds for wheels'
       },
       {
-        url: '/assets/carbodymold.JPG',
+        url: '/assets/carbodymold.webp',
         caption: 'Casting the body'
       }
     ],

@@ -130,7 +130,7 @@ export function Navigation() {
             <div className="flex flex-col items-end gap-0.5 text-xs leading-tight">
               <span className="opacity-50 font-light">design  from the bay.</span>
               <a href="#contact" className="font-semibold hover:opacity-60 transition-opacity">
-                Available for freelance work → <span className="font-bold">Hire me</span>
+                Always happy to chat → <span className="font-bold">Reach out</span>
               </a>
             </div>
           </div>

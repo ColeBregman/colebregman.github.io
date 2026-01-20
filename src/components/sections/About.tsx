@@ -1,6 +1,6 @@
 export function About() {
   return (
-    <section id="about" className="min-h-screen flex items-center px-8 py-32">
+    <section id="about" className="min-h-screen flex items-center px-8 py-32 bg-white relative z-10">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-5xl md:text-7xl font-bold mb-16">About</h2>
         
@@ -19,8 +19,8 @@ export function About() {
             <h3 className="text-2xl font-semibold mb-8">Core Skills</h3>
             <div className="grid grid-cols-2 gap-4">
               {[
-                'Python', 'TypeScript', 'React', 'CAD (Fusion360, NX)', 
-                '3D Printing', 'CNC Machining', 'Design Thinking', 'Product Design'
+                'CAD (NX, Solidworks, Fusion360)', 'Blender', 'LabVIEW', 'JMP',
+                '3D Printing', 'Python', 'Arduino/Raspberry Pi', 'Adobe Suite'
               ].map((skill) => (
                 <div key={skill} className="text-lg font-medium">
                   {skill}

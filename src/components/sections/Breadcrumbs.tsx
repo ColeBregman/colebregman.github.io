@@ -62,7 +62,7 @@ function BinaryBorder() {
 
 export default function Breadcrumbs() {
   return (
-    <section id="breadcrumbs" className="py-32 px-8">
+    <section id="breadcrumbs" className="py-32 px-8 bg-white relative z-10">
       <div className="max-w-7xl mx-auto">
         {/* Binary Border Top */}
         <div className="w-full border-y-2 border-black mb-16">

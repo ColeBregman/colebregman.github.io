@@ -1,4 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
+import { FluidCursor } from '../animations/FluidCursor';
+
+// EASY TOGGLE: Set to false to disable fluid cursor effect
+const SHOW_FLUID_EFFECT = true;
 
 // Generate random binary string
 const generateBinary = (length: number) => {
@@ -66,8 +70,19 @@ export function Hero() {
   };
 
   return (
-    <section className="h-screen flex flex-col items-end justify-end relative">
-      <div className="flex flex-col items-center w-full">
+    <section className="h-screen flex flex-col relative">
+      {/* Fluid Cursor - Renders behind entire page */}
+      {SHOW_FLUID_EFFECT && (
+        <div className="fixed inset-0 z-0">
+          <FluidCursor />
+        </div>
+      )}
+      
+      {/* Hero content - No background, fluid shows through */}
+      <div className="flex-1 relative z-10"></div>
+      
+      {/* COLE BREGMAN Section at Bottom - White background blocks fluid */}
+      <div className="flex flex-col items-center w-full relative z-10 bg-white">
         {/* Top Binary/Slash Border - Extends to window edges */}
         <div className="w-screen border-y border-black/20 overflow-hidden">
           <BinaryBorder />

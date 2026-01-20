@@ -1,5 +1,4 @@
-import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+
 import { Project } from '../../types/project';
 import { Link } from 'react-router-dom';
 

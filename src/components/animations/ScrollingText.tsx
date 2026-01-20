@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useAnimationFrame } from '../../hooks/useAnimationFrame';
 
 interface ScrollingTextProps {

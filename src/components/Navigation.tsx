@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Github, Linkedin, Mail, Menu, X } from 'lucide-react';
 import gsap from 'gsap';
 

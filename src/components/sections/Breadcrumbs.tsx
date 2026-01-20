@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const images = [
   "/assets/owlbook.jpeg",
@@ -13,7 +13,7 @@ const images = [
   "/assets/initialmockup-B6cGBnij.png",
 ];
 
-const Breadcrumbs: React.FC = () => {
+const Breadcrumbs = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   
   const mouseDownAt = useRef<number>(0);

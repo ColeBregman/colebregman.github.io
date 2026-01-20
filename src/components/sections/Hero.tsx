@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ArrowDown } from 'lucide-react';
 import { ScrollingText } from '../animations/ScrollingText';
 import { useScrollVelocity } from '../../hooks/useScrollVelocity';

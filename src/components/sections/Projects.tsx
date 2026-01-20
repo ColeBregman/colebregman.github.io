@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ProjectCard } from '../projects/ProjectCard.tsx';
 import { projects } from '../../types/project';
 

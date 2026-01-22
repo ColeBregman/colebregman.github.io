@@ -21,6 +21,11 @@ export interface Project {
     challenge: string;
     approach: string;
     outcome: string;
+    inlineImages?: {
+      challenge?: string;
+      approach?: string;
+      outcome?: string;
+    };
   };
   technologies?: string[];
   keyFeatures?: string[];

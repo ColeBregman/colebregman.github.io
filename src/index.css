@@ -14,6 +14,23 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
+  
+  /* Minimal Swiss Typography */
+  h1 {
+    @apply font-medium;
+  }
+  
+  h2 {
+    @apply font-medium;
+  }
+  
+  h3 {
+    @apply font-medium;
+  }
+  
+  p {
+    @apply font-light;
+  }
 }
 
 @layer components {
@@ -160,5 +177,222 @@
     html {
       scroll-behavior: smooth;
     }
+  }
+
+  /* Minimal Swiss Design System Utilities */
+  .section-spacing {
+    @apply my-section;
+  }
+  
+  .section-spacing-sm {
+    @apply my-section-sm;
+  }
+  
+  .content-width {
+    @apply max-w-content;
+  }
+  
+  .heading-tight {
+    line-height: 1.1;
+  }
+  
+  /* Scroll-triggered fade-in animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .fade-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .fade-in-visible {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  /* Staggered animation delays */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  /* Hero image fade-in */
+  @keyframes heroFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(1.05);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .hero-fade-in {
+    animation: heroFadeIn 1s ease-out forwards;
+  }
+  
+  /* Image hover effects */
+  .image-hover {
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  }
+  
+  .image-hover:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Technology pill monochrome style */
+  .tech-pill {
+    @apply px-4 py-2 text-primary-text rounded-full font-light text-body
+           border-2 border-primary-text transition-all duration-300;
+  }
+  
+  .tech-pill:hover {
+    @apply bg-primary-text text-white;
+    transform: scale(1.05);
+  }
+  
+  /* Glassmorphism utilities - now white with shadow */
+  .glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Bento Grid Layouts */
+  .bento-grid {
+    display: grid;
+    gap: 1rem;
+    grid-auto-rows: minmax(200px, auto);
+  }
+  
+  .bento-layout-featured {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .bento-featured-large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  
+  .bento-layout-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .bento-grid-feature {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  
+  .bento-layout-offset {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Enhanced hover effects */
+  .card-lift {
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  }
+  
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-scale {
+    transition: transform 0.4s ease-out, filter 0.4s ease-out;
+  }
+  
+  .image-scale:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+  
+  /* Parallax container */
+  .parallax-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .parallax-image {
+    transition: transform 0.3s ease-out;
+    will-change: transform;
+  }
+  
+  /* Timeline vertical line */
+  .timeline-line {
+    position: relative;
+  }
+  
+  .timeline-line::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #E5E5E5;
+  }
+  
+  /* Number badges for story sections */
+  .number-badge {
+    @apply w-12 h-12 rounded-full border-2 border-primary-text
+           flex items-center justify-center font-medium text-base;
+  }
+  
+  /* Masonry grid setup */
+  .masonry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 20px;
+    gap: 1.5rem;
+  }
+  
+  .masonry-item {
+    grid-row-end: span var(--row-span, 10);
+  }
+  
+  /* Separator line */
+  .separator-line {
+    @apply w-full h-px bg-border-gray;
+  }
+  
+  /* Pull quote styling */
+  .pull-quote {
+    @apply text-h3 font-light italic text-secondary-text
+           border-l-2 border-primary-text pl-6 my-8;
+  }
+  
+  /* Smooth hover transitions */
+  .smooth-hover {
+    transition: all 0.2s ease-out;
   }
 }

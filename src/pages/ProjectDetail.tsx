@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Lightbulb, Wrench, Cog } from 'lucide-react';
+import { motion } from 'framer-motion';
+import CountUp from 'react-countup';
 import { projects } from '../types/project';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { ProjectSection } from '../components/project/ProjectSection';
 import { ProjectStory } from '../components/project/ProjectStory';
 import { ProjectImages } from '../components/project/ProjectImages';
+import { ScrollProgress } from '../components/ScrollProgress';
 import { getNextProjectLink, getNextProjectTitle, getNextProjectImage } from '../utils/projectHelpers';
 
 export function ProjectDetail() {
@@ -21,11 +24,11 @@ export function ProjectDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center py-24 px-6">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
-          <p className="text-gray-600 mb-8">The project you're looking for doesn't exist.</p>
+          <h1 className="text-h1 font-medium mb-4">Project Not Found</h1>
+          <p className="text-body text-secondary-text mb-8">The project you're looking for doesn't exist.</p>
           <Link
             to="/#projects"
-            className="inline-flex items-center text-black hover:underline"
+            className="inline-flex items-center text-primary-text hover:underline smooth-hover"
           >
             <ArrowLeft size={20} className="mr-2" />
             Back to Projects
@@ -36,116 +39,243 @@ export function ProjectDetail() {
   }
 
   return (
-    <div className="min-h-screen py-24 px-6">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen">
+      {/* Scroll Progress Indicator */}
+      <ScrollProgress />
+      
+      {/* Breadcrumb - Fixed positioning */}
+      <div className="px-6 pt-24 pb-8 max-w-container mx-auto">
         <Breadcrumb
           items={[
             { label: 'Projects', href: '/#projects' },
             { label: project.title }
           ]}
         />
+      </div>
 
-        <Link
-          to="/#projects"
-          className="inline-flex items-center text-gray-600 hover:text-black mt-8"
+      {/* Hero Section - Responsive height */}
+      <div className="relative w-full h-[50vh] sm:h-[60vh] lg:h-[65vh] overflow-hidden">
+        {/* Hero Image - No gradient overlay */}
+        <motion.div
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+          className="w-full h-full"
         >
-          <ArrowLeft size={20} className="mr-2" />
-          Back home
-        </Link>
-
-        <div className="mt-8">
           <img
             src={project.image}
             alt={`${project.title} cover image`}
-            className="w-full h-[400px] object-cover rounded-lg"
+            className="w-full h-full object-cover"
             loading="eager"
           />
+        </motion.div>
+      </div>
 
-          <h1 className="text-4xl font-bold mt-8">{project.title}</h1>
-          <p className="text-xl text-gray-600 mt-4">{project.description}</p>
-          
-          {project.stats && (
-            <div className="grid grid-cols-3 gap-8 mt-8">
+      {/* Main Content Container */}
+      <div className="max-w-container mx-auto px-6 md:px-20 lg:px-32">
+        {/* Stats Section - Below Hero */}
+        {project.stats && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-12 mb-16"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {project.stats.map((stat, index) => (
-                <div key={index} className="p-4 bg-gray-50">
-                  <div className="text-sm text-gray-600">{stat.label}</div>
-                  <div className="text-xl font-semibold mt-1">{stat.value}</div>
-                </div>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30, rotate: index % 2 === 0 ? -2 : 2 }}
+                  animate={{ opacity: 1, y: 0, rotate: index % 2 === 0 ? -2 : 2 }}
+                  whileHover={{ rotate: 0, y: -4 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.4 + index * 0.1,
+                    rotate: { duration: 0.3 }
+                  }}
+                  className="glass p-6 rounded-lg shadow-md border border-border-gray"
+                  style={{
+                    transform: `rotate(${index % 2 === 0 ? -2 : 2}deg)`,
+                    willChange: 'transform'
+                  }}
+                >
+                  <div className="text-caption text-tertiary-text uppercase tracking-wider mb-2">
+                    {stat.label}
+                  </div>
+                  <div className="text-3xl md:text-4xl font-medium text-black">
+                    {stat.value.match(/^\d+/) ? (
+                      <>
+                        <CountUp
+                          end={parseInt(stat.value.match(/^\d+/)?.[0] || '0')}
+                          duration={2}
+                          delay={0.5 + index * 0.1}
+                        />
+                        {stat.value.replace(/^\d+/, '')}
+                      </>
+                    ) : (
+                      stat.value
+                    )}
+                  </div>
+                </motion.div>
               ))}
             </div>
-          )}
+          </motion.div>
+        )}
 
+        {/* Title and Description Section - Below Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mb-16"
+        >
+          {/* Project Title */}
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium text-black leading-tight mb-6">
+            {project.title}
+          </h1>
           
+          {/* Description - 800px max-width, 24px gray text */}
+          <p className="text-xl md:text-2xl text-secondary-text max-w-reading font-light leading-relaxed">
+            {project.description}
+          </p>
+        </motion.div>
 
-          <div className="border-t border-gray-200">
-            <ProjectSection
-              icon={Lightbulb}
-              title="The Why"
-              content={project.why}
-              iconColor="text-yellow-500"
-            />
-            <ProjectSection
-              icon={Wrench}
-              title="The What"
-              content={project.what}
-              iconColor="text-blue-500"
-            />
-            <ProjectSection
-              icon={Cog}
-              title="The How"
-              content={project.how}
-              iconColor="text-purple-500"
+        {/* Quick Overview Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-section-sm md:mt-section mb-12"
+        >
+          <h2 className="text-h1 font-medium mb-2">Quick Overview</h2>
+          <p className="text-body text-secondary-text">
+            The essential details you need to understand this project at a glance.
+          </p>
+          <p className="text-caption text-tertiary-text uppercase tracking-wider mt-4">
+            ~ 30 sec read
+          </p>
+        </motion.div>
+
+        {/* Content Sections (Why/What/How) - Horizontal Flow */}
+        <div className="mb-section-sm md:mb-section">
+          <ProjectSection
+            why={project.why}
+            what={project.what}
+            how={project.how}
+          />
+        </div>
+
+        {/* Photo Gallery - Aesthetic showcase of all images */}
+        {project.images.length > 0 && (
+          <div className="mt-section-sm md:mt-section">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-h1 font-medium mb-12">Visual Documentation</h2>
+              <ProjectImages images={project.images} />
+            </motion.div>
+          </div>
+        )}
+
+        {/* Deep Dive - with optional inline images */}
+        {project.story && (
+          <div className="mt-section-sm md:mt-section">
+            <ProjectStory
+              story={project.story}
+              inlineImages={project.story.inlineImages}
             />
           </div>
+        )}
 
-          <ProjectImages images={project.images} />
-
-          <ProjectStory story={project.story} />
-
-          {project.technologies && project.technologies.length > 0 && (
-            <div className="mt-12">
-              <h2 className="text-2xl font-semibold mb-6">Technologies & Skills</h2>
-              <div className="flex flex-wrap gap-3">
-                {project.technologies.map((tech, index) => (
-                  <span
-                    key={index}
-                    className="px-4 py-2 bg-gray-100 text-gray-800 rounded-full font-medium hover:bg-gray-200 transition-colors"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
+        {/* Technologies Section */}
+        {project.technologies && project.technologies.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.6 }}
+            className="mt-section-sm md:mt-section"
+          >
+            <h2 className="text-h2 font-medium mb-8">Technologies & Skills</h2>
+            <div className="flex flex-wrap gap-3">
+              {project.technologies.map((tech, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="tech-pill"
+                >
+                  {tech}
+                </motion.span>
+              ))}
             </div>
-          )}
+          </motion.div>
+        )}
 
-          {/* Next Project Navigation */}
-          <div className="mt-24 pt-12 border-t border-gray-200">
-            <div className="flex justify-between items-center mb-4">
-              <div className="text-sm uppercase tracking-wider text-gray-600">Next Project</div>
-              <Link
-                to={getNextProjectLink(id)}
-                className="flex items-center gap-2 text-xl font-semibold hover:underline group"
-                aria-label={`View ${getNextProjectTitle(id)} project`}
-              >
-                {getNextProjectTitle(id)}
-                <div className="ml-2 transform group-hover:translate-x-1 transition-transform">→</div>
-              </Link>
+        {/* Back to Projects Link */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-section-sm"
+        >
+          <Link
+            to="/#projects"
+            className="inline-flex items-center text-secondary-text hover:text-primary-text smooth-hover text-body"
+          >
+            <ArrowLeft size={20} className="mr-2" />
+            Back to Projects
+          </Link>
+        </motion.div>
+      </div>
+
+      {/* Next Project - Full width */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.6 }}
+        className="mt-section-sm md:mt-section"
+      >
+        <div className="max-w-container mx-auto px-6 md:px-20 lg:px-32">
+          <div className="mb-6">
+            <div className="text-caption uppercase tracking-wider text-tertiary-text mb-4">
+              Next Project
             </div>
             <Link
               to={getNextProjectLink(id)}
-              className="block overflow-hidden rounded-lg group"
-              aria-label={`Navigate to ${getNextProjectTitle(id)}`}
+              className="inline-flex items-center gap-3 text-h2 font-medium hover:text-secondary-text smooth-hover group"
+              aria-label={`View ${getNextProjectTitle(id)} project`}
             >
-              <img
-                src={getNextProjectImage(id)}
-                alt={`${getNextProjectTitle(id)} preview`}
-                className="w-full h-[300px] object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
+              {getNextProjectTitle(id)}
+              <span className="transform group-hover:translate-x-2 transition-transform duration-300">
+                →
+              </span>
             </Link>
           </div>
         </div>
-      </div>
+        <Link
+          to={getNextProjectLink(id)}
+          className="block w-full overflow-hidden group"
+          aria-label={`Navigate to ${getNextProjectTitle(id)}`}
+        >
+          <motion.img
+            src={getNextProjectImage(id)}
+            alt={`${getNextProjectTitle(id)} preview`}
+            className="w-full h-[400px] object-cover"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            loading="lazy"
+          />
+        </Link>
+      </motion.div>
     </div>
   );
 }

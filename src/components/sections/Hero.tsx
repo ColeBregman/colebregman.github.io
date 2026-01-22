@@ -65,16 +65,45 @@ function BinaryBorder() {
 }
 
 export function Hero() {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  
+  useEffect(() => {
+    // Detect if device has touch capability
+    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    setIsTouchDevice(hasTouchScreen);
+  }, []);
+  
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section className="h-screen flex flex-col relative">
-      {/* Fluid Cursor - Renders behind entire page */}
-      {SHOW_FLUID_EFFECT && (
-        <div className="fixed inset-0 z-0">
+      {/* Fluid Cursor - Desktop only (touch devices have library issues with scrolling) */}
+      {SHOW_FLUID_EFFECT && !isTouchDevice && (
+        <div className="fixed inset-0 z-0 pointer-events-none">
           <FluidCursor />
+        </div>
+      )}
+      
+      {/* Mobile Animation - Falling lines (no touch interference) */}
+      {isTouchDevice && (
+        <div className="mobile-lines">
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
+          <div className="mobile-line"></div>
         </div>
       )}
       

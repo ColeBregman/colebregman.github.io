@@ -395,4 +395,124 @@
   .smooth-hover {
     transition: all 0.2s ease-out;
   }
+
+  /* Mobile falling lines animation - Pure CSS, no interference */
+  .mobile-lines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    margin: auto;
+    width: 90vw;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .mobile-line {
+    position: relative;
+    width: 1px;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .mobile-line::after {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 15vh;
+    width: 100%;
+    top: -50%;
+    left: 0;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+  }
+
+  @keyframes drop {
+    0% {
+      top: -50%;
+    }
+    100% {
+      top: 110%;
+    }
+  }
+
+  /* Different shades of gray with varied speeds (10-25s range) */
+  .mobile-line:nth-child(1)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #1a1a1a 75%, #1a1a1a 100%);
+    animation: drop 15s 1.3s infinite;
+  }
+
+  .mobile-line:nth-child(2)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #4a4a4a 75%, #4a4a4a 100%);
+    animation: drop 22s 8.7s infinite;
+  }
+
+  .mobile-line:nth-child(3)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #6a6a6a 75%, #6a6a6a 100%);
+    animation: drop 12s 14.2s infinite;
+  }
+
+  .mobile-line:nth-child(4)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #2a2a2a 75%, #2a2a2a 100%);
+    animation: drop 18s 4.9s infinite;
+  }
+
+  .mobile-line:nth-child(5)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #5a5a5a 75%, #5a5a5a 100%);
+    animation: drop 25s 11.5s infinite;
+  }
+
+  .mobile-line:nth-child(6)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #3a3a3a 75%, #3a3a3a 100%);
+    animation: drop 14s 6.8s infinite;
+  }
+
+  .mobile-line:nth-child(7)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #7a7a7a 75%, #7a7a7a 100%);
+    animation: drop 11s 13.1s infinite;
+  }
+
+  .mobile-line:nth-child(8)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #2a2a2a 75%, #2a2a2a 100%);
+    animation: drop 23s 3.4s infinite;
+  }
+
+  .mobile-line:nth-child(9)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #5a5a5a 75%, #5a5a5a 100%);
+    animation: drop 10s 9.6s infinite;
+  }
+
+  .mobile-line:nth-child(10)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #4a4a4a 75%, #4a4a4a 100%);
+    animation: drop 20s 7.2s infinite;
+  }
+
+  .mobile-line:nth-child(11)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #3a3a3a 75%, #3a3a3a 100%);
+    animation: drop 16s 5.8s infinite;
+  }
+
+  .mobile-line:nth-child(12)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #6a6a6a 75%, #6a6a6a 100%);
+    animation: drop 24s 12.4s infinite;
+  }
+
+  .mobile-line:nth-child(13)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #2a2a2a 75%, #2a2a2a 100%);
+    animation: drop 13s 2.7s infinite;
+  }
+
+  .mobile-line:nth-child(14)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #5a5a5a 75%, #5a5a5a 100%);
+    animation: drop 21s 10.3s infinite;
+  }
+
+  .mobile-line:nth-child(15)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #4a4a4a 75%, #4a4a4a 100%);
+    animation: drop 17s 15.1s infinite;
+  }
 }

@@ -54,7 +54,7 @@ export default function BookCard({ book, index }: BookCardProps) {
 
         {/* Description - Fixed height for consistency */}
         <div className="mt-4 flex-grow">
-          <p className="italic text-base leading-relaxed line-clamp-3 min-h-[4.5rem]">
+          <p className="italic text-base leading-relaxed line-clamp-4 min-h-[4.5rem]">
             "{book.description}"
           </p>
         </div>

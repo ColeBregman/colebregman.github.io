@@ -25,7 +25,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book1',
         title: 'Shoe Dog: A Memoir by the Creator of Nike',
         author: 'Phil Knight',
-        coverUrl: '/public/assets/books/SHOE_DOG.webp',
+        coverUrl: '/assets/Books/SHOE_DOG.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/27220736-shoe-dog'
       },
@@ -33,7 +33,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book2',
         title: 'Skunk Works: A Personal Memoir of My Years at Lockheed',
         author: 'Ben R. Rich, Leo Janos',
-        coverUrl: '/public/assets/books/SKUNK_WORKS.webp',
+        coverUrl: '/assets/Books/SKUNK_WORKS.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/101438.Skunk_Works'
       },
@@ -41,7 +41,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book3',
         title: 'Apple in China: The Capture of the World\'s Greatest Company',
         author: 'Patrick McGee',
-        coverUrl: '/public/assets/books/APPLE_IN_CHINA.webp',
+        coverUrl: '/assets/Books/APPLE_IN_CHINA.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/220161058-apple-in-china'
       }
@@ -56,7 +56,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book4',
         title: 'Man\'s Search For Meaning',
         author: 'Viktor E. Frankl',
-        coverUrl: '/public/assets/books/MANS_SEARCH_FOR_MEANING.webp',
+        coverUrl: '/assets/Books/MANS_SEARCH_FOR_MEANING.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/1044863.Man_s_Search_for_Meaning'
       },
@@ -64,7 +64,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book5',
         title: '\"Surely You\'re Joking, Mr. Feynman!\":\nAdventures of a Curious Character',
         author: 'Richard P. Feynman',
-        coverUrl: '/public/assets/books/MR_FEYNMAN.webp',
+        coverUrl: '/assets/Books/MR_FEYNMAN.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/35167685-surely-you-re-joking-mr-feynman'
       },
@@ -72,7 +72,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book6',
         title: 'Range: Why Generalists Triumph in a Specialized World',
         author: 'David Epstein',
-        coverUrl: '/public/assets/books/RANGE.webp',
+        coverUrl: '/assets/Books/RANGE.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/41795733-range'
       }
@@ -87,7 +87,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book7',
         title: 'The Wind in the Willows',
         author: 'Kenneth Grahame',
-        coverUrl: '/public/assets/books/THE_WIND_IN_THE_WILLOWS.webp',
+        coverUrl: '/assets/Books/THE_WIND_IN_THE_WILLOWS.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/5659.The_Wind_in_the_Willows'
       },
@@ -95,7 +95,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book8',
         title: 'The Little Prince',
         author: 'Antoine de Saint-Exupéry',
-        coverUrl: '/public/assets/books/THE_LITTLE_PRINCE.webp',
+        coverUrl: '/assets/Books/THE_LITTLE_PRINCE.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/157993.The_Little_Prince'
       },
@@ -103,7 +103,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book9',
         title: 'The Last Unicorn',
         author: 'Peter S. Beagle',
-        coverUrl: '/public/assets/books/THE_LAST_UNICORN.webp',
+        coverUrl: '/assets/Books/THE_LAST_UNICORN.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/119086.The_Last_Unicorn'
       }
@@ -118,7 +118,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book10',
         title: 'The Three-Body Problem',
         author: 'Liu Cixin',
-        coverUrl: '/public/assets/books/THE_THREE-BODY_PROBLEM.webp',
+        coverUrl: '/assets/Books/THE_THREE-BODY_PROBLEM.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/20518872-the-three-body-problem'
       },
@@ -126,7 +126,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book11',
         title: 'Exhalation',
         author: 'Ted Chiang',
-        coverUrl: '/public/assets/books/EXHALATION.webp',
+        coverUrl: '/assets/Books/EXHALATION.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/41160292-exhalation'
       },
@@ -134,7 +134,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book12',
         title: 'Flatland:\nA Romance of Many Dimensions',
         author: 'Edwin A. Abbott',
-        coverUrl: '/public/assets/books/FLATLAND.webp',
+        coverUrl: '/assets/Books/FLATLAND.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/433567.Flatland'
       }
@@ -149,7 +149,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book13',
         title: 'The Way of Kings',
         author: 'Brandon Sanderson',
-        coverUrl: '/public/assets/books/THE_WAY_OF_KINGS.webp',
+        coverUrl: '/assets/Books/THE_WAY_OF_KINGS.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/7235533-the-way-of-kings'
       },
@@ -157,7 +157,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book14',
         title: 'The Tainted Cup',
         author: 'Robert Jackson Bennett',
-        coverUrl: '/public/assets/books/THE_TAINTED_CUP.webp',
+        coverUrl: '/assets/Books/THE_TAINTED_CUP.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/150247395-the-tainted-cup'
       },
@@ -165,7 +165,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book15',
         title: 'The Count of Monte Cristo',
         author: 'Alexandre Dumas',
-        coverUrl: '/public/assets/books/THE_COUNT_OF_MONTE_CRISTO.webp',
+        coverUrl: '/assets/Books/THE_COUNT_OF_MONTE_CRISTO.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/7126.The_Count_of_Monte_Cristo'
       }
@@ -180,7 +180,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book16',
         title: 'Dorohedoro',
         author: 'Q. Hayashida',
-        coverUrl: '/public/assets/books/DOROHEDORO.webp',
+        coverUrl: '/assets/Books/DOROHEDORO.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/6759156-dorohedoro-vol-1'
       },
@@ -188,7 +188,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book17',
         title: 'Vinland Saga',
         author: 'Makoto Yukimura',
-        coverUrl: '/public/assets/books/VINLAND_SAGA.webp',
+        coverUrl: '/assets/Books/VINLAND_SAGA.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/19087989-vinland-saga-omnibus-vol-1'
       },
@@ -196,7 +196,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book18',
         title: 'JoJo\'s Bizarre Adventure',
         author: 'Hirohiko Araki',
-        coverUrl: '/public/assets/books/JOJO.webp',
+        coverUrl: '/assets/Books/JOJO.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/22545983-jojo-s-bizarre-adventure'
       }
@@ -211,7 +211,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book19',
         title: 'The Night Circus',
         author: 'Erin Morgenstern',
-        coverUrl: '/public/assets/books/THE_NIGHT_CIRCUS.webp',
+        coverUrl: '/assets/Books/THE_NIGHT_CIRCUS.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/9361589-the-night-circus'
       },
@@ -219,7 +219,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book20',
         title: 'Tomorrow, and Tomorrow, and Tomorrow',
         author: 'Gabrielle Zevin',
-        coverUrl: '/public/assets/books/TOMORROW.webp',
+        coverUrl: '/assets/Books/TOMORROW.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/58784475-tomorrow-and-tomorrow-and-tomorrow'
       },
@@ -227,7 +227,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book21',
         title: 'All the Light We Cannot See',
         author: 'Anthony Doerr',
-        coverUrl: '/public/assets/books/ALL_THE_LIGHT_WE_CANNOT_SEE.webp',
+        coverUrl: '/assets/Books/ALL_THE_LIGHT_WE_CANNOT_SEE.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/18143977-all-the-light-we-cannot-see'
       }
@@ -243,7 +243,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book22',
         title: 'The Maniac',
         author: 'Benjamín Labatut',
-        coverUrl: '/public/assets/books/THE_MANIAC.webp',
+        coverUrl: '/assets/Books/THE_MANIAC.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/75665931-the-maniac'
       },
@@ -251,7 +251,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book23',
         title: 'The Art Thief: A True Story of Love, Crime, and a Dangerous Obsession',
         author: 'Michael Finkel',
-        coverUrl: '/public/assets/books/THE_ART_THIEF.webp',
+        coverUrl: '/assets/Books/THE_ART_THIEF.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/62873378-the-art-thief'
       },
@@ -259,7 +259,7 @@ export const bookCategories: BookCategory[] = [
         id: 'book24',
         title: 'What an Owl Knows: The New Science of the World\'s Most Enigmatic Birds',
         author: 'Jennifer Ackerman',
-        coverUrl: '/public/assets/books/WHAT_AN_OWL_KNOWS.webp',
+        coverUrl: '/assets/Books/WHAT_AN_OWL_KNOWS.webp',
         description: 'To be added...',
         link: 'https://www.goodreads.com/book/show/63024269-what-an-owl-knows'
       }

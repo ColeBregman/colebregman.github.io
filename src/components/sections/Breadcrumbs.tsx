@@ -1,64 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
 import { smallProjects } from '../../data/smallProjects';
-
-// Generate random binary string (reused from Hero)
-const generateBinary = (length: number) => {
-  return Array.from({ length }, () => Math.random() > 0.5 ? '1' : '0').join('');
-};
-
-const generatePattern = (segmentCount: number) => {
-  const segments = [];
-  for (let i = 0; i < segmentCount; i++) {
-    segments.push(generateBinary(11));
-    if (i < segmentCount - 1) {
-      segments.push(' //////////////////////////////////////////// ');
-    }
-  }
-  return segments.join('');
-};
-
-function BinaryBorder() {
-  const [pattern, setPattern] = useState('');
-  const [segmentCount, setSegmentCount] = useState(6);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const calculateSegments = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
-        const charWidth = 6.5;
-        const segmentWidth = 56 * charWidth;
-        const count = Math.floor(containerWidth / segmentWidth);
-        setSegmentCount(Math.max(count, 3));
-      }
-    };
-
-    calculateSegments();
-    window.addEventListener('resize', calculateSegments);
-    return () => window.removeEventListener('resize', calculateSegments);
-  }, []);
-
-  useEffect(() => {
-    setPattern(generatePattern(segmentCount));
-    
-    const interval = setInterval(() => {
-      setPattern(generatePattern(segmentCount));
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [segmentCount]);
-
-  return (
-    <div 
-      ref={containerRef}
-      className="font-mono leading-tight py-2 opacity-60 whitespace-nowrap overflow-hidden w-full"
-    >
-      <div className="inline-block">
-        <span className="text-[8px]">{pattern}{pattern}</span>
-      </div>
-    </div>
-  );
-}
+import { BinaryBorder } from '../BinaryBorder';
 
 export default function Breadcrumbs() {
   return (
@@ -74,9 +15,10 @@ export default function Breadcrumbs() {
         {/* Polaroid Grid with Numbers */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
           {smallProjects.map((project, index) => (
-            <div
+            <a
               key={project.id}
-              className="group cursor-pointer"
+              href={project.link}
+              className={`group block ${project.link ? 'cursor-pointer' : 'cursor-default pointer-events-none'}`}
             >
               {/* Number Label */}
               <div className="text-sm font-mono text-gray-500 mb-3">
@@ -106,7 +48,7 @@ export default function Breadcrumbs() {
                   </p>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
 

@@ -1,4 +1,4 @@
-import { Mail, Linkedin, Github } from 'lucide-react';
+import { Linkedin, Github } from 'lucide-react';
 
 export function Contact() {
   return (
@@ -9,16 +9,26 @@ export function Contact() {
         <div className="grid md:grid-cols-2 gap-16">
           <div>
             <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed mb-12">
-              I'm always interested in hearing about new projects, 
-              internship opportunities, and collaborations.
+              I'm always interested in hearing about new projects,
+              collaborations, and 2027 new-grad roles.
             </p>
             
-            <a 
-              href="mailto:ctb2159@columbia.edu"
-              className="inline-block px-12 py-6 bg-black text-white text-xl font-medium hover:bg-gray-800 transition-colors"
-            >
-              Get in Touch
-            </a>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="mailto:ctb2159@columbia.edu"
+                className="inline-block px-12 py-6 bg-black text-white text-xl font-medium hover:bg-gray-800 transition-colors"
+              >
+                Get in Touch
+              </a>
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-12 py-6 border-2 border-black text-black text-xl font-medium hover:bg-black hover:text-white transition-colors"
+              >
+                Resume ↓
+              </a>
+            </div>
           </div>
           
           <div className="space-y-8">

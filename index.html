@@ -16,15 +16,29 @@
     <meta property="og:url" content="https://colebregman.github.io/" />
     <meta property="og:title" content="Cole Bregman - Mechanical Engineering & Product Design Portfolio" />
     <meta property="og:description" content="Mechanical Engineering student at Columbia University specializing in product design, CAD, 3D printing, and full-stack development." />
-    <meta property="og:image" content="https://colebregman.github.io/assets/headshot-M8coJzZI.png" />
+    <meta property="og:image" content="https://colebregman.github.io/assets/headshot-M8coJzZI.webp" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://colebregman.github.io/" />
     <meta property="twitter:title" content="Cole Bregman - Mechanical Engineering & Product Design Portfolio" />
     <meta property="twitter:description" content="Mechanical Engineering student at Columbia University specializing in product design, CAD, 3D printing, and full-stack development." />
-    <meta property="twitter:image" content="https://colebregman.github.io/assets/headshot-M8coJzZI.png" />
+    <meta property="twitter:image" content="https://colebregman.github.io/assets/headshot-M8coJzZI.webp" />
     
+    <!-- GitHub Pages SPA redirect decoder (rafgraph/spa-github-pages):
+         404.html encodes deep links like /project/Optics into the query
+         string; this restores the real URL before the router boots. -->
+    <script>
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function (s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+
     <!-- Favicons - Cole Logo -->
     <link rel="icon" type="image/svg+xml" href="/assets/Cole%20Logo.svg" />
     <link rel="apple-touch-icon" href="/Favicon%20Collection/apple-touch-icon.png">

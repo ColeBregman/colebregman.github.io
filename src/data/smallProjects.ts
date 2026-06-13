@@ -9,6 +9,18 @@ export interface SmallProject {
 
 export const smallProjects: SmallProject[] = [
   {
+    id: 'applecards',
+    title: 'Apple Card Game',
+    description: 'Designed the deck and a heavily-iterated 3D-printed sliding case',
+    image: '/assets/apple-card-game.webp',
+  },
+  {
+    id: 'smiski',
+    title: 'Smiski House',
+    description: '3D-printed, glow-lit display house for Smiski figures',
+    image: '/assets/smiski-display.webp',
+  },
+  {
     id: 'violin',
     title: 'Violin',
     description: 'Embroidery project',

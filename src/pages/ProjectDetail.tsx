@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Lightbulb, Wrench, Cog } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { projects } from '../types/project';
@@ -9,6 +9,7 @@ import { ProjectSection } from '../components/project/ProjectSection';
 import { ProjectStory } from '../components/project/ProjectStory';
 import { ProjectImages } from '../components/project/ProjectImages';
 import { ScrollProgress } from '../components/ScrollProgress';
+import { BinaryBorder } from '../components/BinaryBorder';
 import { getNextProjectLink, getNextProjectTitle, getNextProjectImage } from '../utils/projectHelpers';
 
 export function ProjectDetail() {
@@ -71,6 +72,11 @@ export function ProjectDetail() {
         </motion.div>
       </div>
 
+      {/* Binary strip under hero - ties into the homepage motif */}
+      <div className="w-full border-y border-black/20 overflow-hidden">
+        <BinaryBorder />
+      </div>
+
       {/* Main Content Container */}
       <div className="max-w-container mx-auto px-6 md:px-20 lg:px-32">
         {/* Stats Section - Below Hero */}
@@ -81,28 +87,19 @@ export function ProjectDetail() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-12 mb-16"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 border-2 border-black divide-y-2 md:divide-y-0 md:divide-x-2 divide-black">
               {project.stats.map((stat, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30, rotate: index % 2 === 0 ? -2 : 2 }}
-                  animate={{ opacity: 1, y: 0, rotate: index % 2 === 0 ? -2 : 2 }}
-                  whileHover={{ rotate: 0, y: -4 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.4 + index * 0.1,
-                    rotate: { duration: 0.3 }
-                  }}
-                  className="glass p-6 rounded-lg shadow-md border border-border-gray"
-                  style={{
-                    transform: `rotate(${index % 2 === 0 ? -2 : 2}deg)`,
-                    willChange: 'transform'
-                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                  className="bg-white p-6 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="text-caption text-tertiary-text uppercase tracking-wider mb-2">
+                  <div className="font-mono text-xs text-gray-500 uppercase tracking-widest mb-3">
                     {stat.label}
                   </div>
-                  <div className="text-3xl md:text-4xl font-medium text-black">
+                  <div className="text-3xl md:text-4xl font-black text-black tracking-tight">
                     {stat.value.match(/^\d+/) ? (
                       <>
                         <CountUp
@@ -130,7 +127,7 @@ export function ProjectDetail() {
           className="mb-16"
         >
           {/* Project Title */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium text-black leading-tight mb-6">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-black leading-[1.05] mb-6">
             {project.title}
           </h1>
           
@@ -148,11 +145,11 @@ export function ProjectDetail() {
           transition={{ duration: 0.6 }}
           className="mt-section-sm md:mt-section mb-12"
         >
-          <h2 className="text-h1 font-medium mb-2">Quick Overview</h2>
+          <h2 className="text-h1 font-bold uppercase tracking-tight mb-2">Quick Overview</h2>
           <p className="text-body text-secondary-text">
             The essential details you need to understand this project at a glance.
           </p>
-          <p className="text-caption text-tertiary-text uppercase tracking-wider mt-4">
+          <p className="font-mono text-xs text-tertiary-text uppercase tracking-widest mt-4">
             ~ 30 sec read
           </p>
         </motion.div>
@@ -175,7 +172,7 @@ export function ProjectDetail() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-h1 font-medium mb-12">Visual Documentation</h2>
+              <h2 className="text-h1 font-bold uppercase tracking-tight mb-12">Visual Documentation</h2>
               <ProjectImages images={project.images} />
             </motion.div>
           </div>
@@ -200,7 +197,7 @@ export function ProjectDetail() {
             transition={{ duration: 0.6 }}
             className="mt-section-sm md:mt-section"
           >
-            <h2 className="text-h2 font-medium mb-8">Technologies & Skills</h2>
+            <h2 className="text-h2 font-bold uppercase tracking-tight mb-8">Technologies & Skills</h2>
             <div className="flex flex-wrap gap-3">
               {project.technologies.map((tech, index) => (
                 <motion.span

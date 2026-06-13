@@ -1,2 +1,10 @@
 node_modules/
 /Users/cobre/Downloads/portfolio/colebregman.github.io/node_modules
+# Build output (deployed via gh-pages, not committed)
+dist
+
+# macOS
+.DS_Store
+
+# Raw source material (photos, resume docx) - processed copies live in public/assets
+Claude Extras

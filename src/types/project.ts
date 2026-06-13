@@ -33,8 +33,38 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'AppleMDE',
+    title: 'Manufacturing Design at Apple',
+    description: 'A year owning yield, cost, and process problems on high-volume consumer hardware. Details kept intentionally vague — the results are real.',
+    image: '/assets/apple-mde-cover.svg',
+    images: [],
+    link: '/project/AppleMDE',
+    stats: [
+      { label: 'Cost savings driven', value: '$2.8M+' },
+      { label: 'Assembly yield (from 65%)', value: '99.7%' },
+      { label: 'Raw material cost reduction', value: '71%' }
+    ],
+    why: "High-volume consumer hardware lives or dies on yield, cost, and cosmetic quality — and the details that drive all three get decided on the factory floor, not in CAD.\nAs a Manufacturing Design Engineering intern, I owned problems where design intent met factory reality: yield issues, cost-downs, and assembly bottlenecks.\nThe work spanned metal injection molding, CNC machining, surface finishing, and final assembly.",
+    what: "Drove $2.8M+ in savings through DFM optimizations, targeted design changes, and a novel surface-finish process that improves corrosion resistance and tunes color without PVD.\nRaised assembly yield from 65% to 99.7% through tolerance-stack reduction, design changes, and added feedback in the assembly control loop.\nIntroduced laser welding into the assembly process, cutting assembly time by 50% and total assembly cost by 40%.",
+    how: "Designed CNC, sintering, and assembly fixtures in Siemens NX, drove MIM tooling from cold to hot runner, and qualified an alternative material for a 71% raw-material cost reduction.\nRan failure analysis, root-cause investigations, and DOEs (JMP, Python) — including a 4× improvement in a critical strength metric and resolving a 0%-yield proto-build blocker in 10 days with on-site factory support.\nBuilt a hands-on tabletop factory demonstration presented to Apple's CEO, factory leadership, and press for a new US manufacturing partnership.",
+    story: {
+      challenge: "Most of this work is under NDA, so this page stays at the level of outcomes rather than products and processes. What I can share is what the year taught me: manufacturing is where engineering gets honest. A part that's perfect in CAD means nothing if it can't be made, finished, and assembled at scale with good yield. I learned to own a problem end-to-end — from the data that proves it exists, through the root cause, to the design or process change that fixes it, to getting vendors and cross-functional teams (system PD, cable PD, EE, factory operations) to actually adopt it.",
+      approach: "The pattern that worked, over and over: be systematic and bring data. When mechanical performance dropped, that meant thorough failure analysis and root-cause work before touching anything. When a strength metric was failing on injection-molded components, that meant designing DOE experiments, analyzing them in JMP and Python, and iterating with vendors until we had a 4× improvement. When assembly was the bottleneck, that meant tolerance analysis to find where yield was actually being lost, then attacking it from three sides at once — reducing the tolerance stack, improving the assembly design, and adding feedback to the assembly control loop.",
+      outcome: "The cumulative result was over $2.8M in savings: a material switch cutting raw material cost 71%, a laser-welding process cutting assembly cost 40%, corrective process changes improving yield strength 108%, and assembly yield climbing from 65% to 99.7%. When a proto build hit a 0%-yield blocker, systematic root-causing and on-site factory support resolved it in 10 days and the build delivered on schedule. And at the end of the year, I designed and built a tabletop factory demonstration used to communicate a new US manufacturing partnership to Apple's CEO, factory leadership, and press."
+    },
+    technologies: ['Siemens NX', 'DFM', 'Tolerance Analysis', 'DOE', 'JMP', 'Python', 'MIM', 'CNC', 'Laser Welding', 'Surface Finishing'],
+    keyFeatures: [
+      '$2.8M+ in driven savings',
+      'Assembly yield 65% → 99.7%',
+      '4× critical strength improvement',
+      'Novel surface-finish process',
+      'Demo presented to Apple CEO and press'
+    ]
+  },
+
+  {
     id: 'Optics',
-    title: 'Live Optical Alignment and Automated Lense Testing',
+    title: 'Live Optical Alignment and Automated Lens Testing',
     description: 'Speeding up the microscope development for optical engineers',
     image: '/assets/OpticsJig-Cl6gbkTQ.webp',
     images: [
@@ -52,7 +82,7 @@ export const projects: Project[] = [
       },
       {
         url: '/assets/Data2-BDjiV9sT.webp',
-        caption: 'Lense and Optic fiber reliability analysis'
+        caption: 'Lens and optic fiber reliability analysis'
       }
     ],
     link: '/project/Optics',
@@ -61,37 +91,57 @@ export const projects: Project[] = [
       { label: 'Reduced Optical Alignment Time', value: '90%' },
       { label: 'GUI Analysis Capability', value: '10+ test cases' }
     ],
-    why: "Optical engineers on a strict timeline to develop a novel microscrope face the tedious and time-intensive process of manually testing each optic fiber, lens, and laser wavelength combination. This involves making adjustments, collecting data from the laser profiler, calculating key metrics, refining the alignment, and repeating these steps until optimal alignment is achieved. This process demands both a high level of expertise and significant time investment, diverting skilled engineers from other critical tasks.",
+    why: "Optical engineers on a strict timeline to develop a novel microscope face the tedious and time-intensive process of manually testing each optic fiber, lens, and laser wavelength combination. This involves making adjustments, collecting data from the laser profiler, calculating key metrics, refining the alignment, and repeating these steps until optimal alignment is achieved. This process demands both a high level of expertise and significant time investment, diverting skilled engineers from other critical tasks.",
     what: "Developed a GUI integrated with a custom-built test rig, featuring a 4-wavelength laser, micrometer stage, and laser profiler. The GUI provides real-time alignment and testing insights, streamlining the alignment process and significantly improving speed and precision. Automated data analysis further enhances laser accuracy. Delivered comprehensive documentation to ensure the company could maintain and adapt the system independently after the internship concluded.",
     how: "Collaborated closely with optical engineers, shadowing alignment sessions to pinpoint inefficiencies and opportunities for automation. Conducted interviews to understand key metrics and challenges faced during alignment and testing processes. Designed and constructed a custom test rig equipped with a 4-wavelength laser, micrometer stage, and laser profiler to facilitate precise testing. Leveraged Python for automation, utilizing libraries such as Python.NET for motor control and wxPython for GUI development. Solicited continuous feedback from engineers, iterating on the system design to meet their needs. Automated data capture from the laser profiler, implemented beam property analysis, and used curve-fitting algorithms to determine the laser's focal point with optimal precision. Presented findings and actionable recommendations to management, leading to the adoption of the system in ongoing microscope development projects.",
     story: {
-      challenge: "While I had projects in my coding classes in college, they have always been self contained within the computer. This was my first time using code to interface with the real world and hardware and then also take data from that hardware and analyze it. I learned a lot from this process about how to design experiments and analyze collected data to improve the experiment and come to reccomendations for the company to implement. It was also my first time writing code that was not for myself, so I needed to not only ensure it was legible and easy to follow, but also write up documentation about it so that if others have any difficulties, they can refer to my documents.",
+      challenge: "While I had projects in my coding classes in college, they have always been self contained within the computer. This was my first time using code to interface with the real world and hardware and then also take data from that hardware and analyze it. I learned a lot from this process about how to design experiments and analyze collected data to improve the experiment and come to recommendations for the company to implement. It was also my first time writing code that was not for myself, so I needed to not only ensure it was legible and easy to follow, but also write up documentation about it so that if others have any difficulties, they can refer to my documents.",
       approach: "I set out to create a precise laser-focusing setup for our microscope by guiding beams through mirrors and a Powell lens, aiming for a single focal plane. Throughout this process, I received continuous feedback from the engineers who would use the final product, integrating their suggestions to optimize usability. I automated beam tracking using an image sensor on a transform stage, wrote a Python GUI to analyze the beam in real time, and implemented additional features such as toggling the effective slit and adjusting camera aperture size to refine data quality. Although controlling both the BladeCam2 sensor and the Thorlabs motors together was initially challenging on my laptop, I found a workaround by using the native Kinesis app before switching to Python automation, and everything ran smoothly on the lab desktop without extra steps.",
       outcome: "Once the setup was complete, I presented the system to the team, and they noted how it dramatically simplified their workflow—they mentioned they literally didn't know how they would have done the job without my GUI. I further enhanced the program by adding functionality for NanoScan's photon NS2S-Si/9/5-PRO camera, allowing even more precise measurements of beam width and focus distance. For analysis, I built another wxPython GUI using Matplotlib to streamline data visualization and fit-curve comparisons. Finally, I thoroughly documented all code and procedures so the company can continue using and improving upon the setup after my internship ends."
     },
     technologies: ['Python', 'Metrology', 'Communication', 'Thorlabs', 'Cobalt Lasers', 'DataRay'],
     keyFeatures: [
-      'Real-time data processing',
-      'Predictive analytics',
-      'Interactive dashboards',
-      'Automated reporting',
-      'Custom alert system'
+      'Real-time beam analysis GUI',
+      '4-wavelength laser test rig',
+      'Automated focal-point curve fitting',
+      'Motorized stage control',
+      'Comprehensive handoff documentation'
     ]
   },
 
   {
     id: 'AudiobookPlayer',
     title: 'Audiobook Player',
-    description: 'Coming soon...',
+    description: 'A distraction-free handheld audiobook player — hardware and software now fully working on a breadboard',
     image: '/assets/coverimage-DtUrAx8Y.webp',
     images: [
       {
-        url: '/assets/coverimage-DtUrAx8Y.webp',
-        caption: 'Project overview'
+        url: '/assets/audiobook-breadboard-1.webp',
+        caption: 'Fully working prototype on the breadboard — screen, controls, and audio'
+      },
+      {
+        url: '/assets/audiobook-macsim.mp4',
+        caption: 'Simulating the full interface and I/O on my Mac before wiring anything'
       },
       {
         url: '/assets/examplemenu-BlT3ANCo.gif',
         caption: 'Example of a menu screen'
+      },
+      {
+        url: '/assets/audiobook-enclosure-1.webp',
+        caption: 'Enclosure iteration 1 — teardrop puck with top scroll wheel'
+      },
+      {
+        url: '/assets/audiobook-enclosure-2.webp',
+        caption: 'Enclosure iteration 2 — round screen with side controls'
+      },
+      {
+        url: '/assets/audiobook-enclosure-3.webp',
+        caption: 'Enclosure iteration 3 — corner wheel layout'
+      },
+      {
+        url: '/assets/audiobook-breadboard-2.webp',
+        caption: 'Mid-bring-up on the workbench'
       },
       {
         url: '/assets/SpriteMap-D3pWvwDB.webp',
@@ -104,26 +154,26 @@ export const projects: Project[] = [
     ],
     link: '/project/AudiobookPlayer',
     stats: [
+      { label: 'Status', value: 'Working on breadboard' },
       { label: 'Storage Capacity', value: '256gb' },
-      { label: 'Supported Formats', value: 'MP3, M4B, AAC, FLAC' },
-      { label: 'Weight', value: 'TBD' }
+      { label: 'Supported Formats', value: 'MP3, M4B, AAC, FLAC' }
     ],
     why: "I love books, however, in college I found that I don't have the time to get lost in a good story like I used to when I was younger. This made me turn my attention to audiobooks, where I now listen all the time. However, while it's convenient listening on my phone, I want to reduce all the distractions and problems my phone brings-especially in the gym.",
-    what: "A handheld audiobook player with a simple interface, long battery life, and easy-to-use controls. The device will also be able to change speeds, bookmark, have a sleep timer, as well as various other features I wish a lot of audiobook apps had.",
-    how: "The device is built using a Raspberry Pi and components from Adafruit. The hardware is complemented by custom software to provide a seamless and distraction-free audiobook listening experience.",
+    what: "A handheld audiobook player with a simple interface, long battery life, and easy-to-use physical controls. Beyond the basics—speed control, bookmarking, a sleep timer—it has features I always wished audiobook apps had, like automatically transcribing and saving quotes as I listen. The hardware and software are both fully working on a breadboard; what's left is finishing the I/O and designing an enclosure.",
+    how: "Built around a Raspberry Pi with Adafruit components and custom Python software. I started with sketches and design iterations, then simulated the full interface and I/O on my Mac before wiring anything—so by the time I moved to the breadboard, I knew exactly what components I needed and how they would behave.",
     story: {
-      challenge: "Designing a user-friendly interface for a dedicated audiobook player that provides better functionality than smartphone apps while eliminating distractions.",
-      approach: "In progress...",
-      outcome: "In progress..."
+      challenge: "Designing a dedicated audiobook player that's genuinely better than a phone app—better physical controls, zero distractions—while learning the hardware side of the build: wiring, power management, and real-device I/O. The interface had to be simple enough to use mid-workout without looking, but still expose the features I actually care about.",
+      approach: "I began with the design process: sketches, Photoshop interface mockups, and iterations on the physical layout and spritemap-based GUI. Before touching any hardware, I built a simulation of the entire player on my Mac to validate the interface and confirm exactly which components and I/O I would need. Only then did I move to a breadboard, bringing up the screen, controls, and audio pipeline step by step.",
+      outcome: "The player is completely working on a breadboard—hardware and software together, including the unique features like automatic quote transcription and saving. Still in progress: finishing the I/O and designing a 3D-printed enclosure to take it from breadboard to something I can throw in a gym bag."
     },
     technologies: ['Raspberry Pi', 'Python', 'CAD', '3D printing', 'bash', 'design thinking'],
     keyFeatures: [
-      'Distraction-free reading',
+      'Distraction-free listening',
+      'Automatic quote transcription & saving',
       'Long battery life',
-      'Simple interface',
+      'Simple physical interface',
       'Speed control',
-      'Bookmarking capability',
-      'Sleep timer'
+      'Bookmarking & sleep timer'
     ]
   },
 
@@ -156,10 +206,10 @@ export const projects: Project[] = [
     ],
     link: '/project/ToyCar',
     why: "Tasked with designing and manufacturing a 1920s style toy car for my Materials and Manufacturing class, I wanted to create a car that was not only functional but also aesthetically pleasing.",
-    what: "A silicon cast toy car body made with a 3D printed mold. Wheels made with injection molded PLA with a machined mold. 3D printed cockpit and axle holder.",
+    what: "A silicone-cast toy car body made with a 3D printed mold. Wheels made with injection molded PLA with a machined mold. 3D printed cockpit and axle holder.",
     how: "Using Fusion360 to CAD the car as well as the CAM for the wheel molds. Wheel molds were machined out of aluminum using a Tormach 770M CNC mill.",
     technologies: ['Fusion360', 'CAM', 'CAD', '3D printing', 'casting', 'design for manufacturability'],
   }
-  
+
   // Add other projects here...
 ];

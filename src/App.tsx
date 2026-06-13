@@ -1,4 +1,5 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/sections/Hero';
 import { About } from './components/sections/About';
@@ -8,6 +9,23 @@ import Reading from './components/sections/Reading';
 import Breadcrumbs from './components/sections/Breadcrumbs';
 import { Contact } from './components/sections/Contact';
 import { ProjectDetail } from './pages/ProjectDetail';
+
+// BrowserRouter doesn't scroll to #anchors on navigation (e.g. "/#projects"
+// from a project page), so handle it manually.
+function ScrollToHash() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      // Wait a tick so the home page sections exist before scrolling
+      requestAnimationFrame(() => {
+        document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  }, [pathname, hash]);
+
+  return null;
+}
 
 function HomePage() {
   return (
@@ -26,6 +44,7 @@ function HomePage() {
 export default function App() {
   return (
     <Router>
+      <ScrollToHash />
       <div className="min-h-screen bg-white">
         <Navigation />
         <main>

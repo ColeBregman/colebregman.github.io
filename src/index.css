@@ -172,6 +172,13 @@
     animation: scroll-right 30s linear infinite;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .animate-scroll-left,
+    .animate-scroll-right {
+      animation: none;
+    }
+  }
+
   /* Smooth page transitions */
   @media (prefers-reduced-motion: no-preference) {
     html {
@@ -260,15 +267,14 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
   
-  /* Technology pill monochrome style */
+  /* Technology tag - square, mono, matches the brutalist homepage */
   .tech-pill {
-    @apply px-4 py-2 text-primary-text rounded-full font-light text-body
+    @apply px-4 py-2 text-primary-text font-mono text-sm uppercase tracking-wider
            border-2 border-primary-text transition-all duration-300;
   }
-  
+
   .tech-pill:hover {
     @apply bg-primary-text text-white;
-    transform: scale(1.05);
   }
   
   /* Glassmorphism utilities - now white with shadow */

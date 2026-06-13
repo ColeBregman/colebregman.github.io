@@ -72,11 +72,11 @@ export function ProjectStory({ story, inlineImages }: ProjectStoryProps) {
     >
       {/* Header with reading time */}
       <div className="mb-16">
-        <h2 className="text-h1 font-medium mb-4">The Deep Dive</h2>
+        <h2 className="text-h1 font-bold uppercase tracking-tight mb-4">The Deep Dive</h2>
         <p className="text-body text-secondary-text max-w-reading">
           A detailed look into the personal learnings, implementation challenges, and outcomes from this project.
         </p>
-        <p className="text-caption text-tertiary-text uppercase tracking-wider mt-4">
+        <p className="font-mono text-xs text-tertiary-text uppercase tracking-widest mt-4">
           ~ 3-5 minute read
         </p>
       </div>
@@ -98,7 +98,7 @@ export function ProjectStory({ story, inlineImages }: ProjectStoryProps) {
             >
               {/* Number Badge - Responsive sizing */}
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-black flex items-center justify-center font-medium text-sm sm:text-base text-black bg-white">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-black flex items-center justify-center font-mono font-bold text-sm sm:text-base text-black bg-white">
                   {section.number}
                 </div>
               </div>

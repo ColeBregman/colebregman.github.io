@@ -8,6 +8,8 @@ interface ProjectImage {
   caption: string;
 }
 
+const isVideo = (url: string) => url.endsWith('.mp4') || url.endsWith('.webm');
+
 interface ProjectImagesProps {
   images: ProjectImage[];
   layout?: 'featured' | 'grid' | 'offset';
@@ -69,12 +71,24 @@ function ImageCard({ image, index, onClick, isFeatured = false }: ImageCardProps
             ${isFeatured ? 'h-[300px] sm:h-[400px] lg:h-[500px]' : 'h-[200px] sm:h-[220px] lg:h-[240px]'}
           `}
         >
-          <img
-            src={image.url}
-            alt={image.caption}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          {isVideo(image.url) ? (
+            <video
+              src={image.url}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <img
+              src={image.url}
+              alt={image.caption}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          )}
         </div>
 
         {/* Caption - always visible below image */}
@@ -200,11 +214,23 @@ export function ProjectImages({ images }: ProjectImagesProps) {
               className="max-w-6xl max-h-[90vh] flex flex-col items-center px-2 md:px-0"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src={selectedImage.url}
-                alt={selectedImage.caption}
-                className="max-w-full max-h-[70vh] md:max-h-[80vh] object-contain"
-              />
+              {isVideo(selectedImage.url) ? (
+                <video
+                  src={selectedImage.url}
+                  className="max-w-full max-h-[70vh] md:max-h-[80vh]"
+                  controls
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.caption}
+                  className="max-w-full max-h-[70vh] md:max-h-[80vh] object-contain"
+                />
+              )}
               <p className="mt-4 md:mt-6 text-white text-sm md:text-base font-light text-center max-w-2xl px-4">
                 {selectedImage.caption}
               </p>

@@ -18,7 +18,7 @@ function parseBulletPoints(content: string, maxPoints: number = 3): string[] {
   
   // Remove bullet markers if present
   const cleaned = lines.map(line => 
-    line.replace(/^[•\-\*]\s*/, '').trim()
+    line.replace(/^[•\-*]\s*/, '').trim()
   );
   
   // Take only the first maxPoints

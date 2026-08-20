@@ -3,6 +3,11 @@ export interface Book {
   title: string;
   author: string;
   coverUrl: string;
+  // Optional real spine artwork for the 3D shelf. Drop an image in
+  // public/assets/Books/spines/ and set e.g. spineUrl: '/assets/Books/spines/SHOE_DOG.webp'.
+  // Any aspect ratio works — it's stretched to the spine. Without it, the shelf
+  // generates a spine from the cover's dominant color with the title lettered down it.
+  spineUrl?: string;
   description: string; // Your personal take
   link?: string; // Amazon/Goodreads link
 }
@@ -13,6 +18,13 @@ export interface BookCategory {
   title: string; // Display title
   description?: string;
   books: Book[]; // Exactly 3 books
+}
+
+// A book with its category context, for the flat continuous shelf
+export interface ShelfBook extends Book {
+  categoryId: string;
+  categoryLabel: string;
+  categoryTitle: string;
 }
 
 export const bookCategories: BookCategory[] = [
@@ -62,7 +74,7 @@ export const bookCategories: BookCategory[] = [
       },
       {
         id: 'book5',
-        title: '\"Surely You\'re Joking, Mr. Feynman!\":\nAdventures of a Curious Character',
+        title: '"Surely You\'re Joking, Mr. Feynman!":\nAdventures of a Curious Character',
         author: 'Richard P. Feynman',
         coverUrl: '/assets/Books/MR_FEYNMAN.webp',
         description: 'Nobel Prize-winning physicist tells wild stories: cracking safes, picking up women in bars, playing bongos. A celebration of curiosity and refusing to take life too seriously.',
@@ -236,7 +248,7 @@ export const bookCategories: BookCategory[] = [
   },
   {
     id: 'obsession',
-    label: 'Obssession',
+    label: 'Obsession',
     title: 'You need a new obsession',
     books: [
       {
@@ -266,3 +278,21 @@ export const bookCategories: BookCategory[] = [
     ]
   }
 ];
+
+// The full catalog flattened in category order — one continuous shelf
+export const shelfBooks: ShelfBook[] = bookCategories.flatMap((category) =>
+  category.books.map((book) => ({
+    ...book,
+    categoryId: category.id,
+    categoryLabel: category.label,
+    categoryTitle: category.title,
+  }))
+);
+
+// First shelf index of each category, for tab navigation
+export const categoryStartIndex: Record<string, number> = Object.fromEntries(
+  bookCategories.map((category) => [
+    category.id,
+    shelfBooks.findIndex((book) => book.categoryId === category.id),
+  ])
+);

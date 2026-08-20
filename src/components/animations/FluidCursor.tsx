@@ -34,7 +34,7 @@ export function FluidCursor({ className = '', disableInteraction = false }: Flui
       
       // Initialize fluid after canvas is in DOM
       setTimeout(() => {
-        const config: any = {
+        const config: Parameters<typeof initFluid>[0] = {
           id: 'smokey-fluid-canvas',
           simResolution: 128,
           dyeResolution: 512,
@@ -79,7 +79,7 @@ export function FluidCursor({ className = '', disableInteraction = false }: Flui
         }
       };
     }
-  }, [className]);
+  }, [className, disableInteraction]);
 
   return null;
 }

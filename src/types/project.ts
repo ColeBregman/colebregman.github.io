@@ -10,6 +10,10 @@ export interface Project {
   image: string;
   images: ProjectImage[];
   link: string;
+  pressLink?: {
+    label: string;
+    url: string;
+  };
   stats?: {
     label: string;
     value: string;
@@ -63,6 +67,54 @@ export const projects: Project[] = [
   },
 
   {
+    id: 'CorningModel',
+    title: 'Tabletop Factory Model',
+    description: "A ten-foot working miniature of Corning's Harrodsburg glass plant, built with a small team during my Apple internship so stakeholders and press could understand the process without walking the factory floor.",
+    image: '/assets/corning-model-full.webp',
+    images: [
+      {
+        url: '/assets/corning-model-full.webp',
+        caption: 'The finished model staged for the event — ten feet of process flow, from sand silos to palletizing'
+      },
+      {
+        url: '/assets/corning-led-matrix.webp',
+        caption: 'Assembling the Raspberry Pi-driven LED matrix that stands in for the melting oven, on the shop floor in Harrodsburg'
+      },
+      {
+        url: '/assets/corning-cnbc-segment.webp',
+        caption: "The model (circled) in the background of CNBC's segment with Tim Cook and Jim Cramer at the plant"
+      }
+    ],
+    link: '/project/CorningModel',
+    pressLink: {
+      label: "CNBC: Jim Cramer speaks with Tim Cook at Corning's Harrodsburg plant",
+      url: 'https://www.cnbc.com/video/2025/09/12/jim-cramer-speaks-with-apple-ceo-tim-cook-at-corning-plant-in-harrodsburg-ky.html'
+    },
+    stats: [
+      { label: 'Length', value: '10 feet' },
+      { label: 'Stations', value: '8 in motion' },
+      { label: 'On air', value: 'CNBC · Sept 2025' }
+    ],
+    why: "Corning's plant in Harrodsburg, KY makes glass for Apple — and the process is genuinely impressive, but the floor is hot ovens, catwalks, and restricted areas you can't walk visitors past.\nWith a new US manufacturing partnership being announced, stakeholders and press needed to understand the whole process without a plant tour.\nThe ask, during my Apple internship: a tabletop model that demonstrates the factory's process flow at a glance — on a very short timeline.",
+    what: "A ten-foot tabletop model of the plant's full process flow — sand silos, mixing, auger feeding, oven melting, hopper extrusion, rolling and annealing, cutting, and palletizing — with real motion and programmed light standing in for the machinery.\nBuilt with a small team — another intern and our manager, who had done much of the initial CAD before I joined the project.\nMy scope was motion, electronics, and lighting, plus CAD for parts that were machined and anodized as well as 3D-printed.",
+    how: "Drove the model's motion with NEMA stepper motors running off a Duet 3D-printer controller board, and handled the wiring to tie everything together.\nProgrammed the lighting on an Arduino, plus a Raspberry Pi driving the LED-matrix animation that stands in for the melting oven.\nTraveled to Harrodsburg for installation and pre-event troubleshooting — chasing down loose wiring and printing spares for parts that turned out more fragile than expected.",
+    story: {
+      challenge: "The timeline was the hard part: the event date was fixed, and a working model of an entire factory process had to exist by then — which meant a lot of extra nights and weekends. I also joined a project already in motion. Our manager had done much of the initial CAD before I came on, so the job was to pick up that design intent, fill in everything the model still needed — motion, electronics, lighting — and get it all working together as one piece.",
+      approach: "We split the work across the three of us and iterated fast. The model walks through the plant's whole flow — sand silos, mixing, auger feeding, oven melting, hopper extrusion, rolling and annealing, cutting, palletizing — across ten feet of tabletop. For motion, I used NEMA stepper motors driven by a Duet 3D-printer controller board — an off-the-shelf way to coordinate multiple axes without designing custom electronics from scratch. Lighting ran on an Arduino, with a Raspberry Pi animating the LED matrix that stands in for the melting oven, and I did CAD for parts across the model — a mix of machined and anodized components and 3D-printed ones depending on what each piece needed.",
+      outcome: "I traveled to the plant in Harrodsburg, KY for installation and pre-event troubleshooting — reseating loose wiring from transit and printing spares for parts that proved more fragile than expected. The model was shown to Corning's CEO, who then walked Apple CEO Tim Cook through it during his plant visit. It's even visible in the background of CNBC's segment from the plant that day. But the part I keep coming back to is simpler: a process you'd normally need a hard hat and an escort to see, made legible on a tabletop."
+    },
+    technologies: ['CAD', 'NEMA Stepper Motors', 'Duet Controller Board', 'Arduino', 'Raspberry Pi', 'Wiring & Electronics', 'LED Matrix', '3D Printing', 'CNC Machining', 'Anodizing'],
+    keyFeatures: [
+      'Ten feet of factory process flow in miniature',
+      'Eight stations, from sand silos to palletizing',
+      'Stepper motion coordinated by a Duet printer board',
+      'Arduino lighting + Raspberry Pi LED-matrix oven',
+      'Machined, anodized, and 3D-printed parts',
+      'Installed on-site at the Harrodsburg plant'
+    ]
+  },
+
+  {
     id: 'Optics',
     title: 'Live Optical Alignment and Automated Lens Testing',
     description: 'Speeding up the microscope development for optical engineers',
@@ -111,13 +163,33 @@ export const projects: Project[] = [
 
   {
     id: 'AudiobookPlayer',
-    title: 'Audiobook Player',
-    description: 'A distraction-free handheld audiobook player — hardware and software now fully working on a breadboard',
+    title: 'ode. — Audiobook Player',
+    description: 'A distraction-free handheld audiobook player — fully soldered off the breadboard and into its final 3D-printed enclosure. Tentatively named ode.',
     image: '/assets/coverimage-DtUrAx8Y.webp',
     images: [
       {
-        url: '/assets/audiobook-breadboard-1.webp',
-        caption: 'Fully working prototype on the breadboard — screen, controls, and audio'
+        url: '/assets/audiobook-final-print.webp',
+        caption: 'The finalized enclosure design, fresh off the printer'
+      },
+      {
+        url: '/assets/audiobook-soldered.webp',
+        caption: 'Fully soldered stack — round display, controls, and battery, no breadboard in sight'
+      },
+      {
+        url: '/assets/audiobook-round-display.webp',
+        caption: 'First test of the round display that replaced the original rectangular screen'
+      },
+      {
+        url: '/assets/audiobook-iterations.webp',
+        caption: 'Sketches and the trail of 3D-printed enclosure iterations it took to get here'
+      },
+      {
+        url: '/assets/audiobook-enclosure-v2.webp',
+        caption: 'An earlier enclosure version — test-fitting components into the printed shell'
+      },
+      {
+        url: '/assets/audiobook-final-assembly.webp',
+        caption: 'Final design mid-assembly'
       },
       {
         url: '/assets/audiobook-macsim.mp4',
@@ -128,20 +200,8 @@ export const projects: Project[] = [
         caption: 'Example of a menu screen'
       },
       {
-        url: '/assets/audiobook-enclosure-1.webp',
-        caption: 'Enclosure iteration 1 — teardrop puck with top scroll wheel'
-      },
-      {
-        url: '/assets/audiobook-enclosure-2.webp',
-        caption: 'Enclosure iteration 2 — round screen with side controls'
-      },
-      {
-        url: '/assets/audiobook-enclosure-3.webp',
-        caption: 'Enclosure iteration 3 — corner wheel layout'
-      },
-      {
-        url: '/assets/audiobook-breadboard-2.webp',
-        caption: 'Mid-bring-up on the workbench'
+        url: '/assets/audiobook-breadboard-1.webp',
+        caption: 'Where it started — first working prototype on the breadboard'
       },
       {
         url: '/assets/SpriteMap-D3pWvwDB.webp',
@@ -154,17 +214,17 @@ export const projects: Project[] = [
     ],
     link: '/project/AudiobookPlayer',
     stats: [
-      { label: 'Status', value: 'Working on breadboard' },
+      { label: 'Status', value: 'Assembled & working' },
       { label: 'Storage Capacity', value: '256gb' },
       { label: 'Supported Formats', value: 'MP3, M4B, AAC, FLAC' }
     ],
     why: "I love books, however, in college I found that I don't have the time to get lost in a good story like I used to when I was younger. This made me turn my attention to audiobooks, where I now listen all the time. However, while it's convenient listening on my phone, I want to reduce all the distractions and problems my phone brings-especially in the gym.",
-    what: "A handheld audiobook player with a simple interface, long battery life, and easy-to-use physical controls. Beyond the basics—speed control, bookmarking, a sleep timer—it has features I always wished audiobook apps had, like automatically transcribing and saving quotes as I listen. The hardware and software are both fully working on a breadboard; what's left is finishing the I/O and designing an enclosure.",
-    how: "Built around a Raspberry Pi with Adafruit components and custom Python software. I started with sketches and design iterations, then simulated the full interface and I/O on my Mac before wiring anything—so by the time I moved to the breadboard, I knew exactly what components I needed and how they would behave.",
+    what: "A handheld audiobook player with a simple interface, long battery life, and easy-to-use physical controls. Beyond the basics—speed control, bookmarking, a sleep timer—it has features I always wished audiobook apps had, like automatically transcribing and saving quotes as I listen. Everything is now soldered together off the breadboard, rebuilt around a round display, and living in a 3D-printed enclosure that took many redesigns to get right.",
+    how: "Built around a Raspberry Pi with Adafruit components and custom Python software. I started with sketches and design iterations, then simulated the full interface and I/O on my Mac before wiring anything—so by the time I moved to the breadboard, I knew exactly what components I needed and how they would behave. From there it was continuous enclosure redesign—CAD sketches and 3D-print iterations—until the form factor finally felt right in the hand.",
     story: {
       challenge: "Designing a dedicated audiobook player that's genuinely better than a phone app—better physical controls, zero distractions—while learning the hardware side of the build: wiring, power management, and real-device I/O. The interface had to be simple enough to use mid-workout without looking, but still expose the features I actually care about.",
       approach: "I began with the design process: sketches, Photoshop interface mockups, and iterations on the physical layout and spritemap-based GUI. Before touching any hardware, I built a simulation of the entire player on my Mac to validate the interface and confirm exactly which components and I/O I would need. Only then did I move to a breadboard, bringing up the screen, controls, and audio pipeline step by step.",
-      outcome: "The player is completely working on a breadboard—hardware and software together, including the unique features like automatic quote transcription and saving. Still in progress: finishing the I/O and designing a 3D-printed enclosure to take it from breadboard to something I can throw in a gym bag."
+      outcome: "The player is fully soldered together and off the breadboard—hardware and software working as one device, including the unique features like automatic quote transcription and saving. Along the way I switched to a round display, which sent the enclosure through continuous redesign: rounds of CAD sketches and 3D-printed iterations before settling on a final form factor. The latest design work is about longevity—keeping every component secure inside the enclosure while staying easy to disassemble for future repairs and upgrades."
     },
     technologies: ['Raspberry Pi', 'Python', 'CAD', '3D printing', 'bash', 'design thinking'],
     keyFeatures: [

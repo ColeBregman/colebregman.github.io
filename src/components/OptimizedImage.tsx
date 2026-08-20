@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface OptimizedImageProps {
   src: string;
@@ -18,12 +18,6 @@ export function OptimizedImage({
   priority = false
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string>('');
-
-  useEffect(() => {
-    // Use actual src for now, but structure is ready for WebP conversion
-    setImageSrc(src);
-  }, [src]);
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -31,7 +25,7 @@ export function OptimizedImage({
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
       <img
-        src={imageSrc}
+        src={src}
         alt={alt}
         loading={priority ? 'eager' : loading}
         onLoad={() => setIsLoaded(true)}

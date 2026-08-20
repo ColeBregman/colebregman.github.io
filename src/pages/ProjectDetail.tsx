@@ -135,6 +135,19 @@ export function ProjectDetail() {
           <p className="text-xl md:text-2xl text-secondary-text max-w-reading font-light leading-relaxed">
             {project.description}
           </p>
+
+          {/* Optional press coverage link - kept low-key */}
+          {project.pressLink && (
+            <a
+              href={project.pressLink.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 mt-6 font-mono text-xs uppercase tracking-widest text-gray-500 hover:text-black transition-colors"
+            >
+              {project.pressLink.label}
+              <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+            </a>
+          )}
         </motion.div>
 
         {/* Quick Overview Section Header */}

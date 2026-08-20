@@ -63,7 +63,7 @@ export default function BookCard({ book, index }: BookCardProps) {
         {book.link && (
           <div className="mt-4 pt-2">
             <span className="text-sm inline-flex items-center gap-1 group-hover:underline">
-              → Amazon
+              → Goodreads
             </span>
           </div>
         )}

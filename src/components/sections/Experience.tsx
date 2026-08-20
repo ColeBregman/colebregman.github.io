@@ -6,7 +6,7 @@ interface ExperienceItem {
   date: string;
   summary: string;
   logo?: string;
-  href?: string; // links to the full case study, when one exists
+  links?: { label: string; href: string }[]; // links to full case studies, when they exist
   current?: boolean;
 }
 
@@ -24,9 +24,12 @@ const experiences: ExperienceItem[] = [
     company: 'Apple',
     date: 'May 2025 — May 2026',
     summary:
-      'Drove $2.8M+ in savings across DFM, tooling, materials, and assembly — including raising one assembly from 65% to 99.7% yield.',
+      'Drove $2.8M+ in savings across DFM, tooling, materials, and assembly — including raising one assembly from 65% to 99.7% yield. Also built a tabletop model of a partner factory with a small team, later seen on CNBC.',
     logo: '/assets/logos/Apple_logo_black.svg',
-    href: '/project/AppleMDE',
+    links: [
+      { label: 'View case study', href: '/project/AppleMDE' },
+      { label: 'Tabletop factory model', href: '/project/CorningModel' },
+    ],
   },
   {
     title: 'Student Researcher',
@@ -43,7 +46,7 @@ const experiences: ExperienceItem[] = [
     summary:
       'Built an automated optical-alignment rig and real-time GUI — +44% laser precision, −90% alignment time.',
     logo: '/assets/logos/idckWeE-SI_logos.jpeg',
-    href: '/project/Optics',
+    links: [{ label: 'View case study', href: '/project/Optics' }],
   },
   {
     title: 'Engineering Intern',
@@ -102,14 +105,19 @@ export function Experience() {
                   <h3 className="text-xl md:text-2xl font-bold leading-tight">{exp.title}</h3>
                   <div className="text-base md:text-lg text-gray-600 mb-3">{exp.company}</div>
                   <p className="text-base text-gray-700 leading-relaxed max-w-2xl">{exp.summary}</p>
-                  {exp.href && (
-                    <Link
-                      to={exp.href}
-                      className="group inline-flex items-center gap-2 mt-3 font-mono text-xs uppercase tracking-widest font-bold hover:opacity-60 transition-opacity"
-                    >
-                      View case study
-                      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                    </Link>
+                  {exp.links && (
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 mt-3">
+                      {exp.links.map((link) => (
+                        <Link
+                          key={link.href}
+                          to={link.href}
+                          className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest font-bold hover:opacity-60 transition-opacity"
+                        >
+                          {link.label}
+                          <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                        </Link>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>

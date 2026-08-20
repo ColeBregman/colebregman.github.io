@@ -21,6 +21,20 @@ export function ProjectDetail() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [id]);
 
+  // Per-project title + description so shared links preview meaningfully
+  useEffect(() => {
+    if (!project) return;
+    const previousTitle = document.title;
+    const meta = document.querySelector('meta[name="description"]');
+    const previousDescription = meta?.getAttribute('content') ?? '';
+    document.title = `${project.title} — Cole Bregman`;
+    meta?.setAttribute('content', project.description);
+    return () => {
+      document.title = previousTitle;
+      meta?.setAttribute('content', previousDescription);
+    };
+  }, [project]);
+
   if (!project) {
     return (
       <div className="min-h-screen flex items-center justify-center py-24 px-6">

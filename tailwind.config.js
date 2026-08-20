@@ -5,7 +5,6 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        exo2: ['"Exo 2"', 'serif'],
       },
       fontSize: {
         'hero': ['4.5rem', { lineHeight: '1.1', fontWeight: '500' }],     // 72px

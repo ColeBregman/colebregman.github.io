@@ -31,9 +31,39 @@ export function FluidCursor({ className = '', disableInteraction = false }: Flui
     const heroSection = document.querySelector('section');
     if (heroSection) {
       heroSection.appendChild(canvas);
-      
+
+      // The library's simulation loop re-schedules itself forever with no
+      // pause API, so it would keep burning GPU long after the hero scrolls
+      // away. Capture its frame callback at init time and gate it: while the
+      // hero is off-screen the loop idles on a slow timer instead of rAF.
+      let heroVisible = true;
+      let fluidFrame: FrameRequestCallback | null = null;
+      const nativeRaf = window.requestAnimationFrame.bind(window);
+      let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+      window.requestAnimationFrame = (callback: FrameRequestCallback) => {
+        if (callback !== fluidFrame) return nativeRaf(callback);
+        if (heroVisible) return nativeRaf(callback);
+        const waitForHero = () => {
+          if (heroVisible) {
+            nativeRaf(callback);
+          } else {
+            idleTimer = setTimeout(waitForHero, 300);
+          }
+        };
+        idleTimer = setTimeout(waitForHero, 300);
+        return 0;
+      };
+
+      const observer = new IntersectionObserver(([entry]) => {
+        heroVisible = entry.isIntersecting;
+      });
+      observer.observe(heroSection);
+
+      let autoSplat: ReturnType<typeof setInterval> | null = null;
+
       // Initialize fluid after canvas is in DOM
-      setTimeout(() => {
+      const initTimer = setTimeout(() => {
         const config: Parameters<typeof initFluid>[0] = {
           id: 'smokey-fluid-canvas',
           simResolution: 128,
@@ -48,12 +78,21 @@ export function FluidCursor({ className = '', disableInteraction = false }: Flui
           colorUpdateSpeed: 0.4,
           transparent: true,
         };
-        
+
+        // Whatever initFluid registers with rAF is the simulation loop
+        const capture = window.requestAnimationFrame;
+        window.requestAnimationFrame = (callback: FrameRequestCallback) => {
+          fluidFrame = callback;
+          window.requestAnimationFrame = capture;
+          return capture(callback);
+        };
         initFluid(config);
-        
+        window.requestAnimationFrame = capture;
+
         // On touch devices, create gentle auto-splats for ambient effect
         if (disableInteraction) {
-          const autoSplat = setInterval(() => {
+          autoSplat = setInterval(() => {
+            if (!heroVisible) return;
             const x = Math.random();
             const y = Math.random();
             // Trigger automatic splats for visual interest without user input
@@ -63,17 +102,15 @@ export function FluidCursor({ className = '', disableInteraction = false }: Flui
             });
             canvas.dispatchEvent(event);
           }, 2000);
-          
-          return () => {
-            clearInterval(autoSplat);
-            if (canvas.parentNode) {
-              canvas.parentNode.removeChild(canvas);
-            }
-          };
         }
       }, 100);
-      
+
       return () => {
+        clearTimeout(initTimer);
+        if (idleTimer) clearTimeout(idleTimer);
+        if (autoSplat) clearInterval(autoSplat);
+        observer.disconnect();
+        window.requestAnimationFrame = nativeRaf;
         if (canvas.parentNode) {
           canvas.parentNode.removeChild(canvas);
         }

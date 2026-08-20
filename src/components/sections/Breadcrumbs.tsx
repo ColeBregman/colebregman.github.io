@@ -32,6 +32,7 @@ export default function Breadcrumbs() {
                   <img
                     src={project.image}
                     alt={project.title}
+                    loading="lazy"
                     className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:blur-[0.5px] ${
                       project.rotate ? 'rotate-90' : ''
                     }`}

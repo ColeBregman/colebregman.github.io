@@ -414,8 +414,8 @@ export class BookShelfEngine {
     let cursor = 0;
 
     this.booksData.forEach((book, index) => {
-      const variation = seededVariation(book.id);
-      const thickness = 0.15 + variation * 0.13;
+      // Spine width tracks the real page count (~96p novella to ~1300p epic)
+      const thickness = clamp(0.08 + book.pages * 0.00023, 0.1, 0.4);
       cursor += thickness * 0.5;
       const runtime = this.createBook(book, index, cursor, thickness);
       this.runtimeBooks.push(runtime);

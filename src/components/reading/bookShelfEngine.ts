@@ -303,6 +303,10 @@ export class BookShelfEngine {
   private visibilityObserver: IntersectionObserver;
   // On-demand rendering: draw only while something moves or a one-shot is queued
   private renderRequested = true;
+  // Books exist only after async init measures any real spine images
+  private built = false;
+  private canvasVisible = true;
+  private spineDims = new Map<string, { w: number; h: number }>();
 
   constructor(canvas: HTMLCanvasElement, books: ShelfBook[], callbacks: ShelfCallbacks) {
     this.canvas = canvas;
@@ -339,15 +343,14 @@ export class BookShelfEngine {
 
     this.resizeObserver = new ResizeObserver(this.handleResize);
     this.setupScene();
-    this.createBooks();
     this.bindEvents();
     this.resizeObserver.observe(canvas);
     this.handleResize();
-    this.callbacks.onReady();
 
     // Render only while the shelf is on screen — costs nothing once the
     // reader scrolls past it.
     this.visibilityObserver = new IntersectionObserver(([entry]) => {
+      this.canvasVisible = entry.isIntersecting;
       if (entry.isIntersecting) {
         this.startLoop();
       } else {
@@ -355,11 +358,39 @@ export class BookShelfEngine {
       }
     });
     this.visibilityObserver.observe(canvas);
-    this.startLoop();
+
+    void this.initBooks();
+  }
+
+  // Real spine artwork sets the book's physical thickness, so its dimensions
+  // have to be known before the shelf layout is built.
+  private async initBooks() {
+    await Promise.all(
+      this.booksData
+        .filter((book) => book.spineUrl)
+        .map(
+          (book) =>
+            new Promise<void>((resolve) => {
+              const img = new Image();
+              img.onload = () => {
+                this.spineDims.set(book.id, { w: img.naturalWidth, h: img.naturalHeight });
+                resolve();
+              };
+              img.onerror = () => resolve(); // fall back to page-count thickness
+              img.src = book.spineUrl!;
+            })
+        )
+    );
+    if (this.isDisposed) return;
+    this.createBooks();
+    this.built = true;
+    this.callbacks.onReady();
+    this.requestRender();
+    if (this.canvasVisible) this.startLoop();
   }
 
   private startLoop() {
-    if (this.running || this.isDisposed) return;
+    if (this.running || this.isDisposed || !this.built) return;
     this.running = true;
     this.lastTimestamp = performance.now();
     this.animate();
@@ -414,8 +445,16 @@ export class BookShelfEngine {
     let cursor = 0;
 
     this.booksData.forEach((book, index) => {
-      // Spine width tracks the real page count (~96p novella to ~1300p epic)
-      const thickness = clamp(0.08 + book.pages * 0.00023, 0.1, 0.4);
+      // A real spine image dictates the book's proportions directly; without
+      // one, spine width tracks the page count (~96p novella to ~1300p epic)
+      const spine = this.spineDims.get(book.id);
+      let thickness: number;
+      if (spine && spine.w > 0 && spine.h > 0) {
+        const aspect = spine.w > spine.h ? spine.h / spine.w : spine.w / spine.h;
+        thickness = clamp(aspect * bookHeight, 0.06, 0.5);
+      } else {
+        thickness = clamp(0.08 + book.pages * 0.00023, 0.1, 0.4);
+      }
       cursor += thickness * 0.5;
       const runtime = this.createBook(book, index, cursor, thickness);
       this.runtimeBooks.push(runtime);
@@ -575,6 +614,12 @@ export class BookShelfEngine {
         }
         spineTexture.colorSpace = SRGBColorSpace;
         spineTexture.anisotropy = Math.min(4, this.renderer.capabilities.getMaxAnisotropy());
+        // Accept horizontal scans too: rotate onto the vertical spine face
+        const dims = this.spineDims.get(runtime.data.id);
+        if (dims && dims.w > dims.h) {
+          spineTexture.center.set(0.5, 0.5);
+          spineTexture.rotation = -Math.PI / 2;
+        }
         runtime.spineMesh.material.map = spineTexture;
         runtime.spineMesh.material.color.set('#ffffff');
         runtime.spineMesh.material.needsUpdate = true;
@@ -609,7 +654,7 @@ export class BookShelfEngine {
   // Embedded in a scrolling page: only claim horizontal wheel input and let
   // vertical scrolling pass through to the document.
   private handleWheel = (event: WheelEvent) => {
-    if (this.mode !== 'browse') return;
+    if (!this.built || this.mode !== 'browse') return;
     if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
     this.pendingFocusIndex = null;
     this.targetScrollIndex = clamp(
@@ -621,7 +666,7 @@ export class BookShelfEngine {
   };
 
   private handlePointerDown = (event: PointerEvent) => {
-    if (this.mode !== 'browse') return;
+    if (!this.built || this.mode !== 'browse') return;
     this.pointerDown = true;
     this.pointerId = event.pointerId;
     this.pointerStartX = event.clientX;
@@ -1015,19 +1060,19 @@ export class BookShelfEngine {
   };
 
   browseBy(direction: number) {
-    if (this.mode !== 'browse') return;
+    if (!this.built || this.mode !== 'browse') return;
     this.browseTo(Math.round(this.targetScrollIndex) + direction);
   }
 
   browseTo(index: number) {
-    if (this.mode !== 'browse') return;
+    if (!this.built || this.mode !== 'browse') return;
     this.pendingFocusIndex = null;
     this.targetScrollIndex = clamp(Math.round(index), 0, this.runtimeBooks.length - 1);
     this.lastInputTime = performance.now() - 1000;
   }
 
   focusBook(index = this.activeIndex) {
-    if (this.mode !== 'browse') return;
+    if (!this.built || this.mode !== 'browse') return;
     const next = clamp(Math.round(index), 0, this.runtimeBooks.length - 1);
     this.targetScrollIndex = next;
     this.scrollIndex = next;

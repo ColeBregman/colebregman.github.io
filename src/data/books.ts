@@ -5,8 +5,9 @@ export interface Book {
   coverUrl: string;
   // Optional real spine artwork for the 3D shelf. Drop an image in
   // public/assets/Books/spines/ and set e.g. spineUrl: '/assets/Books/spines/SHOE_DOG.webp'.
-  // Any aspect ratio works — it's stretched to the spine. Without it, the shelf
-  // generates a spine from the cover's dominant color with the title lettered down it.
+  // Its aspect ratio sets the 3D book's thickness (use an uncropped spine, ideally
+  // in vertical shelf orientation — horizontal scans are auto-rotated). Without it,
+  // the shelf generates a dominant-color spine sized by page count.
   spineUrl?: string;
   pages: number; // approximate page count — drives spine thickness on the 3D shelf
   description: string; // Your personal take
@@ -39,6 +40,7 @@ export const bookCategories: BookCategory[] = [
         title: 'Shoe Dog: A Memoir by the Creator of Nike',
         author: 'Phil Knight',
         coverUrl: '/assets/Books/SHOE_DOG.webp',
+        spineUrl: '/assets/Books/spines/SHOE_DOG.webp',
         pages: 400,
         description: 'Phil Knight built Nike by selling shoes from his car trunk. Messy, honest, and relatable. Knight was a "loser" at 24, just figuring things out.',
         link: 'https://www.goodreads.com/book/show/27220736-shoe-dog'

@@ -9,6 +9,9 @@ export interface Book {
   // in vertical shelf orientation — horizontal scans are auto-rotated). Without it,
   // the shelf generates a dominant-color spine sized by page count.
   spineUrl?: string;
+  // Optional real back-cover artwork (public/assets/Books/backs/), shown when the
+  // book is orbited in inspect mode. Without it the back is a plain colored board.
+  backUrl?: string;
   pages: number; // approximate page count — drives spine thickness on the 3D shelf
   description: string; // Your personal take
   link?: string; // Amazon/Goodreads link
@@ -78,6 +81,7 @@ export const bookCategories: BookCategory[] = [
         author: 'Viktor E. Frankl',
         coverUrl: '/assets/Books/MANS_SEARCH_FOR_MEANING.webp',
         spineUrl: '/assets/Books/spines/MANS_SEARCH_FOR_MEANING.webp',
+        backUrl: '/assets/Books/backs/MANS_SEARCH_FOR_MEANING.webp',
         pages: 165,
         description: 'A psychiatrist\'s account of surviving Nazi concentration camps and the philosophy he built from it. Argues that finding meaning—even in suffering—is our deepest human drive.',
         link: 'https://www.goodreads.com/book/show/1044863.Man_s_Search_for_Meaning'
@@ -87,6 +91,8 @@ export const bookCategories: BookCategory[] = [
         title: '"Surely You\'re Joking, Mr. Feynman!":\nAdventures of a Curious Character',
         author: 'Richard P. Feynman',
         coverUrl: '/assets/Books/MR_FEYNMAN.webp',
+        spineUrl: '/assets/Books/spines/MR_FEYNMAN.webp',
+        backUrl: '/assets/Books/backs/MR_FEYNMAN.webp',
         pages: 350,
         description: 'Nobel Prize-winning physicist tells wild stories: cracking safes, picking up women in bars, playing bongos. A celebration of curiosity and refusing to take life too seriously.',
         link: 'https://www.goodreads.com/book/show/35167685-surely-you-re-joking-mr-feynman'

@@ -63,6 +63,7 @@ type RuntimeBook = {
   boardMaterial: MeshStandardMaterial;
   spineMesh: Mesh<PlaneGeometry, MeshStandardMaterial>;
   frontMaterial: MeshStandardMaterial;
+  backMaterial: MeshStandardMaterial | null;
   pickProxy: Mesh;
   x: number;
   width: number;
@@ -548,6 +549,20 @@ export class BookShelfEngine {
     frontSurface.position.z = thickness * 0.5 + 0.018;
     content.add(frontSurface);
 
+    // Real back-cover artwork, visible when the book is orbited in inspect mode
+    let backMaterial: MeshStandardMaterial | null = null;
+    if (book.backUrl) {
+      backMaterial = new MeshStandardMaterial({
+        color: fallbackBoard,
+        roughness: 0.7,
+        metalness: 0.02,
+      });
+      const backSurface = new Mesh(new PlaneGeometry(width, height), backMaterial);
+      backSurface.position.z = -thickness * 0.5 - 0.018;
+      backSurface.rotation.y = Math.PI;
+      content.add(backSurface);
+    }
+
     const spineMesh = new Mesh(
       new PlaneGeometry(thickness + 0.012, height - 0.008),
       new MeshStandardMaterial({ color: fallbackBoard, roughness: 0.7, metalness: 0.01 })
@@ -572,6 +587,7 @@ export class BookShelfEngine {
       boardMaterial,
       spineMesh,
       frontMaterial,
+      backMaterial,
       pickProxy,
       x,
       width,
@@ -598,6 +614,21 @@ export class BookShelfEngine {
       runtime.frontMaterial.needsUpdate = true;
       runtime.textures.push(texture);
       this.requestRender();
+
+      if (runtime.data.backUrl && runtime.backMaterial) {
+        const backTexture = await new TextureLoader().loadAsync(runtime.data.backUrl);
+        if (this.isDisposed) {
+          backTexture.dispose();
+          return;
+        }
+        backTexture.colorSpace = SRGBColorSpace;
+        backTexture.anisotropy = Math.min(8, this.renderer.capabilities.getMaxAnisotropy());
+        runtime.backMaterial.map = backTexture;
+        runtime.backMaterial.color.set('#ffffff');
+        runtime.backMaterial.needsUpdate = true;
+        runtime.textures.push(backTexture);
+        this.requestRender();
+      }
 
       // Boards and generated spine take the cover's dominant color
       const dominant = texture.image ? dominantColorFrom(texture.image as CanvasImageSource) : null;

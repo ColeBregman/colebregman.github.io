@@ -60,6 +60,7 @@ export const bookCategories: BookCategory[] = [
         title: 'Apple in China: The Capture of the World\'s Greatest Company',
         author: 'Patrick McGee',
         coverUrl: '/assets/Books/APPLE_IN_CHINA.webp',
+        spineUrl: '/assets/Books/spines/APPLE_IN_CHINA.webp',
         pages: 448,
         description: 'Reading this while visiting suppliers in Shenzhen as an Apple intern made it surreal. Every decision is political—where to build, whom to partner with, what data to store.',
         link: 'https://www.goodreads.com/book/show/220161058-apple-in-china'
@@ -76,6 +77,7 @@ export const bookCategories: BookCategory[] = [
         title: 'Man\'s Search For Meaning',
         author: 'Viktor E. Frankl',
         coverUrl: '/assets/Books/MANS_SEARCH_FOR_MEANING.webp',
+        spineUrl: '/assets/Books/spines/MANS_SEARCH_FOR_MEANING.webp',
         pages: 165,
         description: 'A psychiatrist\'s account of surviving Nazi concentration camps and the philosophy he built from it. Argues that finding meaning—even in suffering—is our deepest human drive.',
         link: 'https://www.goodreads.com/book/show/1044863.Man_s_Search_for_Meaning'

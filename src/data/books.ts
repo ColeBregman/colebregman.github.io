@@ -50,6 +50,7 @@ export const bookCategories: BookCategory[] = [
         title: 'Skunk Works: A Personal Memoir of My Years at Lockheed',
         author: 'Ben R. Rich, Leo Janos',
         coverUrl: '/assets/Books/SKUNK_WORKS.webp',
+        spineUrl: '/assets/Books/spines/SKUNK_WORKS.webp',
         pages: 368,
         description: 'Small teams built the SR-71 and F-117A through trust and rapid prototyping. Filled with R&D anecdotes from pilots, engineers, and machinists. Made me so hyped for engineering.',
         link: 'https://www.goodreads.com/book/show/101438.Skunk_Works'

@@ -5,6 +5,40 @@ const min = (m) => Math.round(m * 60);
 
 export const BOOKS = [
   {
+    id: 'artthief',
+    title: 'The Art Thief',
+    author: 'Michael Finkel',
+    color: ['#2f5c8f', '#8fb8dd'],
+    initials: 'AT',
+    chapters: [
+      { t: 'A Quiet Museum', d: min(58) },
+      { t: 'The First Piece', d: min(63) },
+      { t: 'Anne-Catherine', d: min(49) },
+      { t: 'The Attic Room', d: min(71) },
+      { t: 'Method & Nerve', d: min(66) },
+      { t: 'Unraveling', d: min(74) },
+      { t: 'The Reckoning', d: min(61) },
+      { t: 'Aftermath', d: min(52) },
+    ],
+    // Original filler lines (the book is in copyright — not real excerpts).
+    quoteBank: [
+      'He never sold a single piece — he stole only what he loved, and kept it all in one hidden room.',
+      'For years the museums never noticed, because he took what no one thought to guard.',
+      'Beauty, to him, was less something to own than something to stay near.',
+      'The boldest thefts happened in daylight, in minutes, with nothing but a steady pulse.',
+    ],
+    recall: [
+      'What set this collector apart from an ordinary thief?',
+      'Where did he keep the works he took?',
+      'How did the museums finally begin to notice?',
+    ],
+    summary: [
+      'A portrait of a collector who stole art only to possess it and stay near it, never to sell.',
+      'A hidden attic room becomes a private museum of Europe’s missing masterpieces.',
+      'The quiet method unravels, and the true scale of what he took comes to light.',
+    ],
+  },
+  {
     id: 'mobydick',
     title: 'Moby-Dick',
     author: 'Herman Melville',
@@ -163,6 +197,12 @@ export const BOOKS = [
 
 // Pre-seeded quotes so the device and web UI have life on first boot.
 export const SEED_QUOTES = [
+  {
+    id: 'q-seed-0', bookId: 'artthief', chapter: 2,
+    t0: 4180, t1: 4210, status: 'done',
+    text: 'He never sold a single piece — he stole only what he loved, and kept it all in one hidden room.',
+    created: Date.now() - 1000 * 60 * 60 * 3,
+  },
   {
     id: 'q-seed-1', bookId: 'mobydick', chapter: 1,
     t0: 6260, t1: 6290, status: 'done',

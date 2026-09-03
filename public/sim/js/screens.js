@@ -60,6 +60,41 @@ function coverDisc(ctx, book, x, y, r, { alpha = 1 } = {}) {
   ctx.restore();
 }
 
+// Cover art as the top-half hero: fills a circle of radius r (top-anchored),
+// clipped to that circle and cut at y=bottom, fading into the cream ground.
+function coverHero(ctx, book, { r = 104, bottom = 150 } = {}) {
+  if (!book) return;
+  ctx.save();
+  ctx.beginPath(); ctx.arc(CX, CY, r, 0, Math.PI * 2); ctx.clip();
+  ctx.beginPath(); ctx.rect(0, 0, W, bottom); ctx.clip();
+  const top = CY - r, d = r * 2;
+  let drawn = false;
+  if (book.cover) {
+    let img = coverImgs[book.id];
+    if (!img) { img = new Image(); img.src = book.cover; coverImgs[book.id] = img; }
+    if (img.complete && img.naturalWidth) {
+      const s = Math.max(d / img.naturalWidth, d / img.naturalHeight);
+      const iw = img.naturalWidth * s, ih = img.naturalHeight * s;
+      ctx.drawImage(img, CX - iw / 2, top, iw, ih); // top-anchored crop
+      drawn = true;
+    }
+  }
+  if (!drawn) {
+    const g = ctx.createLinearGradient(CX - r, top, CX + r, top + d);
+    g.addColorStop(0, book.color[0]); g.addColorStop(1, book.color[1]);
+    ctx.fillStyle = g; ctx.fillRect(CX - r, top, d, d);
+    const sh = ctx.createRadialGradient(CX - r * 0.3, top + r * 0.45, 0, CX, top + r, r * 1.5);
+    sh.addColorStop(0, 'rgba(255,255,255,0.22)'); sh.addColorStop(0.6, 'rgba(255,255,255,0)');
+    ctx.fillStyle = sh; ctx.fillRect(CX - r, top, d, d);
+    txt(ctx, book.initials, CX, top + r * 0.9, { size: r * 0.5, weight: 700, color: 'rgba(255,255,255,0.96)', ls: 1 });
+  }
+  // fade the bottom edge into the cream ground so the title sits clean
+  const fade = ctx.createLinearGradient(0, bottom - 28, 0, bottom);
+  fade.addColorStop(0, 'rgba(245,243,238,0)'); fade.addColorStop(1, T.bg);
+  ctx.fillStyle = fade; ctx.fillRect(0, bottom - 28, W, 28);
+  ctx.restore();
+}
+
 function hintFooter(ctx, s, { color = T.dim, y = 218 } = {}) {
   txt(ctx, s, CX, y, { size: 8.5, color, weight: 600, ls: 1.2, alpha: 0.9 });
 }
@@ -93,85 +128,67 @@ const home = {
     const book = S.book();
     const ch = S.chapterAt();
     const chPos = S.pos - ch.start;
-    const chProg = chPos / ch.d;
-    const bookProg = S.pos / S.dur();
+    const chProg = Math.max(0, Math.min(1, chPos / ch.d));
+    const bookProg = Math.max(0, Math.min(1, S.pos / S.dur()));
 
+    // hero cover fills the top half, inset from the rim
+    coverHero(ctx, book, { r: 104, bottom: 150 });
     rim(ctx);
 
-    // book progress: hairline outer ring (optional)
-    if (S.settings.bookRing) {
-      arc(ctx, 111, 0, 360, { w: 1.5, color: T.track });
-      arc(ctx, 111, 0, Math.max(1, 360 * bookProg), { w: 1.5, color: T.dim, alpha: 0.7 });
-    }
-
-    // chapter progress: main accent ring
-    arc(ctx, 101, 0, 360, { w: 5, color: T.track });
-    arc(ctx, 101, 0, Math.max(1.5, 360 * chProg), { w: 5, color: T.amber });
+    // chapter progress ring riding the rim over the cover
+    arc(ctx, 112, 0, 360, { w: 3.5, color: T.track, cap: 'butt' });
+    arc(ctx, 112, 0, Math.max(1.5, 360 * chProg), { w: 3.5, color: T.amber });
 
     // voice-note marks within this chapter
     for (const n of S.notes) {
       if (n.bookId !== book.id) continue;
       const rel = (n.t0 - ch.start) / ch.d;
       if (rel >= 0 && rel <= 1) {
-        const [nx, ny] = polar(360 * rel, 101);
-        dot(ctx, nx, ny, 2.6, T.bg);
-        dot(ctx, nx, ny, 1.8, T.tealHi);
+        const [nx, ny] = polar(360 * rel, 112);
+        dot(ctx, nx, ny, 2.4, T.bg);
+        dot(ctx, nx, ny, 1.7, T.tealHi);
       }
     }
-    const [kx, ky] = polar(360 * chProg, 101);
+    const [kx, ky] = polar(360 * chProg, 112);
     knob(ctx, kx, ky);
 
-    // cover art up top; bluetooth glyph beside it when routed to BT
-    coverDisc(ctx, book, CX, 32, 15);
-    if (S.settings.btOn && S.settings.btDevice) icon(ctx, 'bt', CX + 28, 32, 9, { color: T.dim, alpha: 0.8 });
+    // status glyphs over the cover, top corners of the text area
+    if (S.settings.btOn && S.settings.btDevice) icon(ctx, 'bt', 196, 132, 9, { color: T.dim, alpha: 0.9 });
+    if (S.sleepRemain > 0 || S.sleepEndOfChapter) icon(ctx, 'moon', 44, 132, 9, { color: T.indigo, fill: true });
 
-    txt(ctx, `CHAPTER ${ch.index + 1} OF ${book.chapters.length}`, CX, 64, { size: 8, color: T.dim, weight: 600, ls: 2 });
-    txt(ctx, ch.t, CX, 80, { size: 13, weight: 600, maxW: 148 });
+    // book title — bold and prominent
+    txt(ctx, book.title, CX, 163, { size: 17, weight: 700, maxW: 180 });
 
-    // big readout + status line per Display settings
+    // chapter line
+    txt(ctx, `CH ${ch.index + 1}/${book.chapters.length} · ${ch.t}`, CX, 181, { size: 9.5, color: T.dim, weight: 600, maxW: 170 });
+
+    // time in the accent colour, play state beside it
     const spd = S.speed();
-    const remainCh = ch.d - chPos;
-    const remainBook = S.dur() - S.pos;
+    const remainCh = Math.max(0, ch.d - chPos);
+    const remainBook = Math.max(0, S.dur() - S.pos);
     const mode = S.settings.timeMode;
     const big = mode === 'bookLeft' ? '−' + fmtTime(remainBook)
       : mode === 'chapterElapsed' ? fmtTime(chPos)
       : '−' + fmtTime(remainCh);
-    txt(ctx, big, CX, 114, { size: big.length > 8 ? 30 : 38, weight: 700, ls: -0.5 });
+    txt(ctx, big, CX, 201, { size: 21, weight: 700, ls: -0.5, color: T.amberDeep });
+    const halfW = (big.length * 21 * 0.52) / 2;
+    icon(ctx, S.playing ? 'pause' : 'play', CX - halfW - 11, 201, 9, { color: S.playing ? T.amber : T.faint });
 
+    // status curved along the bottom rim
     const parts = [];
-    parts.push(mode === 'bookLeft' ? `${fmtTime(remainCh)} in chapter` : `${fmtDur(remainBook / spd)} left`);
+    parts.push(mode === 'bookLeft' ? `${fmtTime(remainCh)} in ch` : `${fmtDur(remainBook / spd)} left`);
     if (spd !== 1) parts.push(spd.toFixed(2).replace(/0$/, '') + '×');
     const pct = Math.round(bookProg * 100);
     if (S.settings.percentMode === 'in') parts.push(pct + '%');
     else if (S.settings.percentMode === 'left') parts.push((100 - pct) + '% left');
-    txt(ctx, parts.join(' · '), CX, 142, { size: 9.5, color: T.dim, weight: 500 });
-
-    // play / pause
-    const py = 174;
-    ctx.save();
-    ctx.strokeStyle = T.track;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.arc(CX, py, 16, 0, Math.PI * 2); ctx.stroke();
-    ctx.restore();
-    icon(ctx, S.playing ? 'pause' : 'play', CX + (S.playing ? 0 : 1.5), py, 13, { color: S.playing ? T.amber : T.dim });
-
-    // sleep indicator
-    if (S.sleepRemain > 0 || S.sleepEndOfChapter) {
-      icon(ctx, 'moon', CX - 34, 30, 9, { color: T.indigo, fill: true });
-      txt(ctx, S.sleepEndOfChapter ? 'ch' : Math.ceil(S.sleepRemain / 60) + 'm', CX - 34, 43, { size: 7.5, color: T.indigo, weight: 600 });
-    }
-
-    arcText(ctx, book.title.toUpperCase(), 90, 180, { size: 8, color: T.dim, ls: 3, alpha: 0.85 });
+    arcText(ctx, parts.join(' · '), 103, 180, { size: 8.5, color: T.dim, ls: 1.2 });
   },
   rotate(d, pressed, ui) {
-    if (pressed) ui.scrub(d);
-    else ui.volumeNudge(d);
+    if (pressed) ui.volumeNudge(d); // press-and-turn = volume
+    else ui.scrub(d);               // plain turn = scrub
   },
-  tap(ui) {
-    if (ui.capture.active) { ui.stopCapture(); return; }
-    ui.quickCapture();
-  },
-  hold(ui) { ui.startCapture(); },
+  tap(ui) { S.togglePlay(); },      // wheel click = play / pause
+  hold(ui) { ui.toggleLock(); },    // wheel hold = input lock
   back(ui) { ui.goto('menu'); return true; },
 };
 

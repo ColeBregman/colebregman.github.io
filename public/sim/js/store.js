@@ -2,14 +2,14 @@
 // On the Pi this file's tick() is replaced by mpv IPC; everything else ports as-is.
 import { BOOKS, SEED_QUOTES, SEED_NOTES, NOTE_POOL, bookDur } from './data.js';
 
-const KEY = 'puck.sim.v1';
+const KEY = 'puck.sim.v2';
 const chan = ('BroadcastChannel' in window) ? new BroadcastChannel('puck-sync') : null;
 
 const listeners = {};
 
 export const S = {
   books: [],
-  currentId: 'mobydick',
+  currentId: 'artthief',
   playing: false,
   pos: 0,
   volume: 72,
@@ -49,14 +49,15 @@ export const S = {
       this.quotes = saved.quotes || [];
       this.notes = saved.notes || [];
       this.uploads = saved.uploads || [];
-      this.currentId = saved.currentId || 'mobydick';
+      this.currentId = saved.currentId || 'artthief';
       this.volume = saved.volume ?? 72;
       this._lastPlayedAt = saved.lastPlayedAt || 0;
     } else {
       this.quotes = [...SEED_QUOTES];
       this.notes = [...SEED_NOTES];
-      this.positions = { mobydick: 0.37 * bookDur(BOOKS[0]), meditations: 0.12 * bookDur(BOOKS[1]), walden: 0.81 * bookDur(BOOKS[3]) };
-      this.speeds = { mobydick: 1.25 };
+      const bd = (id) => { const b = BOOKS.find((x) => x.id === id); return b ? bookDur(b) : 0; };
+      this.positions = { artthief: 0.16 * bd('artthief'), mobydick: 0.37 * bd('mobydick'), meditations: 0.12 * bd('meditations'), walden: 0.81 * bd('walden') };
+      this.speeds = { artthief: 1.55, mobydick: 1.25 };
       // seed a plausible fortnight of listening for the stats chart
       for (let i = 1; i <= 13; i++) {
         const day = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);

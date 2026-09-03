@@ -7,34 +7,96 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/sim.css" />
+  <style>
+    /* handheld device chrome (matches the real player) */
+    :root { --navy: #2b3757; --navy-deep: #1e2740; }
+    main { gap: 56px; }
+    .player {
+      position: relative; width: 300px; height: 430px; margin-right: 30px;
+      background: linear-gradient(158deg, #fbfaf8 0%, #ece9e3 100%);
+      border-radius: 48px 42px 66px 66px;
+      box-shadow: 0 34px 60px -24px rgba(28,40,80,0.38),
+        inset 0 2px 4px rgba(255,255,255,0.9), inset 0 -10px 22px rgba(28,40,80,0.06);
+    }
+    .rail-navy {
+      position: absolute; left: 0; top: 0; width: 94px; height: 208px;
+      background: linear-gradient(150deg, #313d5f, var(--navy-deep));
+      border-radius: 48px 22px 40px 48px;
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.08), inset -6px 0 14px rgba(0,0,0,0.22);
+    }
+    .face-btn {
+      position: absolute; left: 19px; width: 56px; height: 56px; border-radius: 50%;
+      border: 1px solid rgba(20,26,46,0.18);
+      background: radial-gradient(circle at 35% 30%, #ffffff, #e6e4de 78%);
+      color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 13px rgba(15,20,40,0.38), inset 0 1px 2px rgba(255,255,255,0.95);
+      transition: transform 0.06s, box-shadow 0.06s;
+    }
+    .face-btn svg { width: 25px; height: 25px; }
+    .face-btn.mic { top: 30px; }
+    .face-btn.mark { top: 116px; color: #0a7f73; }
+    .face-btn.pressed, .face-btn:active {
+      transform: translateY(2px) scale(0.97);
+      box-shadow: 0 2px 5px rgba(15,20,40,0.42), inset 0 2px 5px rgba(15,20,40,0.25);
+    }
+    .side-btn {
+      position: absolute; left: -11px; top: 250px; width: 22px; height: 60px;
+      border: none; border-radius: 7px 3px 3px 7px;
+      background: linear-gradient(90deg, #c6c4be, #e6e4de); color: var(--navy); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: -4px 4px 9px rgba(28,40,80,0.28), inset 1px 0 2px rgba(255,255,255,0.8);
+      transition: transform 0.06s;
+    }
+    .side-btn svg { width: 15px; height: 15px; }
+    .side-btn:active { transform: translateX(2px); }
+    .wheel {
+      position: absolute; right: -28px; top: 40px; width: 50px; height: 96px; border-radius: 13px;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.35), rgba(255,255,255,0.12) 20%, rgba(0,0,0,0.32) 50%, rgba(255,255,255,0.10) 80%, rgba(0,0,0,0.4)),
+        repeating-linear-gradient(90deg, var(--navy-deep) 0 2px, #3a486b 2px 5px);
+      background-color: var(--navy-deep); background-blend-mode: overlay, normal;
+      box-shadow: 0 9px 20px rgba(15,20,40,0.45), inset 0 2px 4px rgba(255,255,255,0.16), inset 0 -8px 14px rgba(0,0,0,0.4);
+      cursor: grab; touch-action: none;
+    }
+    .wheel::after {
+      content: ''; position: absolute; inset: 0; border-radius: 13px;
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.10) 0 1px, rgba(0,0,0,0.18) 2px 4px);
+      mix-blend-mode: soft-light;
+    }
+    .wheel:active { cursor: grabbing; }
+    .wheel.pressed { filter: brightness(0.9); }
+    .hh-bezel {
+      position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
+      width: 208px; height: 208px; border-radius: 50%; padding: 9px;
+      background: radial-gradient(circle at 36% 28%, #2c2c2e, #0a0a0b 72%);
+      box-shadow: 0 0 0 3px #eae7e2, 0 6px 16px rgba(0,0,0,0.35), inset 0 2px 8px rgba(0,0,0,0.6);
+      display: grid; place-items: center;
+    }
+    #lcd { width: 190px; height: 190px; border-radius: 50%; background: #f5f3ee; cursor: pointer;
+           box-shadow: inset 0 0 22px rgba(0,0,0,0.10); }
+    #lcd.pixel { image-rendering: pixelated; }
+    .device-wrap { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  </style>
 </head>
 <body>
   <main>
     <section class="stage">
       <div class="device-wrap">
-        <div class="device" id="device">
-          <div class="ring" id="encoderRing" title="Drag or scroll to turn the encoder"></div>
-          <div class="screen-bezel">
+        <div class="player" id="device">
+          <div class="rail-navy"></div>
+          <button class="face-btn mic" id="btnNote" title="Record a voice note (mic)">
+            <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zm-7 9a7 7 0 0 0 14 0M12 19v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="face-btn mark" id="btnQuote" title="Save a quote — last 30 s (bookmark)">
+            <svg viewBox="0 0 24 24"><path d="M6 3.5h12a1 1 0 0 1 1 1V20.5l-7-4.3-7 4.3V4.5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="side-btn" id="btnSkip" title="Back 30 s · Back">
+            <svg viewBox="0 0 24 24"><path d="M14 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="wheel" id="encoderRing" title="Turn to move · click = OK / play · hold to lock"></div>
+          <div class="hh-bezel">
             <canvas id="lcd" width="480" height="480"></canvas>
           </div>
-        </div>
-        <div class="btn-row">
-          <button class="hw-btn" id="btnSkip" title="Skip back 30 s (←)">
-            <svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg>
-            <span>−30s</span>
-          </button>
-          <button class="hw-btn primary" id="btnPlay" title="Play / pause (Space) · hold to lock">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-            <span>Play</span>
-          </button>
-          <button class="hw-btn" id="btnBack" title="Back / menu (Esc)">
-            <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Back</span>
-          </button>
-          <button class="hw-btn note" id="btnNote" title="Voice note (N) — pauses playback while recording">
-            <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zm-7 9a7 7 0 0 0 14 0M12 19v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Note</span>
-          </button>
         </div>
       </div>
     </section>
@@ -48,15 +110,14 @@
       <div class="card">
         <h2>Controls</h2>
         <table class="legend">
-          <tr><td>Scroll / drag ring</td><td>turn encoder — volume</td></tr>
-          <tr><td>Shift + scroll</td><td>press-and-turn — scrub (keep turning: ±5 min)</td></tr>
-          <tr><td>Click screen</td><td>encoder tap — <b>capture last 30 s</b></td></tr>
-          <tr><td>Long-press screen</td><td>encoder hold — live quote recording</td></tr>
-          <tr><td>Space / ⏯</td><td>play · pause (hold 1.2 s: lock)</td></tr>
-          <tr><td>← / −30s</td><td>skip back 30 s</td></tr>
-          <tr><td>Esc / Back</td><td>back · menu</td></tr>
-          <tr><td>N / Note</td><td><b>voice note</b> — pauses book, marks chapter + time</td></tr>
-          <tr><td>↑ ↓ Enter H</td><td>encoder via keyboard</td></tr>
+          <tr><td>Turn / scroll wheel</td><td>scrub Now Playing (keep turning: ±5 min) · scroll lists</td></tr>
+          <tr><td>Shift + scroll</td><td>press-and-turn — volume</td></tr>
+          <tr><td>Click wheel</td><td>play · pause · <b>OK</b> in menus</td></tr>
+          <tr><td>Hold wheel</td><td>lock input (hold again to unlock)</td></tr>
+          <tr><td>Mic button</td><td><b>voice note</b> — pauses, marks chapter + time</td></tr>
+          <tr><td>Bookmark button</td><td><b>save quote</b> — last 30 s (hold: live record)</td></tr>
+          <tr><td>Side button</td><td>back 30 s · back</td></tr>
+          <tr><td>↑ ↓ Enter H · Space</td><td>wheel / play via keyboard</td></tr>
         </table>
       </div>
 

@@ -411,14 +411,21 @@ canvas.addEventListener('pointerup', () => {
 });
 canvas.addEventListener('pointercancel', () => { clearTimeout(holdTimer); pointerDown = false; });
 
-// drag the encoder ring
+// the wheel: drag/scroll to turn · click = OK/play · hold = input lock
 let dragging = false, dragAngle = 0, dragAcc = 0;
+let ringTurned = false, ringHoldFired = false, ringHoldTimer = null;
 function angleOf(e) {
   const r = ring.getBoundingClientRect();
   return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2));
 }
 ring.addEventListener('pointerdown', (e) => {
   dragging = true; dragAngle = angleOf(e); dragAcc = 0;
+  ringTurned = false; ringHoldFired = false;
+  clearTimeout(ringHoldTimer);
+  ringHoldTimer = setTimeout(() => {
+    if (dragging && !ringTurned) { ringHoldFired = true; ui.hold(); }
+  }, 550);
+  ring.classList.add('pressed');
   ring.setPointerCapture(e.pointerId);
 });
 ring.addEventListener('pointermove', (e) => {
@@ -433,15 +440,26 @@ ring.addEventListener('pointermove', (e) => {
   while (Math.abs(dragAcc) >= detent) {
     const s = Math.sign(dragAcc);
     dragAcc -= s * detent;
+    ringTurned = true;
+    clearTimeout(ringHoldTimer);
     spinRing(s);
     ui.rotate(s, e.shiftKey);
   }
 });
-ring.addEventListener('pointerup', () => { dragging = false; });
+function ringUp() {
+  if (!dragging) return;
+  dragging = false;
+  clearTimeout(ringHoldTimer);
+  ring.classList.remove('pressed');
+  if (!ringTurned && !ringHoldFired) ui.tap(); // a clean click = OK / play
+}
+ring.addEventListener('pointerup', ringUp);
+ring.addEventListener('pointercancel', () => { dragging = false; clearTimeout(ringHoldTimer); ring.classList.remove('pressed'); });
 
 // physical buttons
 function wireButton(id, onTap, onHoldMs, onHold) {
   const el = document.getElementById(id);
+  if (!el) return; // control not present in this layout (e.g. embed vs full page)
   let t = null, fired = false;
   el.addEventListener('pointerdown', (e) => {
     fired = false;
@@ -456,10 +474,13 @@ function wireButton(id, onTap, onHoldMs, onHold) {
   });
   el.addEventListener('pointercancel', () => { el.classList.remove('pressed'); clearTimeout(t); });
 }
-wireButton('btnPlay', () => ui.btnPlay(), 1200, () => ui.toggleLock());
-wireButton('btnSkip', () => ui.btnSkip());
-wireButton('btnBack', () => ui.btnBack());
-wireButton('btnNote', () => ui.toggleNote());
+wireButton('btnPlay', () => ui.btnPlay(), 1200, () => ui.toggleLock()); // full page only
+wireButton('btnBack', () => ui.btnBack());                             // full page only
+wireButton('btnSkip', () => ui.btnSkip());                             // side button: −30 s / back
+wireButton('btnNote', () => ui.toggleNote());                          // mic button: record voice note
+wireButton('btnQuote',                                                 // bookmark button: save quote
+  () => { if (ui.capture.active) ui.stopCapture(); else ui.quickCapture(); },
+  600, () => { if (!ui.capture.active) ui.startCapture(); });
 
 // keyboard
 window.addEventListener('keydown', (e) => {

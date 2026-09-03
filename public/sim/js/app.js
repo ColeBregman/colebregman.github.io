@@ -42,6 +42,7 @@ const ui = {
   scrubTicks: 0,
   capture: { active: false, t0: 0, started: 0 },
   noteRec: { active: false, t0: 0, started: 0, wasPlaying: false },
+  quoteSplash: { active: false, started: 0, sub: '' },
   toasts: [],
 
   goto(id, params) {
@@ -110,10 +111,18 @@ const ui = {
     this.scrubShow = 1.1;
   },
 
+  _captureSub(t) {
+    const ch = S.chapterAt(t);
+    return `CH ${ch.index + 1} · ${fmtTime(t)}`;
+  },
+  showQuoteSplash(sub = '') {
+    this.quoteSplash = { active: true, started: performance.now(), sub };
+  },
   quickCapture() {
     const t1 = S.pos;
-    S.captureQuote(Math.max(0, t1 - 30), t1);
-    this.toast('Captured last 30 s', { icon: 'quote', color: T.tealHi });
+    const t0 = Math.max(0, t1 - 30);
+    S.captureQuote(t0, t1);
+    this.showQuoteSplash(this._captureSub(t0));
   },
   startCapture() {
     this.capture = { active: true, t0: S.pos, started: performance.now() };
@@ -124,7 +133,7 @@ const ui = {
     const c = this.capture;
     this.capture = { active: false, t0: 0, started: 0 };
     S.captureQuote(c.t0, S.pos);
-    this.toast('Quote captured', { icon: 'quote', color: T.tealHi });
+    this.showQuoteSplash(this._captureSub(c.t0));
   },
 
   // Voice note: dedicated button — pauses the book while you speak,
@@ -151,7 +160,7 @@ const ui = {
 
 // store events → UI reactions
 S.on('finished', () => ui.goto('finished'));
-S.on('quote-done', () => ui.toast('Quote saved', { icon: 'check', color: T.tealHi }));
+S.on('quote-done', () => ui.toast('Quote transcribed', { icon: 'check', color: T.tealHi }));
 S.on('note-done', () => ui.toast('Note transcribed', { icon: 'check', color: T.tealHi }));
 S.on('autopause', (why) => ui.toast(why + ' · paused', { icon: 'headphones' }));
 S.on('sleep-fired', () => ui.toast('Sleep timer · paused', { icon: 'moon' }));
@@ -265,6 +274,41 @@ function drawOverlays(dt) {
       ctx.globalAlpha = ui.lockFlash * 0.9;
       icon(ctx, 'lock', CX, 44, 16, { color: T.text });
       ctx.restore();
+    }
+  }
+
+  // quote-saved splash — full-screen takeover (replaces the old capture toast)
+  if (ui.quoteSplash.active) {
+    const el = (performance.now() - ui.quoteSplash.started) / 1000;
+    const D = 1.6;
+    if (el >= D) {
+      ui.quoteSplash.active = false;
+    } else {
+      const aIn = Math.min(1, el / 0.18);
+      const A = Math.min(aIn, Math.min(1, (D - el) / 0.35));
+      // paper takeover, fading in/out over the live screen
+      ctx.save();
+      ctx.globalAlpha = A;
+      ctx.fillStyle = T.bg;
+      ctx.beginPath(); ctx.arc(CX, CY, 120, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      // teal ripples radiating out
+      for (let i = 0; i < 3; i++) {
+        const lt = el - i * 0.1;
+        if (lt <= 0) continue;
+        const rr = Math.min(122, (lt / 0.55) * 122);
+        arc(ctx, rr, 0, 360, { w: 2, color: T.teal, cap: 'butt', alpha: Math.max(0, 1 - rr / 122) * 0.5 * A });
+      }
+      // quote mark springs in (easeOutBack)
+      const bt = Math.min(1, el / 0.45);
+      const c1 = 1.70158, c3 = c1 + 1;
+      const pop = 1 + c3 * Math.pow(bt - 1, 3) + c1 * Math.pow(bt - 1, 2);
+      if (pop > 0.02) icon(ctx, 'quote', CX, 94, 52 * pop, { color: T.teal, alpha: A });
+      // label + where it was captured
+      txt(ctx, 'Quote saved', CX, 150 - (1 - aIn) * 8, { size: 21, weight: 700, color: T.text, alpha: A });
+      if (ui.quoteSplash.sub) {
+        txt(ctx, ui.quoteSplash.sub, CX, 176, { size: 9.5, weight: 600, color: T.tealHi, ls: 1.5, alpha: A });
+      }
     }
   }
 }

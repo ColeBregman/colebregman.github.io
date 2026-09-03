@@ -3,14 +3,14 @@
 
 export const W = 240, H = 240, CX = 120, CY = 120;
 
-// Light "paper" theme — cream ground, ink type, one warm accent.
-// amber* = playback accent, teal* = quotes/recall accent (Hi = readable-dark on light).
+// Light "paper" theme — cream ground, ink type, navy accent (matches the device).
+// amber* = playback/navigation accent (navy blue), teal* = quotes/recall accent.
 export const T = {
   bg: '#f5f3ee',
-  amber: '#ff4f1f',
-  amberHi: '#ff7a4d',
-  amberDeep: '#d8380e',
-  amberSoft: 'rgba(255,79,31,0.12)',
+  amber: '#2b57c4',
+  amberHi: '#5a82e0',
+  amberDeep: '#1c3f96',
+  amberSoft: 'rgba(43,87,196,0.12)',
   teal: '#10ac9b',
   tealHi: '#0a7f73',
   tealDeep: '#0a7f73',

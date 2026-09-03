@@ -76,7 +76,7 @@ const boot = {
     const p = Math.min(1, el / 1.1);
     const sweep = 360 * (1 - Math.pow(1 - p, 3));
     arc(ctx, 104, 0, sweep, { w: 3, color: T.amber });
-    txt(ctx, 'PUCK', CX, CY - 6, { size: 26, weight: 700, ls: 8, alpha: Math.min(1, el / 0.5) });
+    txt(ctx, 'ode.', CX, CY - 6, { size: 30, weight: 700, ls: 4, alpha: Math.min(1, el / 0.5) });
     txt(ctx, 'AUDIOBOOKS, REMEMBERED', CX, CY + 20, { size: 8, weight: 600, ls: 2.4, color: T.dim, alpha: Math.max(0, Math.min(1, (el - 0.35) / 0.5)) });
     if (el > 1.7) {
       ui.goto('home');
@@ -802,7 +802,7 @@ const settings = {
       { id: 'smartResume', label: 'Smart Resume', sub: 'rewind 30 s after a pause', right: { type: 'toggle', on: S.settings.smartResume } },
       { id: 'autoRecall', label: 'Recall Prompts', sub: 'between chapters', right: { type: 'toggle', on: S.settings.autoRecall } },
       { id: 'sounds', label: 'UI Sounds', sub: 'encoder detents', right: { type: 'toggle', on: S.settings.sounds } },
-      { id: 'about', label: 'About', sub: 'Puck sim v0.2', right: {} },
+      { id: 'about', label: 'About', sub: 'ode. sim', right: {} },
     ];
   },
   enter() { this.idx = 0; this.anim = 0; },
@@ -818,7 +818,7 @@ const settings = {
     const it = this.items()[this.idx];
     if (it.to) { ui.goto(it.to); return; }
     if (it.right.type === 'toggle') { S.settings[it.id] = !S.settings[it.id]; S.persist(); }
-    else ui.toast('Puck · 240×240 GC9A01 · Pi Zero 2 W', {});
+    else ui.toast('ode. · 240×240 GC9A01 · Pi Zero 2 W', {});
   },
   hold() {},
 };

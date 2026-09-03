@@ -80,6 +80,24 @@ function ParallaxMedia({ src, alt, video = false, className = '' }:
   );
 }
 
+/* ---------- feature glyphs (SF-style line icons, 24×24, currentColor) ---------- */
+
+const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+const ICONS: React.ReactNode[] = [
+  // distraction-free — a single point of focus
+  (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" /></svg>),
+  // quote capture — quotation marks
+  (<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 6.2C7 7.4 5.3 9.8 5.3 12.8c0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2L9.6 6.2zM17.7 6.2c-2.6 1.2-4.3 3.6-4.3 6.6 0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2l-1.5-1.7z" /></svg>),
+  // voice notes — microphone
+  (<svg viewBox="0 0 24 24" {...S}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" /><path d="M12 18v3" /></svg>),
+  // physical controls — knurled dial
+  (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="7.4" /><path d="M12 4.6v1.8M12 17.6v1.8M4.6 12h1.8M17.6 12h1.8M6.9 6.9l1.3 1.3M15.8 15.8l1.3 1.3M17.1 6.9l-1.3 1.3M8.2 15.8l-1.3 1.3" /><circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none" /></svg>),
+  // speed & sleep — gauge
+  (<svg viewBox="0 0 24 24" {...S}><path d="M4 15.5a8 8 0 0 1 16 0" /><path d="M12 15.5l4.2-3.7" /><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none" /></svg>),
+  // all the formats — stacked layers
+  (<svg viewBox="0 0 24 24" {...S}><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" /><path d="M4 12l8 4.5 8-4.5" /><path d="M4 16.5 12 21l8-4.5" opacity="0.45" /></svg>),
+];
+
 /* ---------- the page ---------- */
 
 export function AudiobookPage({ project }: { project: Project }) {
@@ -205,7 +223,13 @@ export function AudiobookPage({ project }: { project: Project }) {
                   onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 30px 60px -30px rgba(28,40,80,0.28)')}
                   onMouseLeave={(e) => (e.currentTarget.style.boxShadow = '0 1px 2px rgba(28,40,80,0.04)')}
                 >
-                  <div className="mb-4 h-9 w-9 rounded-xl" style={{ background: teal ? 'rgba(16,154,138,0.12)' : 'rgba(43,87,196,0.1)' }} />
+                  <div
+                    className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl [&>svg]:h-[22px] [&>svg]:w-[22px]"
+                    style={{ background: teal ? 'rgba(16,154,138,0.1)' : 'rgba(43,87,196,0.09)', color: teal ? TEAL : NAVY }}
+                    aria-hidden
+                  >
+                    {ICONS[i]}
+                  </div>
                   <h3 className="text-lg font-semibold" style={{ color: teal ? TEAL : '#0a0a0a' }}>{title}</h3>
                   <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">{body}</p>
                 </div>

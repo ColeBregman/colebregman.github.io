@@ -239,6 +239,50 @@ export function AudiobookPage({ project }: { project: Project }) {
         </div>
       </section>
 
+      {/* ============ TRY IT YOURSELF (real interactive simulator) ============ */}
+      <section className="px-6 py-28 md:py-36">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <div className="text-center">
+              <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Try it yourself</div>
+              <h2 className="mx-auto mt-5 max-w-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,56px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
+                The real interface, running in your browser.
+              </h2>
+              <p className="mx-auto mt-6 max-w-[56ch] text-lg leading-relaxed text-neutral-500">
+                This is the actual simulator I built to design the device — the same screen-drawing code
+                that now runs on the hardware. Scroll or drag the ring, click the screen to capture a
+                quote, and press the buttons.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div
+              className="mt-12 overflow-hidden rounded-[28px] ring-1 ring-black/5"
+              style={{ background: '#eceae4', boxShadow: '0 50px 100px -40px rgba(28,40,80,0.4)' }}
+            >
+              <iframe
+                src="/sim/embed.html"
+                title="ode. interface simulator"
+                loading="lazy"
+                className="block h-[720px] w-full border-0 md:h-[520px]"
+              />
+            </div>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-neutral-500">
+              <span>
+                Keyboard: <b className="font-medium text-neutral-700">↑ ↓</b> turn ·{' '}
+                <b className="font-medium text-neutral-700">Space</b> play ·{' '}
+                <b className="font-medium text-neutral-700">N</b> note
+              </span>
+              <a href="/sim/index.html" target="_blank" rel="noreferrer" className="font-medium hover:underline" style={{ color: NAVY }}>
+                Open the full simulator ↗
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ============ THE MAKING-OF (challenge → approach → build) ============ */}
       <section className="px-6 py-28 md:py-40">
         <div className="mx-auto max-w-6xl">
@@ -257,9 +301,9 @@ export function AudiobookPage({ project }: { project: Project }) {
                 <div className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-400">01 — Prove it in software</div>
                 <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY }}>The whole player, faked on my laptop.</h3>
                 <p className="mt-4 text-lg leading-relaxed text-neutral-500 max-w-[46ch]">
-                  Before touching a component I built a full simulation of the interface and I/O on my Mac —
-                  so by the time I reached for a soldering iron, I knew exactly which parts I needed and how
-                  they'd behave.
+                  That simulator above is where it started. Before touching a component I built the whole
+                  interface and I/O in software — so by the time I reached for a soldering iron, I knew
+                  exactly which parts I needed and how they'd behave.
                 </p>
               </div>
             </Reveal>

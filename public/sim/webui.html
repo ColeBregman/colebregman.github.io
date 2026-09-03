@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Puck · Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/webui.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="dot"></span>
+      <h1>PUCK <span>companion</span></h1>
+    </div>
+    <div class="now" id="nowPlaying">—</div>
+  </header>
+
+  <main>
+    <section class="stats" id="stats"></section>
+
+    <section class="chart-card">
+      <div class="sec-head"><h2>Listening · last 14 days</h2><span class="chart-total" id="chartTotal"></span></div>
+      <div class="chart" id="chart"></div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>Library</h2>
+        <label class="upload" id="dropzone">
+          <input type="file" id="fileInput" accept=".m4b,.mp3,.aac,audio/*" multiple hidden />
+          <span>＋ Upload audiobooks</span>
+          <small>drop .m4b / .mp3 here — metadata is registered for the device</small>
+        </label>
+      </div>
+      <div class="grid" id="library"></div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Quotes</h2>
+        <select id="quoteFilter"><option value="">All books</option></select>
+      </div>
+      <div class="quotes" id="quotes"></div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Voice notes</h2></div>
+      <div class="quotes" id="notes"></div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Summaries</h2></div>
+      <div class="summaries" id="summaries"></div>
+    </section>
+  </main>
+
+  <script type="module" src="js/webui.js"></script>
+</body>
+</html>

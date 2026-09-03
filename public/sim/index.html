@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Puck · Device Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/sim.css" />
+</head>
+<body>
+  <main>
+    <section class="stage">
+      <div class="device-wrap">
+        <div class="device" id="device">
+          <div class="ring" id="encoderRing" title="Drag or scroll to turn the encoder"></div>
+          <div class="screen-bezel">
+            <canvas id="lcd" width="480" height="480"></canvas>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="hw-btn" id="btnSkip" title="Skip back 30 s (←)">
+            <svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg>
+            <span>−30s</span>
+          </button>
+          <button class="hw-btn primary" id="btnPlay" title="Play / pause (Space) · hold to lock">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            <span>Play</span>
+          </button>
+          <button class="hw-btn" id="btnBack" title="Back / menu (Esc)">
+            <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Back</span>
+          </button>
+          <button class="hw-btn note" id="btnNote" title="Voice note (N) — pauses playback while recording">
+            <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zm-7 9a7 7 0 0 0 14 0M12 19v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Note</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <header>
+        <h1>PUCK</h1>
+        <p class="tag">rotary audiobook player · device simulator</p>
+      </header>
+
+      <div class="card">
+        <h2>Controls</h2>
+        <table class="legend">
+          <tr><td>Scroll / drag ring</td><td>turn encoder — volume</td></tr>
+          <tr><td>Shift + scroll</td><td>press-and-turn — scrub (keep turning: ±5 min)</td></tr>
+          <tr><td>Click screen</td><td>encoder tap — <b>capture last 30 s</b></td></tr>
+          <tr><td>Long-press screen</td><td>encoder hold — live quote recording</td></tr>
+          <tr><td>Space / ⏯</td><td>play · pause (hold 1.2 s: lock)</td></tr>
+          <tr><td>← / −30s</td><td>skip back 30 s</td></tr>
+          <tr><td>Esc / Back</td><td>back · menu</td></tr>
+          <tr><td>N / Note</td><td><b>voice note</b> — pauses book, marks chapter + time</td></tr>
+          <tr><td>↑ ↓ Enter H</td><td>encoder via keyboard</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Hardware sim</h2>
+        <label class="row check">
+          <input type="checkbox" id="wiredToggle" checked /> <span>Wired headphones plugged in (unplug = auto-pause)</span>
+        </label>
+        <label class="row check">
+          <input type="checkbox" id="sndToggle" checked /> <span>Encoder detent sounds</span>
+        </label>
+        <label class="row check">
+          <input type="checkbox" id="pixToggle" /> <span>True 240×240 resolution (see real pixel density)</span>
+        </label>
+      </div>
+
+      <div class="card">
+        <h2>Screens</h2>
+        <div class="chips">
+          <button data-screen="home">Now Playing</button>
+          <button data-screen="menu">Menu</button>
+          <button data-screen="library">Library</button>
+          <button data-screen="chapters">Chapters</button>
+          <button data-screen="quotes">Quotes</button>
+          <button data-screen="notes">Notes</button>
+          <button data-screen="recall">Recall</button>
+          <button data-screen="speed">Speed</button>
+          <button data-screen="sleep">Sleep</button>
+          <button data-screen="settings">Settings</button>
+          <button data-screen="wifi">Wi-Fi</button>
+          <button data-screen="bluetooth">Bluetooth</button>
+          <button data-screen="display">Display</button>
+          <button data-screen="finished">Finished</button>
+        </div>
+      </div>
+
+      <a class="webui-link" href="webui.html" target="_blank">
+        Open companion Web UI ↗
+        <small>library upload · quotes · summaries — syncs live with the device</small>
+      </a>
+    </aside>
+  </main>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

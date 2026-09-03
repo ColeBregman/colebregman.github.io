@@ -165,8 +165,12 @@ export const projects: Project[] = [
     id: 'AudiobookPlayer',
     title: 'ode. — Audiobook Player',
     description: 'A distraction-free handheld audiobook player — fully soldered off the breadboard and into its final 3D-printed enclosure. Tentatively named ode.',
-    image: '/assets/coverimage-DtUrAx8Y.webp',
+    image: '/assets/device-hero.jpg',
     images: [
+      {
+        url: '/assets/coverimage-DtUrAx8Y.webp',
+        caption: 'The enclosure concept render that started the final design'
+      },
       {
         url: '/assets/audiobook-final-print.webp',
         caption: 'The finalized enclosure design, fresh off the printer'

@@ -107,20 +107,22 @@ export function DeviceShowcase() {
         const box = new THREE.Box3().setFromObject(model);
         const c = box.getCenter(new THREE.Vector3());
         const radius = box.getBoundingSphere(new THREE.Sphere()).radius;
-        model.children.slice().forEach((m) => {
+        const AX = stackAxis as 'x' | 'y' | 'z';
+        model.children.slice().forEach((m, i) => {
           const base = m.position.clone();
-          const rel = base.clone().sub(c);
-          // radial fan outward + a strong push along the stack axis so
-          // stacked plates separate into a legible teardown
-          const expl = rel.clone().multiplyScalar(1.5);
-          const axisSign = Math.sign((rel as unknown as Record<string, number>)[stackAxis] || (Math.random() - 0.5));
-          (expl as unknown as Record<string, number>)[stackAxis] += axisSign * radius * 0.9;
-          // give near-centre parts a guaranteed nudge
-          if (rel.length() < radius * 0.15) expl.multiplyScalar(2.2);
+          // use each part's own centroid so large shells get a true direction
+          const pc = new THREE.Box3().setFromObject(m).getCenter(new THREE.Vector3());
+          const rel = pc.sub(c);
+          const expl = rel.clone().multiplyScalar(1.35);         // in-plane fan
+          const a = rel[AX];
+          // strong, guaranteed separation along the assembly axis so even the
+          // two case shells fly apart (not just the small internals)
+          const sign = Math.abs(a) > radius * 0.01 ? Math.sign(a) : (i % 2 ? 1 : -1);
+          expl[AX] += sign * (radius * 1.15 + Math.abs(a) * 2.4);
           parts.push({ m, base, expl });
         });
 
-        camDist = radius / Math.sin((camera.fov * Math.PI) / 360) * 1.35;
+        camDist = radius / Math.sin((camera.fov * Math.PI) / 360) * 1.55;
         camera.position.set(0, radius * 0.12, camDist);
         camera.lookAt(0, 0, 0);
         setLoaded(true);

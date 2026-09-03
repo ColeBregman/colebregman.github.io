@@ -11,6 +11,7 @@ import { ProjectImages } from '../components/project/ProjectImages';
 import { ScrollProgress } from '../components/ScrollProgress';
 import { BinaryBorder } from '../components/BinaryBorder';
 import { DeviceShowcase } from '../components/project/DeviceShowcase';
+import { AudiobookStory } from '../components/project/AudiobookStory';
 import { getNextProjectLink, getNextProjectTitle, getNextProjectImage } from '../utils/projectHelpers';
 
 export function ProjectDetail() {
@@ -89,8 +90,13 @@ export function ProjectDetail() {
         </div>
       )}
 
-      {/* Interactive exploded 3D model — audiobook player only */}
-      {project.id === 'AudiobookPlayer' && <DeviceShowcase />}
+      {/* Interactive exploded 3D model + Apple-style product story — audiobook player only */}
+      {project.id === 'AudiobookPlayer' && (
+        <>
+          <DeviceShowcase />
+          <AudiobookStory />
+        </>
+      )}
 
       {/* Binary strip under hero - ties into the homepage motif */}
       <div className="w-full border-y border-black/20 overflow-hidden">

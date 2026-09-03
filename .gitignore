@@ -13,3 +13,9 @@ tsconfig.*.tsbuildinfo
 # Raw source material
 Claude Extras
 .vite/
+
+# local agent skill tooling
+.agents/
+.claude/skills/
+.claude/agents/
+impeccable*

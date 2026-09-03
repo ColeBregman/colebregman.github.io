@@ -12,3 +12,4 @@ tsconfig.*.tsbuildinfo
 
 # Raw source material
 Claude Extras
+.vite/

@@ -10,6 +10,7 @@ import { ProjectStory } from '../components/project/ProjectStory';
 import { ProjectImages } from '../components/project/ProjectImages';
 import { ScrollProgress } from '../components/ScrollProgress';
 import { BinaryBorder } from '../components/BinaryBorder';
+import { DeviceShowcase } from '../components/project/DeviceShowcase';
 import { getNextProjectLink, getNextProjectTitle, getNextProjectImage } from '../utils/projectHelpers';
 
 export function ProjectDetail() {
@@ -68,23 +69,28 @@ export function ProjectDetail() {
         />
       </div>
 
-      {/* Hero Section - Responsive height */}
-      <div className="relative w-full h-[50vh] sm:h-[60vh] lg:h-[65vh] overflow-hidden">
-        {/* Hero Image - No gradient overlay */}
-        <motion.div
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className="w-full h-full"
-        >
-          <img
-            src={project.image}
-            alt={`${project.title} cover image`}
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
-        </motion.div>
-      </div>
+      {/* Hero Section - static cover (hidden for AudiobookPlayer, which uses the 3D showcase) */}
+      {project.id !== 'AudiobookPlayer' && (
+        <div className="relative w-full h-[50vh] sm:h-[60vh] lg:h-[65vh] overflow-hidden">
+          {/* Hero Image - No gradient overlay */}
+          <motion.div
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: 'easeOut' }}
+            className="w-full h-full"
+          >
+            <img
+              src={project.image}
+              alt={`${project.title} cover image`}
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Interactive exploded 3D model — audiobook player only */}
+      {project.id === 'AudiobookPlayer' && <DeviceShowcase />}
 
       {/* Binary strip under hero - ties into the homepage motif */}
       <div className="w-full border-y border-black/20 overflow-hidden">

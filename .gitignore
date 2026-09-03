@@ -18,4 +18,6 @@ Claude Extras
 .agents/
 .claude/skills/
 .claude/agents/
+.codex/
 impeccable*
+skills-lock.json

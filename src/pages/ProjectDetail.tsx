@@ -10,8 +10,7 @@ import { ProjectStory } from '../components/project/ProjectStory';
 import { ProjectImages } from '../components/project/ProjectImages';
 import { ScrollProgress } from '../components/ScrollProgress';
 import { BinaryBorder } from '../components/BinaryBorder';
-import { DeviceShowcase } from '../components/project/DeviceShowcase';
-import { AudiobookStory } from '../components/project/AudiobookStory';
+import { AudiobookPage } from '../components/project/AudiobookPage';
 import { getNextProjectLink, getNextProjectTitle, getNextProjectImage } from '../utils/projectHelpers';
 
 export function ProjectDetail() {
@@ -55,11 +54,29 @@ export function ProjectDetail() {
     );
   }
 
+  // The audiobook player gets a fully bespoke, Apple-style narrative page.
+  if (project.id === 'AudiobookPlayer') {
+    return (
+      <div className="min-h-screen">
+        <ScrollProgress />
+        <div className="fixed left-6 top-6 z-50">
+          <Link
+            to="/#projects"
+            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm text-neutral-700 backdrop-blur-md transition-colors hover:border-black/30"
+          >
+            <ArrowLeft size={16} /> Projects
+          </Link>
+        </div>
+        <AudiobookPage project={project} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Scroll Progress Indicator */}
       <ScrollProgress />
-      
+
       {/* Breadcrumb - Fixed positioning */}
       <div className="px-6 pt-24 pb-8 max-w-container mx-auto">
         <Breadcrumb
@@ -70,8 +87,8 @@ export function ProjectDetail() {
         />
       </div>
 
-      {/* Hero Section - static cover (hidden for AudiobookPlayer, which uses the 3D showcase) */}
-      {project.id !== 'AudiobookPlayer' && (
+      {/* Hero Section */}
+      {(
         <div className="relative w-full h-[50vh] sm:h-[60vh] lg:h-[65vh] overflow-hidden">
           {/* Hero Image - No gradient overlay */}
           <motion.div
@@ -88,14 +105,6 @@ export function ProjectDetail() {
             />
           </motion.div>
         </div>
-      )}
-
-      {/* Interactive exploded 3D model + Apple-style product story — audiobook player only */}
-      {project.id === 'AudiobookPlayer' && (
-        <>
-          <DeviceShowcase />
-          <AudiobookStory />
-        </>
       )}
 
       {/* Binary strip under hero - ties into the homepage motif */}

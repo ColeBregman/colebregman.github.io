@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import CountUp from 'react-countup';
@@ -101,6 +101,7 @@ const ICONS: React.ReactNode[] = [
 /* ---------- the page ---------- */
 
 export function AudiobookPage({ project }: { project: Project }) {
+  const [sim3d, setSim3d] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: heroP } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroY = useTransform(heroP, [0, 1], ['0%', '30%']);
@@ -250,19 +251,36 @@ export function AudiobookPage({ project }: { project: Project }) {
               </h2>
               <p className="mx-auto mt-6 max-w-[56ch] text-lg leading-relaxed text-neutral-500">
                 This is the actual simulator I built to design the device — the same screen-drawing code
-                that now runs on the hardware. Scroll or drag the ring, click the screen to capture a
-                quote, and press the buttons.
+                that now runs on the hardware. Turn the wheel to move, click it to play, and use the mic
+                and bookmark buttons. Try it flat, or on the real 3D model.
               </p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.06}>
+            <div className="mt-8 flex justify-center">
+              <div className="inline-flex rounded-full border border-black/10 bg-white p-1 text-sm">
+                {[['Interactive', false], ['3D model', true]].map(([label, on]) => (
+                  <button
+                    key={label as string}
+                    onClick={() => setSim3d(on as boolean)}
+                    className={`rounded-full px-5 py-1.5 font-medium transition-colors ${sim3d === on ? 'text-white' : 'text-neutral-600 hover:text-neutral-900'}`}
+                    style={sim3d === on ? { background: NAVY } : undefined}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
             <div
-              className="mt-12 overflow-hidden rounded-[28px] ring-1 ring-black/5"
+              className="mt-8 overflow-hidden rounded-[28px] ring-1 ring-black/5"
               style={{ background: '#eceae4', boxShadow: '0 50px 100px -40px rgba(28,40,80,0.4)' }}
             >
               <iframe
-                src="/sim/embed.html"
-                title="ode. interface simulator"
+                key={sim3d ? '3d' : '2d'}
+                src={sim3d ? '/sim/embed3d.html' : '/sim/embed.html'}
+                title={sim3d ? 'ode. 3D simulator' : 'ode. interface simulator'}
                 loading="lazy"
                 className="block h-[840px] w-full border-0 md:h-[600px]"
               />
@@ -271,9 +289,9 @@ export function AudiobookPage({ project }: { project: Project }) {
           <Reveal delay={0.15}>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-neutral-500">
               <span>
-                Keyboard: <b className="font-medium text-neutral-700">↑ ↓</b> turn ·{' '}
-                <b className="font-medium text-neutral-700">Space</b> play ·{' '}
-                <b className="font-medium text-neutral-700">N</b> note
+                {sim3d
+                  ? 'Drag to rotate · scroll the wheel · click the buttons on the device'
+                  : 'Turn/scroll the wheel · click it to play · mic records, bookmark saves a quote'}
               </span>
               <a href="/sim/index.html" target="_blank" rel="noreferrer" className="font-medium hover:underline" style={{ color: NAVY }}>
                 Open the full simulator ↗

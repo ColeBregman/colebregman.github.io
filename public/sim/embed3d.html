@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ode. · 3D simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html, body { margin: 0; height: 100%; background: transparent; overflow: hidden;
+      font-family: -apple-system, 'SF Pro Text', 'Inter', system-ui, sans-serif; }
+    #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+    #gl:active { cursor: grabbing; }
+    .hint3d { position: fixed; left: 0; right: 0; bottom: 12px; text-align: center;
+      font-size: 12px; font-weight: 500; color: #77756e; pointer-events: none; }
+    .hint3d b { color: #2b3757; font-weight: 600; }
+    .spin { position: fixed; inset: 0; display: grid; place-items: center; }
+    .spin i { width: 30px; height: 30px; border: 2px solid rgba(43,55,87,0.18);
+      border-top-color: #2b3757; border-radius: 50%; animation: r 0.8s linear infinite; }
+    @keyframes r { to { transform: rotate(360deg); } }
+    /* hidden 2D engine — runs the real sim, draws the screen we texture-map */
+    #engine { position: fixed; left: -4000px; top: 0; width: 260px; height: 380px; opacity: 0.01; pointer-events: none; }
+    #engine #lcd { width: 240px; height: 240px; }
+  </style>
+</head>
+<body>
+  <canvas id="gl"></canvas>
+  <div class="spin" id="spin"><i></i></div>
+  <div class="hint3d"><b>Drag</b> to rotate · <b>scroll</b> the wheel · <b>click</b> the buttons</div>
+
+  <!-- hidden 2D engine: app.js drives the sim and renders #lcd; we map it onto the 3D screen -->
+  <div id="engine" aria-hidden="true">
+    <div id="device">
+      <div id="encoderRing"></div>
+      <canvas id="lcd" width="480" height="480"></canvas>
+      <button id="btnNote"></button>
+      <button id="btnQuote"></button>
+      <button id="btnSkip"></button>
+    </div>
+    <label><input type="checkbox" id="wiredToggle" checked /></label>
+    <label><input type="checkbox" id="sndToggle" checked /></label>
+    <label><input type="checkbox" id="pixToggle" /></label>
+  </div>
+
+  <script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+  </script>
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+    // ---- tunables (adjust if the device isn't framed how you like) ----
+    const MODEL_URL = '/assets/player_sim.glb';
+    const ORIENT = { x: 0, y: 0, z: 0 };     // extra rotation (radians) on top of auto-orient
+    const SCREEN = { downFrac: 0.60, radiusFrac: 0.33, lift: 0.06 }; // pos down the face · radius vs width · gap above face
+    const NAMES = ['knob', 'Back_Button', 'Save_button', 'on_off_switch', 'front_face', 'Buttonshell'];
+
+    const canvas = document.getElementById('gl');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.001, 100);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe4ee, 0.9));
+    const key = new THREE.DirectionalLight(0xffffff, 2.0); key.position.set(-0.5, 0.8, 0.9); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xdce6ff, 0.8); fill.position.set(0.8, 0.1, 0.4); scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(0.2, 0.4, -0.8); scene.add(rim);
+
+    const pivot = new THREE.Group(); scene.add(pivot);   // holds the oriented, centered model
+    const named = {};
+    let screenMesh = null, screenTex = null, radius = 0.06, ready = false;
+
+    // live screen texture from the hidden 2D sim
+    const lcd = document.getElementById('lcd');
+    screenTex = new THREE.CanvasTexture(lcd);
+    screenTex.colorSpace = THREE.SRGBColorSpace;
+    screenTex.flipY = true;
+    screenTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
+
+    loader.load(MODEL_URL, (gltf) => {
+      const root = gltf.scene;
+      root.updateMatrixWorld(true);
+
+      // collect named meshes (name may sit on the node or its mesh child)
+      const centers = {};
+      root.traverse((o) => {
+        if (!o.isMesh) return;
+        const nm = NAMES.includes(o.name) ? o.name : (NAMES.includes(o.parent?.name) ? o.parent.name : null);
+        if (nm) { (named[nm] ||= []).push(o); }
+      });
+      const box0 = new THREE.Box3().setFromObject(root);
+      const size0 = box0.getSize(new THREE.Vector3());
+      const center0 = box0.getCenter(new THREE.Vector3());
+
+      // --- auto-orient: tall axis -> up (+Y), front (front_face normal) -> camera (+Z) ---
+      // tall axis = largest bbox dimension
+      const dims = [['x', size0.x], ['y', size0.y], ['z', size0.z]].sort((a, b) => b[1] - a[1]);
+      const tallAxis = dims[0][0];
+      // button end = "top" -> up points from centre toward the buttons/knob
+      const btnc = new THREE.Vector3(); let bn = 0;
+      ['knob', 'Back_Button', 'Save_button'].forEach((k) => (named[k] || []).forEach((m) => {
+        btnc.add(new THREE.Box3().setFromObject(m).getCenter(new THREE.Vector3())); bn++;
+      }));
+      if (bn) btnc.multiplyScalar(1 / bn);
+      const up = new THREE.Vector3(); up[tallAxis] = Math.sign((btnc[tallAxis] || 1) - center0[tallAxis]) || 1;
+      // front axis = thin axis of front_face; sign toward that face from centre
+      let front = new THREE.Vector3(0, 0, 1);
+      const ff = (named['front_face'] || [])[0];
+      if (ff) {
+        const fb = new THREE.Box3().setFromObject(ff);
+        const fs = fb.getSize(new THREE.Vector3());
+        const fa = [['x', fs.x], ['y', fs.y], ['z', fs.z]].sort((a, b) => a[1] - b[1])[0][0];
+        const fc = fb.getCenter(new THREE.Vector3());
+        front.set(0, 0, 0); front[fa] = Math.sign(fc[fa] - center0[fa]) || 1;
+      }
+      // build orientation: map model up->+Y, front->+Z
+      const right = new THREE.Vector3().crossVectors(up, front).normalize();
+      const trueFront = new THREE.Vector3().crossVectors(right, up).normalize();
+      const m = new THREE.Matrix4().makeBasis(right, up.clone().normalize(), trueFront);
+      const q = new THREE.Quaternion().setFromRotationMatrix(m).invert();
+
+      root.position.sub(center0);          // centre at origin
+      const holder = new THREE.Group(); holder.add(root); holder.quaternion.copy(q);
+      holder.rotation.x += ORIENT.x; holder.rotation.y += ORIENT.y; holder.rotation.z += ORIENT.z;
+      pivot.add(holder);
+
+      // --- place the live screen disc on the model's actual round recess ---
+      pivot.updateMatrixWorld(true);
+      const box = new THREE.Box3().setFromObject(pivot);
+      const size = box.getSize(new THREE.Vector3());
+      // detect the display: a roughly-circular, thin, front-facing mesh in the lower half
+      let best = null, bestScore = -1;
+      pivot.traverse((o) => {
+        if (!o.isMesh) return;
+        const b = new THREE.Box3().setFromObject(o);
+        const sz = b.getSize(new THREE.Vector3()); const c = b.getCenter(new THREE.Vector3());
+        const circ = Math.abs(sz.x - sz.y) < sz.x * 0.35;
+        const thinZ = sz.z < Math.min(sz.x, sz.y) * 0.7;
+        const bigEnough = sz.x > size.x * 0.35;
+        const frontish = c.z > box.min.z + size.z * 0.4;
+        if (circ && thinZ && bigEnough && frontish) {
+          const score = sz.x + (c.z - box.min.z);
+          if (score > bestScore) { bestScore = score; best = { c, sz, b }; }
+        }
+      });
+      let cx, cy, faceZ;
+      const lift = Math.max(0.0016, size.z * 0.06);   // in front of the device's frontmost point
+      if (best) {
+        cx = best.c.x; cy = best.c.y; radius = best.sz.x * 0.52;
+      } else {
+        cx = (box.min.x + box.max.x) / 2; cy = box.max.y - size.y * SCREEN.downFrac;
+        radius = size.x * SCREEN.radiusFrac;
+      }
+      faceZ = box.max.z + lift;   // sit in front of the cover glass so the UI is never occluded
+      const disc = new THREE.Mesh(
+        new THREE.CircleGeometry(radius, 64),
+        new THREE.MeshBasicMaterial({
+          map: screenTex, toneMapped: false,
+          polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4, // beat z-fighting with the glass
+        })
+      );
+      disc.position.set(cx, cy, faceZ);
+      screenMesh = disc; pivot.add(disc);
+
+      // frame the camera on the whole device
+      const sph = box.getBoundingSphere(new THREE.Sphere());
+      const dist = sph.radius / Math.sin((camera.fov * Math.PI) / 360) * 1.5;
+      camera.position.set(0, 0, dist);
+      camera.lookAt(0, 0, 0);
+      ready = true;
+      document.getElementById('spin').hidden = true;
+    }, undefined, (e) => { console.error('model load failed', e); document.getElementById('spin').hidden = true; });
+
+    // ---- interaction ----
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let dragging = false, moved = false, px = 0, py = 0, rotY = 0.4, rotX = 0.05, velY = 0, idle = 0;
+    let downT = 0, holdTimer = null, holdFired = false;
+
+    function puck() { return window.puck; }
+
+    function hitName(ev) {
+      const r = canvas.getBoundingClientRect();
+      pointer.x = ((ev.clientX - r.left) / r.width) * 2 - 1;
+      pointer.y = -((ev.clientY - r.top) / r.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObject(pivot, true);
+      for (const h of hits) {
+        if (h.object === screenMesh) return 'screen';
+        let o = h.object;
+        while (o && o !== pivot) { if (NAMES.includes(o.name)) return o.name; o = o.parent; }
+      }
+      return null;
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      dragging = true; moved = false; holdFired = false; px = e.clientX; py = e.clientY; downT = performance.now();
+      canvas.setPointerCapture(e.pointerId); idle = 0;
+      const n = hitName(e);
+      holdTimer = setTimeout(() => {
+        if (!moved) { holdFired = true;
+          if (n === 'Back_Button') puck()?.ui.goto('menu');
+          else puck()?.ui.hold();               // knob/screen hold = lock
+        }
+      }, 550);
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - px, dy = e.clientY - py; px = e.clientX; py = e.clientY;
+      if (Math.abs(dx) + Math.abs(dy) > 3) { moved = true; clearTimeout(holdTimer); }
+      rotY += dx * 0.008; rotX = Math.max(-0.9, Math.min(0.9, rotX + dy * 0.008)); velY = dx * 0.008;
+    });
+    canvas.addEventListener('pointerup', (e) => {
+      clearTimeout(holdTimer);
+      if (dragging && !moved && !holdFired) {          // a clean tap → act on what was hit
+        const n = hitName(e); const u = puck();
+        if (u) {
+          if (n === 'knob' || n === 'screen') u.ui.tap();
+          else if (n === 'Back_Button') u.ui.btnSkip();
+          else if (n === 'Save_button') { u.ui.capture.active ? u.ui.stopCapture() : u.ui.quickCapture(); }
+          else if (n === 'Buttonshell') u.ui.toggleNote();
+          else if (n === 'on_off_switch') u.ui.toggleLock();
+        }
+      }
+      dragging = false;
+    });
+    canvas.addEventListener('pointercancel', () => { clearTimeout(holdTimer); dragging = false; });
+    // scroll anywhere = turn the wheel
+    let wacc = 0;
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault(); wacc += e.deltaY; const u = puck(); if (!u) return;
+      while (Math.abs(wacc) >= 80) { const d = Math.sign(wacc); wacc -= d * 80; u.ui.rotate(d, e.shiftKey); }
+    }, { passive: false });
+
+    function resize() {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(resize).observe(canvas); resize();
+
+    renderer.setAnimationLoop(() => {
+      if (screenTex) screenTex.needsUpdate = true;
+      if (window.__view) { rotY = window.__view.y; rotX = window.__view.x; velY = 0; idle = 0; }
+      if (!dragging && !window.__view) { velY *= 0.92; idle++; if (idle > 40) rotY += 0.003; }
+      pivot.rotation.y = rotY; pivot.rotation.x = rotX;
+      renderer.render(scene, camera);
+    });
+    window.__sim3d = { get ready() { return ready; }, named, get screenMesh() { return screenMesh; } };
+  </script>
+</body>
+</html>

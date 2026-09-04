@@ -10,6 +10,7 @@ export const BOOKS = [
     author: 'Michael Finkel',
     color: ['#2f5c8f', '#8fb8dd'],
     initials: 'AT',
+    cover: 'covers/art-thief.jpg',
     chapters: [
       { t: 'A Quiet Museum', d: min(58) },
       { t: 'The First Piece', d: min(63) },

@@ -241,7 +241,7 @@ export function DeviceShowcase() {
             Designed &amp; built from scratch
           </div>
           <h2 className="mt-3 text-4xl sm:text-6xl font-black tracking-tighter text-black">
-            Forty parts, one puck.
+            Every component, exploded.
           </h2>
         </div>
 

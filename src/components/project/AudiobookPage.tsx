@@ -8,7 +8,9 @@ import { AudiobookStory } from './AudiobookStory';
 import { getNextProjectLink, getNextProjectTitle } from '../../utils/projectHelpers';
 
 const NAVY = '#2b57c4';
+const NAVY_DEEP = '#1c3f96';
 const TEAL = '#0f9a8a';
+const INK = '#0a0a0a';
 const DISPLAY = '-apple-system, "SF Pro Display", "Segoe UI", system-ui, sans-serif';
 
 /* ---------- small motion helpers ---------- */
@@ -83,20 +85,98 @@ function ParallaxMedia({ src, alt, video = false, className = '' }:
 /* ---------- feature glyphs (SF-style line icons, 24×24, currentColor) ---------- */
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
-const ICONS: React.ReactNode[] = [
-  // distraction-free — a single point of focus
-  (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" /></svg>),
-  // quote capture — quotation marks
-  (<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 6.2C7 7.4 5.3 9.8 5.3 12.8c0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2L9.6 6.2zM17.7 6.2c-2.6 1.2-4.3 3.6-4.3 6.6 0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2l-1.5-1.7z" /></svg>),
-  // voice notes — microphone
-  (<svg viewBox="0 0 24 24" {...S}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" /><path d="M12 18v3" /></svg>),
-  // physical controls — knurled dial
-  (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="7.4" /><path d="M12 4.6v1.8M12 17.6v1.8M4.6 12h1.8M17.6 12h1.8M6.9 6.9l1.3 1.3M15.8 15.8l1.3 1.3M17.1 6.9l-1.3 1.3M8.2 15.8l-1.3 1.3" /><circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none" /></svg>),
-  // speed & sleep — gauge
-  (<svg viewBox="0 0 24 24" {...S}><path d="M4 15.5a8 8 0 0 1 16 0" /><path d="M12 15.5l4.2-3.7" /><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none" /></svg>),
-  // all the formats — stacked layers
-  (<svg viewBox="0 0 24 24" {...S}><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" /><path d="M4 12l8 4.5 8-4.5" /><path d="M4 16.5 12 21l8-4.5" opacity="0.45" /></svg>),
+const ICONS: Record<string, React.ReactNode> = {
+  focus: (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" /></svg>),
+  quote: (<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 6.2C7 7.4 5.3 9.8 5.3 12.8c0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2L9.6 6.2zM17.7 6.2c-2.6 1.2-4.3 3.6-4.3 6.6 0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2l-1.5-1.7z" /></svg>),
+  mic: (<svg viewBox="0 0 24 24" {...S}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" /><path d="M12 18v3" /></svg>),
+  dial: (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="7.4" /><path d="M12 4.6v1.8M12 17.6v1.8M4.6 12h1.8M17.6 12h1.8M6.9 6.9l1.3 1.3M15.8 15.8l1.3 1.3M17.1 6.9l-1.3 1.3M8.2 15.8l-1.3 1.3" /><circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none" /></svg>),
+  gauge: (<svg viewBox="0 0 24 24" {...S}><path d="M4 15.5a8 8 0 0 1 16 0" /><path d="M12 15.5l4.2-3.7" /><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none" /></svg>),
+  layers: (<svg viewBox="0 0 24 24" {...S}><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" /><path d="M4 12l8 4.5 8-4.5" /><path d="M4 16.5 12 21l8-4.5" opacity="0.45" /></svg>),
+};
+
+/* ---------- sticky local nav (Apple product-page style) ---------- */
+
+function LocalNav({ project }: { project: Project }) {
+  const items = [['Overview', 'overview'], ['Highlights', 'highlights'], ['Try it', 'tryit'], ['Specs', 'specs']];
+  return (
+    <nav
+      className="sticky top-0 z-40 border-b border-black/[0.06]"
+      style={{ background: 'rgba(250,250,250,0.72)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)' }}
+    >
+      <div className="mx-auto flex h-11 max-w-5xl items-center justify-center gap-5 px-6 text-[13px]">
+        <div className="flex items-center gap-5 text-neutral-500 sm:gap-7">
+          {items.map(([label, id]) => (
+            <a key={id} href={`#${id}`} className="transition-colors hover:text-black">{label}</a>
+          ))}
+          <Link
+            to={getNextProjectLink(project.id)}
+            className="rounded-full px-3.5 py-1 font-medium text-white transition-transform hover:scale-[1.04] active:scale-95"
+            style={{ background: NAVY }}
+          >
+            Next ↗
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+/* ---------- "Get the highlights" — horizontal snap carousel ---------- */
+
+const HIGHLIGHTS: { icon: keyof typeof ICONS; title: string; body: string; grad: [string, string]; accent: string }[] = [
+  { icon: 'quote', title: 'Quote\ncapture', body: 'Save any line as text — transcribed on the device itself.', grad: ['#0f9a8a', '#0a6f63'], accent: '#eafffb' },
+  { icon: 'mic', title: 'Voice\nnotes', body: 'Speak a thought; it lands with the exact chapter and time.', grad: ['#12b0a0', '#0b7a6d'], accent: '#eafffb' },
+  { icon: 'dial', title: 'Controls\nyou feel', body: 'A knurled wheel and thumb-buttons you work without looking.', grad: ['#2b57c4', '#1c3f96'], accent: '#eef3ff' },
+  { icon: 'focus', title: 'Zero\ndistractions', body: 'One book, one round screen. No feeds, no badges, no phone.', grad: ['#31406b', '#1a2440'], accent: '#eef3ff' },
+  { icon: 'gauge', title: 'Offline\nby design', body: 'Whisper runs on-device. No account, no cloud, ever.', grad: ['#2b57c4', '#1c3f96'], accent: '#eef3ff' },
+  { icon: 'layers', title: 'A whole\nlibrary', body: 'MP3, M4B, AAC, FLAC — 256 GB and ~5 hours a charge.', grad: ['#3a3f4c', '#16181f'], accent: '#f2f3f5' },
 ];
+
+function Highlights() {
+  return (
+    <section id="highlights" className="scroll-mt-16 py-20 md:py-28">
+      <div className="mx-auto max-w-6xl px-6">
+        <Reveal>
+          <h2 className="font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(28px,4.5vw,52px)', letterSpacing: '-0.03em' }}>
+            Get the highlights.
+          </h2>
+        </Reveal>
+      </div>
+      <div
+        className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-6 md:mt-12"
+        style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+      >
+        <style>{`#highlights ::-webkit-scrollbar{display:none}`}</style>
+        <div className="shrink-0" style={{ width: 'max(0px, calc((100vw - 72rem) / 2))' }} aria-hidden />
+        {HIGHLIGHTS.map((h, i) => (
+          <motion.div
+            key={h.title}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-8%' }}
+            transition={{ type: 'spring', bounce: 0.16, duration: 0.8, delay: (i % 3) * 0.06 }}
+            className="relative flex aspect-[3/4] w-[260px] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-[28px] p-6 md:w-[300px]"
+            style={{ background: `linear-gradient(160deg, ${h.grad[0]}, ${h.grad[1]})`, boxShadow: '0 30px 60px -32px rgba(28,40,80,0.5)' }}
+          >
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-2xl [&>svg]:h-6 [&>svg]:w-6"
+              style={{ background: 'rgba(255,255,255,0.16)', color: h.accent }}
+            >
+              {ICONS[h.icon]}
+            </div>
+            <div>
+              <h3 className="whitespace-pre-line font-semibold tracking-tight text-white" style={{ fontFamily: DISPLAY, fontSize: 'clamp(24px,2.4vw,30px)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+                {h.title}
+              </h3>
+              <p className="mt-3 text-[14px] leading-relaxed" style={{ color: h.accent, opacity: 0.86 }}>{h.body}</p>
+            </div>
+          </motion.div>
+        ))}
+        <div className="shrink-0 pr-1" style={{ width: 'max(1.5rem, calc((100vw - 72rem) / 2))' }} aria-hidden />
+      </div>
+    </section>
+  );
+}
 
 /* ---------- the page ---------- */
 
@@ -104,16 +184,20 @@ export function AudiobookPage({ project }: { project: Project }) {
   const [sim3d, setSim3d] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: heroP } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroY = useTransform(heroP, [0, 1], ['0%', '30%']);
-  const heroFade = useTransform(heroP, [0, 0.8], [1, 0]);
+  const heroY = useTransform(heroP, [0, 1], ['0%', '24%']);
+  const heroFade = useTransform(heroP, [0, 0.85], [1, 0]);
+  const imgY = useTransform(heroP, [0, 1], ['0%', '14%']);
+  const imgScale = useTransform(heroP, [0, 1], [1, 1.06]);
 
   return (
-    <div className="bg-white text-[#0a0a0a]">
+    <div className="bg-[#fafafa] text-[#0a0a0a]" style={{ scrollBehavior: 'smooth' }}>
+      <LocalNav project={project} />
+
       {/* ============ HERO ============ */}
-      <header ref={heroRef} className="relative flex min-h-[100dvh] flex-col items-center justify-center px-6 pt-24 text-center">
+      <header id="overview" ref={heroRef} className="relative flex min-h-[100dvh] scroll-mt-16 flex-col items-center px-6 pt-24 text-center">
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(70% 55% at 50% 30%, rgba(43,87,196,0.07), rgba(255,255,255,0) 65%)' }}
+          style={{ background: 'radial-gradient(70% 50% at 50% 22%, rgba(43,87,196,0.08), rgba(250,250,250,0) 62%)' }}
         />
         <motion.div style={{ y: heroY, opacity: heroFade }} className="relative">
           <Reveal y={16}>
@@ -125,36 +209,55 @@ export function AudiobookPage({ project }: { project: Project }) {
             initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ type: 'spring', bounce: 0.2, duration: 1.1, delay: 0.1 }}
-            className="mt-5 font-semibold tracking-tight"
-            style={{ fontFamily: DISPLAY, fontSize: 'clamp(72px,16vw,168px)', letterSpacing: '-0.05em', lineHeight: 0.9 }}
+            className="mt-4 font-semibold tracking-tight"
+            style={{ fontFamily: DISPLAY, fontSize: 'clamp(76px,17vw,184px)', letterSpacing: '-0.05em', lineHeight: 0.9 }}
           >
             ode<span style={{ color: NAVY }}>.</span>
           </motion.h1>
-          <Reveal delay={0.25}>
-            <p className="mt-4 font-medium" style={{ fontFamily: DISPLAY, fontSize: 'clamp(20px,3vw,30px)', letterSpacing: '-0.02em' }}>
+          <Reveal delay={0.22}>
+            <p className="mt-3 font-medium" style={{ fontFamily: DISPLAY, fontSize: 'clamp(22px,3.2vw,34px)', letterSpacing: '-0.02em' }}>
               Audiobooks, remembered.
             </p>
           </Reveal>
-          <Reveal delay={0.35}>
-            <p className="mx-auto mt-5 max-w-[52ch] text-lg leading-relaxed text-neutral-500">
-              A distraction-free player for people who read with their ears — with controls you feel,
-              quotes it remembers for you, and nothing else asking for your attention.
-            </p>
-          </Reveal>
         </motion.div>
+
+        {/* product hero shot */}
+        <motion.div style={{ y: imgY, scale: imgScale }} className="relative mt-4 w-full max-w-[420px]">
+          <motion.img
+            src="/assets/device-hero.jpg"
+            alt="The ode. audiobook player"
+            initial={{ opacity: 0, y: 40, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: 'spring', bounce: 0.16, duration: 1.2, delay: 0.35 }}
+            className="mx-auto w-full rounded-[32px] object-contain"
+            style={{ filter: 'drop-shadow(0 50px 60px rgba(28,40,80,0.28))' }}
+          />
+        </motion.div>
+
         <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-          className="absolute bottom-8 font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-400"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}
+          className="pointer-events-none absolute bottom-6 font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-400"
         >
-          Scroll to build it ↓
+          Scroll to explore ↓
         </motion.div>
       </header>
 
-      {/* ============ 3D EXPLODE → ASSEMBLE ============ */}
+      {/* ============ HIGHLIGHTS CAROUSEL ============ */}
+      <Highlights />
+
+      {/* ============ TAKE A CLOSER LOOK — 3D explode → assemble ============ */}
+      <div className="mx-auto max-w-6xl px-6 pt-6 text-center">
+        <Reveal>
+          <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Take a closer look</div>
+          <h2 className="mx-auto mt-4 max-w-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,58px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
+            Forty parts, in the palm of your hand.
+          </h2>
+        </Reveal>
+      </div>
       <DeviceShowcase />
 
       {/* ============ THE WHY ============ */}
-      <section className="relative px-6 py-28 md:py-40">
+      <section className="relative scroll-mt-16 px-6 py-28 md:py-40">
         <div className="mx-auto max-w-4xl">
           <Reveal>
             <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Why</div>
@@ -177,21 +280,21 @@ export function AudiobookPage({ project }: { project: Project }) {
       {/* ============ PRODUCT STORY (real photos) ============ */}
       <AudiobookStory />
 
-      {/* ============ THE ONE FEATURE THAT STARTED IT (teal / retention) ============ */}
-      <section className="relative px-6 py-28 md:py-36">
+      {/* ============ THE ONE FEATURE THAT STARTED IT (teal, full-bleed) ============ */}
+      <section className="relative overflow-hidden px-6 py-28 md:py-40" style={{ background: 'linear-gradient(180deg, #0b1f1c, #06110f)' }}>
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(60% 50% at 50% 50%, rgba(16,154,138,0.06), rgba(255,255,255,0) 65%)' }}
+          style={{ background: 'radial-gradient(60% 45% at 50% 42%, rgba(16,176,160,0.22), rgba(6,17,15,0) 68%)' }}
         />
         <div className="relative mx-auto max-w-3xl text-center">
-          <Reveal><div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: TEAL }}>The feature I always wanted</div></Reveal>
+          <Reveal><div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: '#5fe6d2' }}>The feature I always wanted</div></Reveal>
           <LineReveal
             text="Hear a line worth keeping? Keep it."
-            className="mt-6 font-semibold tracking-tight"
-            style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5.5vw,62px)', letterSpacing: '-0.03em', lineHeight: 1.03, textWrap: 'balance' }}
+            className="mt-6 font-semibold tracking-tight text-white"
+            style={{ fontFamily: DISPLAY, fontSize: 'clamp(32px,6vw,68px)', letterSpacing: '-0.03em', lineHeight: 1.02, textWrap: 'balance' }}
           />
           <Reveal delay={0.15}>
-            <p className="mx-auto mt-7 max-w-[54ch] text-xl leading-relaxed text-neutral-500">
+            <p className="mx-auto mt-7 max-w-[54ch] text-xl leading-relaxed" style={{ color: 'rgba(220,255,248,0.72)' }}>
               One press grabs the last thirty seconds and transcribes it — with the book, chapter and
               timestamp — running Whisper on the device itself. No phone, no account, no cloud. The
               lines you'd have forgotten are waiting for you later.
@@ -201,23 +304,23 @@ export function AudiobookPage({ project }: { project: Project }) {
       </section>
 
       {/* ============ FEATURES GRID ============ */}
-      <section className="px-6 pb-8">
+      <section className="scroll-mt-16 px-6 py-24 md:py-28">
         <div className="mx-auto max-w-6xl">
           <Reveal>
-            <h2 className="font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(28px,4vw,46px)', letterSpacing: '-0.03em' }}>
+            <h2 className="font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(28px,4.5vw,52px)', letterSpacing: '-0.03em' }}>
               Everything I wished an app had.
             </h2>
           </Reveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              ['Distraction-free', 'One book, one screen. No feeds, no badges, no reason to look at your phone.'],
-              ['Quote capture', 'Save the last 30 seconds as text, transcribed on-device.', true],
-              ['Voice notes', 'Press to pause, speak a thought, and it lands with the exact timestamp.', true],
-              ['Physical controls', 'A knurled wheel and thumb-buttons you can work without looking.'],
-              ['Speed & sleep', '0.75–2× per book, a sleep timer, and resume that rewinds when you come back.'],
-              ['All the formats', 'MP3, M4B, AAC and FLAC, with 256 GB of room for a whole library.'],
-            ].map(([title, body, teal], i) => (
-              <Reveal key={title as string} delay={i * 0.05}>
+            {([
+              ['focus', 'Distraction-free', 'One book, one screen. No feeds, no badges, no reason to look at your phone.', false],
+              ['quote', 'Quote capture', 'Save the last 30 seconds as text, transcribed on-device.', true],
+              ['mic', 'Voice notes', 'Press to pause, speak a thought, and it lands with the exact timestamp.', true],
+              ['dial', 'Physical controls', 'A knurled wheel and thumb-buttons you can work without looking.', false],
+              ['gauge', 'Speed & sleep', '0.75–2× per book, a sleep timer, and resume that rewinds when you come back.', false],
+              ['layers', 'All the formats', 'MP3, M4B, AAC and FLAC, with 256 GB of room for a whole library.', false],
+            ] as [keyof typeof ICONS, string, string, boolean][]).map(([icon, title, body, teal], i) => (
+              <Reveal key={title} delay={i * 0.05}>
                 <div
                   className="group h-full rounded-3xl border border-black/[0.06] bg-white p-7 transition-all duration-300 hover:-translate-y-1"
                   style={{ boxShadow: '0 1px 2px rgba(28,40,80,0.04)' }}
@@ -229,9 +332,9 @@ export function AudiobookPage({ project }: { project: Project }) {
                     style={{ background: teal ? 'rgba(16,154,138,0.1)' : 'rgba(43,87,196,0.09)', color: teal ? TEAL : NAVY }}
                     aria-hidden
                   >
-                    {ICONS[i]}
+                    {ICONS[icon]}
                   </div>
-                  <h3 className="text-lg font-semibold" style={{ color: teal ? TEAL : '#0a0a0a' }}>{title}</h3>
+                  <h3 className="text-lg font-semibold" style={{ color: teal ? TEAL : INK }}>{title}</h3>
                   <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">{body}</p>
                 </div>
               </Reveal>
@@ -241,7 +344,7 @@ export function AudiobookPage({ project }: { project: Project }) {
       </section>
 
       {/* ============ TRY IT YOURSELF (real interactive simulator) ============ */}
-      <section className="px-6 py-28 md:py-36">
+      <section id="tryit" className="scroll-mt-16 px-6 py-24 md:py-32">
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <div className="text-center">
@@ -302,7 +405,7 @@ export function AudiobookPage({ project }: { project: Project }) {
       </section>
 
       {/* ============ THE MAKING-OF (challenge → approach → build) ============ */}
-      <section className="px-6 py-28 md:py-40">
+      <section className="scroll-mt-16 px-6 py-28 md:py-40">
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>How it was made</div>
@@ -373,26 +476,27 @@ export function AudiobookPage({ project }: { project: Project }) {
         </div>
       </section>
 
-      {/* ============ SPECS ============ */}
-      <section className="px-6 py-24" style={{ background: 'linear-gradient(180deg, #ffffff, #f7f8fb)' }}>
+      {/* ============ SPECS — big Apple-style stat blocks ============ */}
+      <section id="specs" className="scroll-mt-16 px-6 py-24 md:py-28" style={{ background: 'linear-gradient(180deg, #fafafa, #f1f3f8)' }}>
         <div className="mx-auto max-w-6xl">
           <Reveal>
-            <h2 className="text-center font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(28px,4vw,46px)', letterSpacing: '-0.03em' }}>
-              The finished thing.
+            <h2 className="text-center font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,56px)', letterSpacing: '-0.03em' }}>
+              The specs.
             </h2>
           </Reveal>
-          <div className="mt-14 grid grid-cols-2 gap-y-12 md:grid-cols-4" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {[
+          <div className="mt-16 grid grid-cols-2 gap-y-14 md:grid-cols-4" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {([
               [240, '×240', 'round display'],
               [5, ' hr', 'per charge'],
               [256, ' GB', 'library'],
               [100, '%', 'offline AI'],
-            ].map(([n, suf, label], i) => (
-              <Reveal key={label as string} delay={i * 0.08} className="text-center">
-                <div className="font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(40px,6vw,64px)', letterSpacing: '-0.03em', color: NAVY }}>
-                  <CountUp end={n as number} duration={2} enableScrollSpy scrollSpyOnce />{suf}
+            ] as [number, string, string][]).map(([n, suf, label], i) => (
+              <Reveal key={label} delay={i * 0.08} className="text-center">
+                <div className="font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(52px,8vw,88px)', letterSpacing: '-0.04em', color: NAVY_DEEP, lineHeight: 1 }}>
+                  <CountUp end={n} duration={2} enableScrollSpy scrollSpyOnce />
+                  <span style={{ fontSize: '0.42em', color: NAVY }}>{suf}</span>
                 </div>
-                <div className="mt-2 font-mono text-xs uppercase tracking-widest text-neutral-500">{label}</div>
+                <div className="mt-3 font-mono text-xs uppercase tracking-widest text-neutral-500">{label}</div>
               </Reveal>
             ))}
           </div>
@@ -407,7 +511,7 @@ export function AudiobookPage({ project }: { project: Project }) {
         </div>
       </section>
 
-      {/* ============ CLOSING ============ */}
+      {/* ============ KEEP EXPLORING ============ */}
       <section className="px-6 py-28 md:py-40 text-center">
         <Reveal>
           <LineReveal
@@ -427,7 +531,7 @@ export function AudiobookPage({ project }: { project: Project }) {
           <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
             <Link to={getNextProjectLink(project.id)}
               className="rounded-full px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-[1.03] active:scale-95"
-              style={{ background: '#0a0a0a' }}>
+              style={{ background: INK }}>
               Next: {getNextProjectTitle(project.id)} →
             </Link>
             <Link to="/#projects" className="rounded-full border border-black/15 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:border-black/40">

@@ -53,6 +53,7 @@
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
     // ---- tunables (adjust if the device isn't framed how you like) ----
     const MODEL_URL = '/assets/player_sim.glb';
@@ -69,10 +70,13 @@
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 0.001, 100);
-    scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe4ee, 0.9));
-    const key = new THREE.DirectionalLight(0xffffff, 2.0); key.position.set(-0.5, 0.8, 0.9); scene.add(key);
-    const fill = new THREE.DirectionalLight(0xdce6ff, 0.8); fill.position.set(0.8, 0.1, 0.4); scene.add(fill);
-    const rim = new THREE.DirectionalLight(0xffffff, 0.7); rim.position.set(0.2, 0.4, -0.8); scene.add(rim);
+    // neutral studio environment so the white shell reads white (not blue)
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xece9e3, 0.55));
+    const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-0.5, 0.8, 0.9); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xfff6ea, 0.5); fill.position.set(0.8, 0.1, 0.4); scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffffff, 0.5); rim.position.set(0.2, 0.4, -0.8); scene.add(rim);
 
     const pivot = new THREE.Group(); scene.add(pivot);   // holds the oriented, centered model
     const named = {};
@@ -95,10 +99,15 @@
 
       // collect named meshes (name may sit on the node or its mesh child)
       const centers = {};
+      const NAVY_MAT = new THREE.MeshStandardMaterial({ color: new THREE.Color('#2b3757'), roughness: 0.5, metalness: 0.0 });
       root.traverse((o) => {
         if (!o.isMesh) return;
         const nm = NAMES.includes(o.name) ? o.name : (NAMES.includes(o.parent?.name) ? o.parent.name : null);
-        if (nm) { (named[nm] ||= []).push(o); }
+        if (nm) {
+          (named[nm] ||= []).push(o);
+          // the rail housing + wheel are navy on the real device (model ships them light blue)
+          if (nm === 'Buttonshell' || nm === 'knob') o.material = NAVY_MAT;
+        }
       });
       const box0 = new THREE.Box3().setFromObject(root);
       const size0 = box0.getSize(new THREE.Vector3());

@@ -383,14 +383,20 @@ let holdFired = false;
 let holdTimer = null;
 let rotatedWhileDown = false;
 
+// accumulate scroll delta so one detent takes a real flick, not a feather-touch
+let wheelAcc = 0;
+const WHEEL_STEP = 80;
 device.addEventListener('wheel', (e) => {
   e.preventDefault();
-  const d = Math.sign(e.deltaY);
-  if (!d) return;
+  wheelAcc += e.deltaY;
   const pressed = e.shiftKey || pointerDown;
-  if (pointerDown) rotatedWhileDown = true;
-  spinRing(d);
-  ui.rotate(d, pressed);
+  while (Math.abs(wheelAcc) >= WHEEL_STEP) {
+    const d = Math.sign(wheelAcc);
+    wheelAcc -= d * WHEEL_STEP;
+    if (pointerDown) rotatedWhileDown = true;
+    spinRing(d);
+    ui.rotate(d, pressed);
+  }
 }, { passive: false });
 
 // encoder push: click canvas = tap, long-press = hold
@@ -436,7 +442,7 @@ ring.addEventListener('pointermove', (e) => {
   if (d < -Math.PI) d += Math.PI * 2;
   dragAngle = a;
   dragAcc += d;
-  const detent = (12 * Math.PI) / 180;
+  const detent = (22 * Math.PI) / 180; // larger step = less twitchy drag
   while (Math.abs(dragAcc) >= detent) {
     const s = Math.sign(dragAcc);
     dragAcc -= s * detent;
@@ -476,7 +482,8 @@ function wireButton(id, onTap, onHoldMs, onHold) {
 }
 wireButton('btnPlay', () => ui.btnPlay(), 1200, () => ui.toggleLock()); // full page only
 wireButton('btnBack', () => ui.btnBack());                             // full page only
-wireButton('btnSkip', () => ui.btnSkip());                             // side button: −30 s / back
+wireButton('btnSkip', () => ui.btnSkip(),                              // side button: −30 s / back
+  550, () => ui.goto('menu'));                                        // hold = open the menu
 wireButton('btnNote', () => ui.toggleNote());                          // mic button: record voice note
 wireButton('btnQuote',                                                 // bookmark button: save quote
   () => { if (ui.capture.active) ui.stopCapture(); else ui.quickCapture(); },

@@ -264,7 +264,7 @@ export function AudiobookPage({ project }: { project: Project }) {
                 src="/sim/embed.html"
                 title="ode. interface simulator"
                 loading="lazy"
-                className="block h-[720px] w-full border-0 md:h-[520px]"
+                className="block h-[840px] w-full border-0 md:h-[600px]"
               />
             </div>
           </Reveal>

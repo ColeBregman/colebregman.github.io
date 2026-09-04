@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion
 import CountUp from 'react-countup';
 import type { Project } from '../../types/project';
 import { DeviceShowcase } from './DeviceShowcase';
+import { DeviceSim3D } from './DeviceSim3D';
 import { AudiobookStory } from './AudiobookStory';
 import { getNextProjectLink, getNextProjectTitle } from '../../utils/projectHelpers';
 
@@ -380,13 +381,18 @@ export function AudiobookPage({ project }: { project: Project }) {
               className="mt-8 overflow-hidden rounded-[28px] ring-1 ring-black/5"
               style={{ background: '#eceae4', boxShadow: '0 50px 100px -40px rgba(28,40,80,0.4)' }}
             >
-              <iframe
-                key={sim3d ? '3d' : '2d'}
-                src={sim3d ? '/sim/embed3d.html' : '/sim/embed.html'}
-                title={sim3d ? 'ode. 3D simulator' : 'ode. interface simulator'}
-                loading="lazy"
-                className="block h-[840px] w-full border-0 md:h-[600px]"
-              />
+              {sim3d ? (
+                <div className="h-[560px] w-full md:h-[600px]">
+                  <DeviceSim3D />
+                </div>
+              ) : (
+                <iframe
+                  src="/sim/embed.html"
+                  title="ode. interface simulator"
+                  loading="lazy"
+                  className="block h-[840px] w-full border-0 md:h-[600px]"
+                />
+              )}
             </div>
           </Reveal>
           <Reveal delay={0.15}>

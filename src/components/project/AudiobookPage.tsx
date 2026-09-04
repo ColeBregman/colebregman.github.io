@@ -124,13 +124,13 @@ function LocalNav({ project }: { project: Project }) {
 
 /* ---------- "Get the highlights" — horizontal snap carousel ---------- */
 
-const HIGHLIGHTS: { icon: keyof typeof ICONS; title: string; body: string; grad: [string, string]; accent: string }[] = [
-  { icon: 'quote', title: 'Quote\ncapture', body: 'Save any line as text — transcribed on the device itself.', grad: ['#0f9a8a', '#0a6f63'], accent: '#eafffb' },
-  { icon: 'mic', title: 'Voice\nnotes', body: 'Speak a thought; it lands with the exact chapter and time.', grad: ['#12b0a0', '#0b7a6d'], accent: '#eafffb' },
-  { icon: 'dial', title: 'Controls\nyou feel', body: 'A knurled wheel and thumb-buttons you work without looking.', grad: ['#2b57c4', '#1c3f96'], accent: '#eef3ff' },
-  { icon: 'focus', title: 'Zero\ndistractions', body: 'One book, one round screen. No feeds, no badges, no phone.', grad: ['#31406b', '#1a2440'], accent: '#eef3ff' },
-  { icon: 'gauge', title: 'Offline\nby design', body: 'Whisper runs on-device. No account, no cloud, ever.', grad: ['#2b57c4', '#1c3f96'], accent: '#eef3ff' },
-  { icon: 'layers', title: 'A whole\nlibrary', body: 'MP3, M4B, AAC, FLAC — 256 GB and ~5 hours a charge.', grad: ['#3a3f4c', '#16181f'], accent: '#f2f3f5' },
+const HIGHLIGHTS: { media: string; video?: boolean; eyebrow: string; title: string; body: string }[] = [
+  { media: '/assets/clip-inhand.mp4', video: true, eyebrow: 'Controls', title: 'Made to use blind', body: 'Turn, click and capture without looking down.' },
+  { media: '/assets/device-hero.jpg', eyebrow: 'Focus', title: 'One book, one screen', body: 'No feeds, no badges, no reason to reach for your phone.' },
+  { media: '/assets/clip-webui.mp4', video: true, eyebrow: 'Companion', title: 'Quotes, on the web', body: 'Everything you save, synced to a little local web app.' },
+  { media: '/assets/device-buttons.jpg', eyebrow: 'Capture', title: 'Keep the good lines', body: 'One press saves the last thirty seconds as text.' },
+  { media: '/assets/device-internals.jpg', eyebrow: 'Inside', title: 'A Pi, tuned to vanish', body: 'Whisper runs on-device — no account, no cloud.' },
+  { media: '/assets/device-teardown.jpg', eyebrow: 'By hand', title: 'Soldered & serviceable', body: 'Point-to-point, packed into a printed shell.' },
 ];
 
 function Highlights() {
@@ -156,20 +156,21 @@ function Highlights() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-8%' }}
             transition={{ type: 'spring', bounce: 0.16, duration: 0.8, delay: (i % 3) * 0.06 }}
-            className="relative flex aspect-[3/4] w-[260px] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-[28px] p-6 md:w-[300px]"
-            style={{ background: `linear-gradient(160deg, ${h.grad[0]}, ${h.grad[1]})`, boxShadow: '0 30px 60px -32px rgba(28,40,80,0.5)' }}
+            className="relative aspect-[3/4] w-[280px] shrink-0 snap-start overflow-hidden rounded-[28px] bg-neutral-900 md:w-[320px]"
+            style={{ boxShadow: '0 34px 64px -34px rgba(28,40,80,0.55)' }}
           >
-            <div
-              className="flex h-12 w-12 items-center justify-center rounded-2xl [&>svg]:h-6 [&>svg]:w-6"
-              style={{ background: 'rgba(255,255,255,0.16)', color: h.accent }}
-            >
-              {ICONS[h.icon]}
-            </div>
-            <div>
-              <h3 className="whitespace-pre-line font-semibold tracking-tight text-white" style={{ fontFamily: DISPLAY, fontSize: 'clamp(24px,2.4vw,30px)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+            {h.video ? (
+              <video src={h.media} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+            ) : (
+              <img src={h.media} alt={h.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+            )}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(6,10,20,0.86) 4%, rgba(6,10,20,0.28) 42%, rgba(6,10,20,0) 66%)' }} />
+            <div className="absolute inset-x-0 bottom-0 p-6">
+              <div className="font-mono text-[11px] uppercase tracking-[0.2em]" style={{ color: '#a8c5ff' }}>{h.eyebrow}</div>
+              <h3 className="mt-1.5 font-semibold tracking-tight text-white" style={{ fontFamily: DISPLAY, fontSize: 'clamp(22px,2.2vw,28px)', letterSpacing: '-0.02em', lineHeight: 1.06 }}>
                 {h.title}
               </h3>
-              <p className="mt-3 text-[14px] leading-relaxed" style={{ color: h.accent, opacity: 0.86 }}>{h.body}</p>
+              <p className="mt-2 text-[13.5px] leading-snug text-white/75">{h.body}</p>
             </div>
           </motion.div>
         ))}
@@ -482,6 +483,32 @@ export function AudiobookPage({ project }: { project: Project }) {
         </div>
       </section>
 
+      {/* ============ EVERY PROTOTYPE (real iteration photo) ============ */}
+      <section className="scroll-mt-16 px-6 py-24 md:py-32">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid items-center gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-16">
+            <Reveal>
+              <div>
+                <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Every version</div>
+                <h2 className="mt-5 font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,54px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
+                  It took a lot of tries.
+                </h2>
+                <p className="mt-6 max-w-[42ch] text-lg leading-relaxed text-neutral-500">
+                  Every shell here is a print I held, judged, and threw back on the pile — shrinking the
+                  body, nudging buttons a millimetre, and chasing the round screen until the whole thing
+                  finally disappeared into the hand.
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div className="overflow-hidden rounded-[24px] ring-1 ring-black/5 bg-neutral-100" style={{ boxShadow: '0 40px 90px -34px rgba(28,40,80,0.4)' }}>
+                <img src="/assets/prototypes.jpg" alt="Every 3D-printed prototype shell, across dozens of iterations" loading="lazy" className="w-full object-cover" />
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
       {/* ============ SPECS — big Apple-style stat blocks ============ */}
       <section id="specs" className="scroll-mt-16 px-6 py-24 md:py-28" style={{ background: 'linear-gradient(180deg, #fafafa, #f1f3f8)' }}>
         <div className="mx-auto max-w-6xl">
@@ -519,6 +546,11 @@ export function AudiobookPage({ project }: { project: Project }) {
 
       {/* ============ KEEP EXPLORING ============ */}
       <section className="px-6 py-28 md:py-40 text-center">
+        <Reveal className="mx-auto mb-14 max-w-[420px]">
+          <div className="overflow-hidden rounded-[28px] ring-1 ring-black/5 bg-neutral-100" style={{ boxShadow: '0 40px 90px -34px rgba(28,40,80,0.4)' }}>
+            <video src="/assets/clip-hold.mp4" autoPlay muted loop playsInline className="w-full object-cover" />
+          </div>
+        </Reveal>
         <Reveal>
           <LineReveal
             text="Soldered, sealed, and still easy to open."

@@ -14,10 +14,9 @@ const experiences: ExperienceItem[] = [
   {
     title: 'Ride Development Engineering Intern',
     company: 'Walt Disney Imagineering',
-    date: 'Jun 2026 — Present',
-    summary: 'Developing ride systems for upcoming attractions.',
+    date: 'Jun 2026 — Aug 2026',
+    summary: 'Developed ride systems for Avengers: Infinity Defense, an upcoming Avengers Campus attraction.',
     logo: '/assets/logos/walt-disney-imagineering.webp',
-    current: true,
   },
   {
     title: 'Manufacturing Design Engineering Intern',

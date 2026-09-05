@@ -37,6 +37,86 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'AudiobookPlayer',
+    title: 'ode. — Audiobook Player',
+    description: 'A distraction-free handheld audiobook player — fully soldered off the breadboard and into its final 3D-printed enclosure. Tentatively named ode.',
+    image: '/assets/device-hero.jpg',
+    images: [
+      {
+        url: '/assets/coverimage-DtUrAx8Y.webp',
+        caption: 'The enclosure concept render that started the final design'
+      },
+      {
+        url: '/assets/audiobook-final-print.webp',
+        caption: 'The finalized enclosure design, fresh off the printer'
+      },
+      {
+        url: '/assets/audiobook-soldered.webp',
+        caption: 'Fully soldered stack — round display, controls, and battery, no breadboard in sight'
+      },
+      {
+        url: '/assets/audiobook-round-display.webp',
+        caption: 'First test of the round display that replaced the original rectangular screen'
+      },
+      {
+        url: '/assets/audiobook-iterations.webp',
+        caption: 'Sketches and the trail of 3D-printed enclosure iterations it took to get here'
+      },
+      {
+        url: '/assets/audiobook-enclosure-v2.webp',
+        caption: 'An earlier enclosure version — test-fitting components into the printed shell'
+      },
+      {
+        url: '/assets/audiobook-final-assembly.webp',
+        caption: 'Final design mid-assembly'
+      },
+      {
+        url: '/assets/audiobook-macsim.mp4',
+        caption: 'Simulating the full interface and I/O on my Mac before wiring anything'
+      },
+      {
+        url: '/assets/examplemenu-BlT3ANCo.gif',
+        caption: 'Example of a menu screen'
+      },
+      {
+        url: '/assets/audiobook-breadboard-1.webp',
+        caption: 'Where it started — first working prototype on the breadboard'
+      },
+      {
+        url: '/assets/SpriteMap-D3pWvwDB.webp',
+        caption: 'Spritemap to hold all GUI elements'
+      },
+      {
+        url: '/assets/initialmockup-B6cGBnij.webp',
+        caption: 'Initial mockup in Photoshop'
+      }
+    ],
+    link: '/project/AudiobookPlayer',
+    stats: [
+      { label: 'Status', value: 'Assembled & working' },
+      { label: 'Storage Capacity', value: '256gb' },
+      { label: 'Supported Formats', value: 'MP3, M4B, AAC, FLAC' }
+    ],
+    why: "I love books, however, in college I found that I don't have the time to get lost in a good story like I used to when I was younger. This made me turn my attention to audiobooks, where I now listen all the time. However, while it's convenient listening on my phone, I want to reduce all the distractions and problems my phone brings-especially in the gym.",
+    what: "A handheld audiobook player with a simple interface, long battery life, and easy-to-use physical controls. Beyond the basics—speed control, bookmarking, a sleep timer—it has features I always wished audiobook apps had, like automatically transcribing and saving quotes as I listen. Everything is now soldered together off the breadboard, rebuilt around a round display, and living in a 3D-printed enclosure that took many redesigns to get right.",
+    how: "Built around a Raspberry Pi with Adafruit components and custom Python software. I started with sketches and design iterations, then simulated the full interface and I/O on my Mac before wiring anything—so by the time I moved to the breadboard, I knew exactly what components I needed and how they would behave. From there it was continuous enclosure redesign—CAD sketches and 3D-print iterations—until the form factor finally felt right in the hand.",
+    story: {
+      challenge: "Designing a dedicated audiobook player that's genuinely better than a phone app—better physical controls, zero distractions—while learning the hardware side of the build: wiring, power management, and real-device I/O. The interface had to be simple enough to use mid-workout without looking, but still expose the features I actually care about.",
+      approach: "I began with the design process: sketches, Photoshop interface mockups, and iterations on the physical layout and spritemap-based GUI. Before touching any hardware, I built a simulation of the entire player on my Mac to validate the interface and confirm exactly which components and I/O I would need. Only then did I move to a breadboard, bringing up the screen, controls, and audio pipeline step by step.",
+      outcome: "The player is fully soldered together and off the breadboard—hardware and software working as one device, including the unique features like automatic quote transcription and saving. Along the way I switched to a round display, which sent the enclosure through continuous redesign: rounds of CAD sketches and 3D-printed iterations before settling on a final form factor. The latest design work is about longevity—keeping every component secure inside the enclosure while staying easy to disassemble for future repairs and upgrades."
+    },
+    technologies: ['Raspberry Pi', 'Python', 'CAD', '3D printing', 'bash', 'design thinking'],
+    keyFeatures: [
+      'Distraction-free listening',
+      'Automatic quote transcription & saving',
+      'Long battery life',
+      'Simple physical interface',
+      'Speed control',
+      'Bookmarking & sleep timer'
+    ]
+  },
+
+  {
     id: 'AppleMDE',
     title: 'Manufacturing Design at Apple',
     description: 'A year owning yield, cost, and process problems on high-volume consumer hardware. Details kept intentionally vague — the results are real.',
@@ -158,86 +238,6 @@ export const projects: Project[] = [
       'Automated focal-point curve fitting',
       'Motorized stage control',
       'Comprehensive handoff documentation'
-    ]
-  },
-
-  {
-    id: 'AudiobookPlayer',
-    title: 'ode. — Audiobook Player',
-    description: 'A distraction-free handheld audiobook player — fully soldered off the breadboard and into its final 3D-printed enclosure. Tentatively named ode.',
-    image: '/assets/device-hero.jpg',
-    images: [
-      {
-        url: '/assets/coverimage-DtUrAx8Y.webp',
-        caption: 'The enclosure concept render that started the final design'
-      },
-      {
-        url: '/assets/audiobook-final-print.webp',
-        caption: 'The finalized enclosure design, fresh off the printer'
-      },
-      {
-        url: '/assets/audiobook-soldered.webp',
-        caption: 'Fully soldered stack — round display, controls, and battery, no breadboard in sight'
-      },
-      {
-        url: '/assets/audiobook-round-display.webp',
-        caption: 'First test of the round display that replaced the original rectangular screen'
-      },
-      {
-        url: '/assets/audiobook-iterations.webp',
-        caption: 'Sketches and the trail of 3D-printed enclosure iterations it took to get here'
-      },
-      {
-        url: '/assets/audiobook-enclosure-v2.webp',
-        caption: 'An earlier enclosure version — test-fitting components into the printed shell'
-      },
-      {
-        url: '/assets/audiobook-final-assembly.webp',
-        caption: 'Final design mid-assembly'
-      },
-      {
-        url: '/assets/audiobook-macsim.mp4',
-        caption: 'Simulating the full interface and I/O on my Mac before wiring anything'
-      },
-      {
-        url: '/assets/examplemenu-BlT3ANCo.gif',
-        caption: 'Example of a menu screen'
-      },
-      {
-        url: '/assets/audiobook-breadboard-1.webp',
-        caption: 'Where it started — first working prototype on the breadboard'
-      },
-      {
-        url: '/assets/SpriteMap-D3pWvwDB.webp',
-        caption: 'Spritemap to hold all GUI elements'
-      },
-      {
-        url: '/assets/initialmockup-B6cGBnij.webp',
-        caption: 'Initial mockup in Photoshop'
-      }
-    ],
-    link: '/project/AudiobookPlayer',
-    stats: [
-      { label: 'Status', value: 'Assembled & working' },
-      { label: 'Storage Capacity', value: '256gb' },
-      { label: 'Supported Formats', value: 'MP3, M4B, AAC, FLAC' }
-    ],
-    why: "I love books, however, in college I found that I don't have the time to get lost in a good story like I used to when I was younger. This made me turn my attention to audiobooks, where I now listen all the time. However, while it's convenient listening on my phone, I want to reduce all the distractions and problems my phone brings-especially in the gym.",
-    what: "A handheld audiobook player with a simple interface, long battery life, and easy-to-use physical controls. Beyond the basics—speed control, bookmarking, a sleep timer—it has features I always wished audiobook apps had, like automatically transcribing and saving quotes as I listen. Everything is now soldered together off the breadboard, rebuilt around a round display, and living in a 3D-printed enclosure that took many redesigns to get right.",
-    how: "Built around a Raspberry Pi with Adafruit components and custom Python software. I started with sketches and design iterations, then simulated the full interface and I/O on my Mac before wiring anything—so by the time I moved to the breadboard, I knew exactly what components I needed and how they would behave. From there it was continuous enclosure redesign—CAD sketches and 3D-print iterations—until the form factor finally felt right in the hand.",
-    story: {
-      challenge: "Designing a dedicated audiobook player that's genuinely better than a phone app—better physical controls, zero distractions—while learning the hardware side of the build: wiring, power management, and real-device I/O. The interface had to be simple enough to use mid-workout without looking, but still expose the features I actually care about.",
-      approach: "I began with the design process: sketches, Photoshop interface mockups, and iterations on the physical layout and spritemap-based GUI. Before touching any hardware, I built a simulation of the entire player on my Mac to validate the interface and confirm exactly which components and I/O I would need. Only then did I move to a breadboard, bringing up the screen, controls, and audio pipeline step by step.",
-      outcome: "The player is fully soldered together and off the breadboard—hardware and software working as one device, including the unique features like automatic quote transcription and saving. Along the way I switched to a round display, which sent the enclosure through continuous redesign: rounds of CAD sketches and 3D-printed iterations before settling on a final form factor. The latest design work is about longevity—keeping every component secure inside the enclosure while staying easy to disassemble for future repairs and upgrades."
-    },
-    technologies: ['Raspberry Pi', 'Python', 'CAD', '3D printing', 'bash', 'design thinking'],
-    keyFeatures: [
-      'Distraction-free listening',
-      'Automatic quote transcription & saving',
-      'Long battery life',
-      'Simple physical interface',
-      'Speed control',
-      'Bookmarking & sleep timer'
     ]
   },
 

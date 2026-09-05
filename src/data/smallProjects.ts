@@ -21,6 +21,18 @@ export const smallProjects: SmallProject[] = [
     image: '/assets/smiski-display.webp',
   },
   {
+    id: 'zoovadis',
+    title: 'Zoo Vadis Insert',
+    description: '3D-printed board game organizer',
+    image: '/assets/zoo-vadis.jpg',
+  },
+  {
+    id: 'arcade',
+    title: 'Custom Arcade Cabinet',
+    description: 'CNC-cut cabinet running RetroPie on a Raspberry Pi — 200+ games',
+    image: '/assets/arcade-cabinet.jpg',
+  },
+  {
     id: 'violin',
     title: 'Violin',
     description: 'Embroidery project',

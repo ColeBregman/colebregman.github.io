@@ -169,20 +169,31 @@ export function AudiobookPage({ project }: { project: Project }) {
   const { scrollYProgress: heroP } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroY = useTransform(heroP, [0, 1], ['0%', '24%']);
   const heroFade = useTransform(heroP, [0, 0.85], [1, 0]);
-  const imgY = useTransform(heroP, [0, 1], ['0%', '14%']);
   const imgScale = useTransform(heroP, [0, 1], [1, 1.06]);
 
   return (
     <div className="bg-[#fafafa] text-[#0a0a0a]" style={{ scrollBehavior: 'smooth' }}>
       <LocalNav />
 
-      {/* ============ HERO ============ */}
-      <header id="overview" ref={heroRef} className="relative flex min-h-[100dvh] scroll-mt-16 flex-col items-center px-6 pt-24 text-center">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(70% 50% at 50% 22%, rgba(43,87,196,0.08), rgba(250,250,250,0) 62%)' }}
+      {/* ============ HERO — device in hand, title in the photo's white space ============ */}
+      <header id="overview" ref={heroRef} className="relative flex min-h-[100dvh] scroll-mt-16 items-start overflow-hidden bg-white md:items-center">
+        {/* the device, in hand — full-bleed; the photo's light left/top holds the title */}
+        <motion.img
+          src="/assets/device-inhand.jpg"
+          alt="Holding the ode. audiobook player"
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          style={{ scale: imgScale, objectPosition: '72% 50%' }}
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         />
-        <motion.div style={{ y: heroY, opacity: heroFade }} className="relative">
+        {/* white wash so the copy stays legible over the photo */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-white/70 to-white/0 md:bg-gradient-to-r md:from-white md:via-white/55 md:to-transparent" />
+
+        <motion.div
+          style={{ y: heroY, opacity: heroFade }}
+          className="relative z-10 w-full max-w-xl px-6 pt-28 sm:px-10 md:px-14 md:pt-0 lg:px-20"
+        >
           <Reveal y={16}>
             <div className="font-mono text-xs uppercase tracking-[0.28em]" style={{ color: NAVY }}>
               A handheld audiobook player, built from scratch
@@ -193,39 +204,21 @@ export function AudiobookPage({ project }: { project: Project }) {
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ type: 'spring', bounce: 0.2, duration: 1.1, delay: 0.1 }}
             className="mt-4 font-semibold tracking-tight"
-            style={{ fontFamily: DISPLAY, fontSize: 'clamp(76px,17vw,184px)', letterSpacing: '-0.05em', lineHeight: 0.9 }}
+            style={{ fontFamily: DISPLAY, fontSize: 'clamp(72px,12vw,150px)', letterSpacing: '-0.05em', lineHeight: 0.9 }}
           >
             ode<span style={{ color: NAVY }}>.</span>
           </motion.h1>
           <Reveal delay={0.22}>
-            <p className="mt-3 font-medium" style={{ fontFamily: DISPLAY, fontSize: 'clamp(22px,3.2vw,34px)', letterSpacing: '-0.02em' }}>
+            <p className="mt-3 font-medium" style={{ fontFamily: DISPLAY, fontSize: 'clamp(22px,3.4vw,32px)', letterSpacing: '-0.02em' }}>
               1,000 books in your pocket.
             </p>
-            <p className="mt-1 text-sm font-medium uppercase tracking-[0.2em] text-neutral-400">Audiobooks, remembered</p>
+            <p className="mt-1 text-sm font-medium uppercase tracking-[0.2em] text-neutral-500">Audiobooks, remembered</p>
           </Reveal>
-        </motion.div>
-
-        {/* product hero shot on a soft platform (lifts a light device off a light bg) */}
-        <motion.div style={{ y: imgY, scale: imgScale }} className="relative mt-4 w-full max-w-[440px]">
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-2 mx-auto h-24 w-[86%]"
-            style={{ background: 'radial-gradient(60% 100% at 50% 50%, rgba(28,40,80,0.22), rgba(28,40,80,0) 72%)', filter: 'blur(6px)' }}
-            aria-hidden
-          />
-          <motion.img
-            src="/assets/device-hero.jpg"
-            alt="The ode. audiobook player"
-            initial={{ opacity: 0, y: 40, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ type: 'spring', bounce: 0.16, duration: 1.2, delay: 0.35 }}
-            className="relative mx-auto w-full rounded-[32px] object-contain"
-            style={{ filter: 'drop-shadow(0 42px 46px rgba(28,40,80,0.32))' }}
-          />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}
-          className="pointer-events-none absolute bottom-6 font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-400"
+          className="pointer-events-none absolute bottom-6 left-6 font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-500 sm:left-10 md:left-14 lg:left-20"
         >
           Scroll to explore ↓
         </motion.div>

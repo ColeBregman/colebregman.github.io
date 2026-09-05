@@ -107,10 +107,12 @@ function LocalNav() {
 /* ---------- "Get the highlights" — horizontal snap carousel ---------- */
 
 const HIGHLIGHTS: { media: string; video?: boolean; eyebrow: string; title: string; body: string }[] = [
+  { media: '/assets/clip-beauty.mp4', video: true, eyebrow: 'Library', title: 'A whole library', body: 'A thousand books — MP3, M4B, AAC, FLAC — on 256 GB.' },
   { media: '/assets/clip-inhand.mp4', video: true, eyebrow: 'Controls', title: 'Intuitive mapping', body: 'Every control does the obvious thing — you work it without looking.' },
-  { media: '/assets/device-hero.jpg', eyebrow: 'Focus', title: 'Notification-free', body: 'No feeds, no badges, nothing buzzing for your attention.' },
-  { media: '/assets/clip-webui.mp4', video: true, eyebrow: 'Companion', title: 'A little web UI', body: 'A local host to upload books, see your stats, and copy out any quote or note.' },
+  { media: '/assets/device-buttons.jpg', eyebrow: 'Voice notes', title: 'Speak a thought', body: 'Pause, say it, and it lands marked to the chapter and second.' },
   { media: '/assets/clip-capture.mp4', video: true, eyebrow: 'Capture', title: 'Keep the good lines', body: 'One press saves the last thirty seconds as text.' },
+  { media: '/assets/clip-webui.mp4', video: true, eyebrow: 'Companion', title: 'A little web UI', body: 'A local host to upload books, see your stats, and copy out any quote or note.' },
+  { media: '/assets/device-hero.jpg', eyebrow: 'Focus', title: 'Notification-free', body: 'No feeds, no badges, nothing buzzing for your attention.' },
   { media: '/assets/device-teardown.jpg', eyebrow: 'By hand', title: 'Soldered & serviceable', body: 'Point-to-point, packed into a printed shell.' },
 ];
 
@@ -198,8 +200,9 @@ export function AudiobookPage({ project }: { project: Project }) {
           </motion.h1>
           <Reveal delay={0.22}>
             <p className="mt-3 font-medium" style={{ fontFamily: DISPLAY, fontSize: 'clamp(22px,3.2vw,34px)', letterSpacing: '-0.02em' }}>
-              Audiobooks, remembered.
+              1,000 books in your pocket.
             </p>
+            <p className="mt-1 text-sm font-medium uppercase tracking-[0.2em] text-neutral-400">Audiobooks, remembered</p>
           </Reveal>
         </motion.div>
 

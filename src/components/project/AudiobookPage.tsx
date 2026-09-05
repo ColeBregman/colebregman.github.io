@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import CountUp from 'react-countup';
 import type { Project } from '../../types/project';
-import { DeviceShowcase } from './DeviceShowcase';
+import { ScrollAssembly } from './ScrollAssembly';
 import { AudiobookStory } from './AudiobookStory';
 import { getNextProjectLink, getNextProjectTitle } from '../../utils/projectHelpers';
 
 const NAVY = '#2b57c4';
 const NAVY_DEEP = '#1c3f96';
-const TEAL = '#0f9a8a';
 const INK = '#0a0a0a';
 const DISPLAY = '-apple-system, "SF Pro Display", "Segoe UI", system-ui, sans-serif';
 
@@ -235,8 +234,8 @@ export function AudiobookPage({ project }: { project: Project }) {
       {/* ============ HIGHLIGHTS CAROUSEL ============ */}
       <Highlights />
 
-      {/* ============ TAKE A CLOSER LOOK — 3D explode → assemble (own title inside) ============ */}
-      <DeviceShowcase />
+      {/* ============ TEARDOWN — pinned assemble-on-scroll, labeled components ============ */}
+      <ScrollAssembly />
 
       {/* ============ THE WHY ============ */}
       <section className="relative scroll-mt-16 px-6 py-28 md:py-40">

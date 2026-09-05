@@ -70,7 +70,7 @@ const ui = {
     this.screen.tap && this.screen.tap(this);
   },
   hold() {
-    if (this.locked) { this.lockFlash = 1; return; }
+    if (this.locked) { this.toggleLock(); return; } // hold again to unlock
     if (this.noteRec.active) return;
     blip(520, 0.05);
     this.screen.hold && this.screen.hold(this);

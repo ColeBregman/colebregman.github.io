@@ -116,6 +116,35 @@ const HIGHLIGHTS: { media: string; video?: boolean; eyebrow: string; title: stri
 ];
 
 function Highlights() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ down: false, moved: false, startX: 0, startLeft: 0 });
+
+  const onDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return; // touch/pen keep native swipe scrolling
+    const el = trackRef.current; if (!el) return;
+    drag.current = { down: true, moved: false, startX: e.clientX, startLeft: el.scrollLeft };
+    el.setPointerCapture(e.pointerId);
+    el.style.scrollSnapType = 'none';
+    el.style.cursor = 'grabbing';
+  };
+  const onMove = (e: React.PointerEvent) => {
+    const el = trackRef.current; if (!el || !drag.current.down) return;
+    const dx = e.clientX - drag.current.startX;
+    if (Math.abs(dx) > 4) drag.current.moved = true;
+    el.scrollLeft = drag.current.startLeft - dx;
+  };
+  const onUp = (e: React.PointerEvent) => {
+    const el = trackRef.current; if (!el || !drag.current.down) return;
+    drag.current.down = false;
+    el.style.scrollSnapType = '';
+    el.style.cursor = '';
+    try { el.releasePointerCapture(e.pointerId); } catch { /* ignore */ }
+  };
+  // swallow the click that follows a real drag so it doesn't register as a tap
+  const onClickCapture = (e: React.MouseEvent) => {
+    if (drag.current.moved) { e.preventDefault(); e.stopPropagation(); drag.current.moved = false; }
+  };
+
   return (
     <section id="highlights" className="scroll-mt-16 py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
@@ -126,8 +155,14 @@ function Highlights() {
         </Reveal>
       </div>
       <div
-        className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-6 md:mt-12"
+        ref={trackRef}
+        className="mt-10 flex cursor-grab snap-x snap-mandatory select-none gap-5 overflow-x-auto px-6 pb-6 md:mt-12"
         style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+        onPointerCancel={onUp}
+        onClickCapture={onClickCapture}
       >
         <style>{`#highlights ::-webkit-scrollbar{display:none}`}</style>
         <div className="shrink-0" style={{ width: 'max(0px, calc((100vw - 72rem) / 2))' }} aria-hidden />
@@ -142,9 +177,9 @@ function Highlights() {
             style={{ boxShadow: '0 34px 64px -34px rgba(28,40,80,0.55)' }}
           >
             {h.video ? (
-              <video src={h.media} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+              <video src={h.media} autoPlay muted loop playsInline draggable={false} className="absolute inset-0 h-full w-full object-cover" />
             ) : (
-              <img src={h.media} alt={h.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+              <img src={h.media} alt={h.title} loading="lazy" draggable={false} className="absolute inset-0 h-full w-full object-cover" />
             )}
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(6,10,20,0.86) 4%, rgba(6,10,20,0.28) 42%, rgba(6,10,20,0) 66%)' }} />
             <div className="absolute inset-x-0 bottom-0 p-6">

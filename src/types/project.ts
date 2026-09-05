@@ -40,7 +40,7 @@ export const projects: Project[] = [
     id: 'AudiobookPlayer',
     title: 'ode. — Audiobook Player',
     description: 'A distraction-free handheld audiobook player — fully soldered off the breadboard and into its final 3D-printed enclosure. Tentatively named ode.',
-    image: '/assets/device-hero.jpg',
+    image: '/assets/device-cover.jpg',
     images: [
       {
         url: '/assets/coverimage-DtUrAx8Y.webp',

@@ -6,40 +6,37 @@ const ACCENT = '#6f9bff';
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
-/** The build order — each card names a cluster of parts as the device comes together. */
+// The video's real assembly timeline (seconds). Scroll scrubs 0 → ASM_END;
+// the remaining tail (ASM_END → duration) is a "spin for fun" that autoplays.
+const ASM_END = 17;
+
+/** Each card is tied to the window of video time in which its part flies in. */
 const STAGES = [
-  {
-    no: '01', label: 'Compute', part: 'Raspberry Pi Zero 2 W',
-    body: 'A quad-core Linux computer the size of a stick of gum. Runs the player and the on-device Whisper model that turns speech into text.',
-  },
-  {
-    no: '02', label: 'Power', part: '1100 mAh LiPo · USB-C',
-    body: 'An all-day cell, a power module, and USB-C charging tucked along the spine.',
-  },
-  {
-    no: '03', label: 'Audio', part: 'DAC · Amp · Speaker · Mic',
-    body: 'A dedicated DAC and amplifier for clean playback, and a MEMS microphone for capturing quotes and voice notes.',
-  },
-  {
-    no: '04', label: 'Display', part: '1.28″ Round TFT',
-    body: 'A single round screen — one book, one cover. No feed, no notifications.',
-  },
-  {
-    no: '05', label: 'Controls', part: 'Encoder · Knob · Buttons',
-    body: 'A knurled wheel on a rotary encoder, plus three machined buttons on springs: capture, voice, and back.',
-  },
-  {
-    no: '06', label: 'Enclosure', part: 'Top & Back Shells',
-    body: '3D-printed shells, iterated across a dozen prototypes and closed up by hand around every part.',
-  },
+  { t0: 0,  t1: 4,  label: 'Controls', part: 'Capture · Voice · Back buttons', body: 'The button sub-assembly — three machined buttons on their springs.' },
+  { t0: 4,  t1: 6,  label: 'Chassis',  part: 'Shell + 1.28″ round TFT',        body: 'The printed shell and the round screen — one book, one cover.' },
+  { t0: 6,  t1: 9,  label: 'Power',    part: 'Power module',                    body: 'Regulation and USB-C charging along the spine.' },
+  { t0: 9,  t1: 10, label: 'Compute',  part: 'Raspberry Pi Zero 2 W',          body: 'The quad-core brain running the player and on-device Whisper.' },
+  { t0: 10, t1: 11, label: 'Audio',    part: 'DAC',                            body: 'A dedicated digital-to-analog converter for clean playback.' },
+  { t0: 11, t1: 12, label: 'Capture',  part: 'Microphone',                     body: 'A MEMS mic for capturing quotes and voice notes.' },
+  { t0: 12, t1: 13, label: 'Battery',  part: '1100 mAh LiPo',                  body: 'An all-day cell tucked into the base.' },
+  { t0: 13, t1: 14, label: 'Sound',    part: 'Amplifier + speaker',            body: 'Amp and speaker for listening out loud.' },
+  { t0: 14, t1: 15, label: 'Wheel',    part: 'Rotary encoder + knob',          body: 'The knurled wheel for scrubbing and menus.' },
+  { t0: 15, t1: 17, label: 'Cover',    part: 'Back cover + screws',            body: 'The back cover and fasteners close it up by hand.' },
 ];
 const N = STAGES.length;
+
+function stageAt(time: number): number {
+  if (time < STAGES[0].t0) return -1;
+  if (time >= ASM_END) return N; // fully assembled → spinning
+  for (let i = 0; i < N; i++) if (time >= STAGES[i].t0 && time < STAGES[i].t1) return i;
+  return N - 1;
+}
 
 /**
  * "Assemble on scroll" teardown for the ode. player.
  * Left: a rendered assembly animation scrubbed by scroll — the device builds
- * itself part by part as you move down the pinned section.
- * Right: the component list rises in lockstep, each part named as it lands.
+ * itself part by part as you move down the pinned section, then spins on its
+ * own once complete. Right: the component list rises in lockstep.
  * On phones it plays through on a loop with the full parts list beneath it.
  */
 export function ScrollAssembly() {
@@ -67,15 +64,15 @@ export function ScrollAssembly() {
     if (mobileRef.current) return; // mobile just loops the clip; no scrubbing
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // window of scroll over which the assembly plays (leaves an intro + settle)
-    const P0 = 0.08, P1 = 0.9;
+    // scroll zones: [P0,PA] scrubs the assembly, [PA,P1] lets the spin autoplay
+    const P0 = 0.05, PA = 0.8;
     let duration = 0;
-    let target = 0;         // desired currentTime
     let raf = 0;
     let lastActive = -2;
     let lastSet = -1;
+    let spinning = false;
 
-    const onMeta = () => { duration = video.duration || 0; };
+    const onMeta = () => { duration = video.duration || 20; };
     video.addEventListener('loadedmetadata', onMeta);
     if (video.readyState >= 1) onMeta();
 
@@ -87,33 +84,38 @@ export function ScrollAssembly() {
 
       const totalScroll = wrap.offsetHeight - window.innerHeight;
       const progress = clamp(-rect.top / Math.max(1, totalScroll));
-      // linear map of scroll → assembly time so the scrub feels 1:1
-      const f = clamp((progress - P0) / (P1 - P0));
 
-      if (duration) {
-        // keep a sliver of the start/end so it never sits on the empty frame 0
-        target = (0.03 + 0.97 * f) * duration;
-        // seek only on a meaningful change; all-intra encode makes this crisp
-        if (video.readyState >= 2 && Math.abs(target - lastSet) > 0.012) {
-          if (!video.seeking) { video.currentTime = target; lastSet = target; }
+      let activeTime: number;
+      if (progress < PA) {
+        // ---- scrub the assembly (paused, seeked by scroll) ----
+        if (spinning) { spinning = false; video.pause(); }
+        const f = clamp((progress - P0) / (PA - P0));   // 0..1, linear
+        const t = f * ASM_END;
+        if (video.readyState >= 2 && Math.abs(t - lastSet) > 0.012 && !video.seeking) {
+          video.currentTime = t; lastSet = t;
         }
+        activeTime = t;
+      } else {
+        // ---- spin for fun: autoplay + loop the tail, independent of scroll ----
+        if (!spinning) { spinning = true; video.currentTime = ASM_END; if (!reduce) video.play().catch(() => {}); }
+        else if (!reduce && video.paused) video.play().catch(() => {});
+        if (duration && (video.currentTime >= duration - 0.06 || video.currentTime < ASM_END - 0.25)) {
+          video.currentTime = ASM_END;
+        }
+        activeTime = ASM_END; // everything assembled
       }
 
-      let a: number;
-      if (progress < P0) a = -1;
-      else if (progress >= P1 - 0.001) a = N;
-      else a = clamp(Math.floor(f * N), 0, N - 1);
+      const a = stageAt(activeTime);
       if (a !== lastActive) { lastActive = a; setActive(a); }
     };
 
     // prime decoding so the first scrub-seek is instant (esp. Safari/iOS)
     video.muted = true;
-    const prime = () => {
+    if (!reduce) {
       const p = video.play();
       if (p && typeof p.then === 'function') p.then(() => video.pause()).catch(() => {});
       else video.pause();
-    };
-    if (!reduce) prime();
+    }
     tick();
 
     return () => {
@@ -132,7 +134,7 @@ export function ScrollAssembly() {
       preload="auto"
       autoPlay={mobile}
       loop={mobile}
-      className="h-full w-full object-cover"
+      className="h-full w-full object-contain"
       style={{ background: '#08090c' }}
     />
   );
@@ -142,14 +144,14 @@ export function ScrollAssembly() {
       <div className="font-mono text-[11px] uppercase tracking-[0.24em]" style={{ color: ACCENT }}>
         Designed &amp; built from scratch
       </div>
-      <h2 className="mt-2 text-[26px] sm:text-3xl font-black tracking-tighter text-white">
+      <h2 className="mt-2 text-2xl sm:text-3xl font-black tracking-tighter text-white">
         Every part, in its place.
       </h2>
-      <p className="mt-2 max-w-md text-sm leading-relaxed text-neutral-400">
-        {mobile ? 'Every component, modeled and labeled.' : 'Scroll to build it — one component at a time.'}
+      <p className="mt-2 max-w-md text-[13px] leading-relaxed text-neutral-400">
+        {mobile ? 'Every component, in the order it goes in.' : 'Scroll to build it — one component at a time.'}
       </p>
 
-      <ol className="mt-5 flex flex-col gap-1">
+      <ol className="mt-4 flex flex-col gap-0.5">
         {STAGES.map((s, i) => {
           const state = mobile ? 'active' : active >= N ? (i === N - 1 ? 'active' : 'done')
             : active < 0 ? 'future'
@@ -158,12 +160,12 @@ export function ScrollAssembly() {
           const isFuture = state === 'future';
           return (
             <li
-              key={s.no}
-              className="relative rounded-2xl px-4 py-2.5 transition-all duration-500 ease-out"
+              key={s.part}
+              className="relative rounded-xl px-4 py-2 transition-all duration-500 ease-out"
               style={{
                 background: isActive ? 'rgba(111,155,255,0.10)' : 'transparent',
-                opacity: isFuture ? 0.32 : 1,
-                transform: isFuture ? 'translateY(10px)' : 'translateY(0)',
+                opacity: isFuture ? 0.34 : 1,
+                transform: isFuture ? 'translateY(8px)' : 'translateY(0)',
               }}
             >
               <div className="flex items-baseline gap-3">
@@ -171,7 +173,7 @@ export function ScrollAssembly() {
                   className="font-mono text-[11px] tabular-nums transition-colors duration-500"
                   style={{ color: isActive ? ACCENT : '#5b6472' }}
                 >
-                  {s.no}
+                  {String(i + 1).padStart(2, '0')}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-3">
@@ -192,8 +194,8 @@ export function ScrollAssembly() {
                       opacity: isActive || mobile ? 1 : 0,
                     }}
                   >
-                    <p className="overflow-hidden text-[13.5px] leading-relaxed text-neutral-400"
-                       style={{ marginTop: isActive || mobile ? 8 : 0 }}>
+                    <p className="overflow-hidden text-[13px] leading-relaxed text-neutral-400"
+                       style={{ marginTop: isActive || mobile ? 6 : 0 }}>
                       {s.body}
                     </p>
                   </div>
@@ -220,7 +222,7 @@ export function ScrollAssembly() {
 
   // ---- desktop: pinned, two columns ----
   return (
-    <section ref={wrapRef} className="relative w-full" style={{ height: '520vh', background: '#08090c' }}>
+    <section ref={wrapRef} className="relative w-full" style={{ height: '680vh', background: '#08090c' }}>
       <div className="sticky top-0 flex h-screen w-full items-start overflow-hidden">
         <div className="relative h-full flex-1">{Video}</div>
         <div className="flex h-full w-[42%] max-w-[540px] shrink-0 flex-col justify-center px-8 pb-10 pt-24 lg:px-14">{Rail}</div>

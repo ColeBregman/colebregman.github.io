@@ -56,17 +56,9 @@ export function ProjectDetail() {
 
   // The audiobook player gets a fully bespoke, Apple-style narrative page.
   if (project.id === 'AudiobookPlayer') {
+    // Single top nav lives inside AudiobookPage (LocalNav); no floating pill / progress bar here.
     return (
       <div className="min-h-screen">
-        <ScrollProgress />
-        <div className="fixed left-6 top-6 z-50">
-          <Link
-            to="/#projects"
-            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm text-neutral-700 backdrop-blur-md transition-colors hover:border-black/30"
-          >
-            <ArrowLeft size={16} /> Projects
-          </Link>
-        </div>
         <AudiobookPage project={project} />
       </div>
     );

@@ -78,11 +78,16 @@ export function Navigation() {
     setIsMobileMenuOpen(false); // Close mobile menu on navigation
   };
 
+  // The audiobook project page carries its own single top nav (LocalNav).
+  if (location.pathname === '/project/AudiobookPlayer') {
+    return null;
+  }
+
   if (!isHomePage) {
     return (
       <nav className="fixed top-8 right-8 z-50">
-        <a 
-          href="/" 
+        <a
+          href="/"
           className="text-sm font-medium tracking-wider uppercase hover:opacity-60 transition-opacity"
         >
           ← Back

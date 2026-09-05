@@ -82,39 +82,22 @@ function ParallaxMedia({ src, alt, video = false, className = '' }:
   );
 }
 
-/* ---------- feature glyphs (SF-style line icons, 24×24, currentColor) ---------- */
+/* ---------- sticky local nav ---------- */
 
-const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
-const ICONS: Record<string, React.ReactNode> = {
-  focus: (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" /></svg>),
-  quote: (<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 6.2C7 7.4 5.3 9.8 5.3 12.8c0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2L9.6 6.2zM17.7 6.2c-2.6 1.2-4.3 3.6-4.3 6.6 0 2.1 1.3 3.6 3.2 3.6 1.6 0 2.8-1.2 2.8-2.8 0-1.5-1-2.6-2.5-2.6-.2 0-.5 0-.7.1.3-1.3 1.4-2.5 3-3.2l-1.5-1.7z" /></svg>),
-  mic: (<svg viewBox="0 0 24 24" {...S}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" /><path d="M12 18v3" /></svg>),
-  dial: (<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="7.4" /><path d="M12 4.6v1.8M12 17.6v1.8M4.6 12h1.8M17.6 12h1.8M6.9 6.9l1.3 1.3M15.8 15.8l1.3 1.3M17.1 6.9l-1.3 1.3M8.2 15.8l-1.3 1.3" /><circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none" /></svg>),
-  gauge: (<svg viewBox="0 0 24 24" {...S}><path d="M4 15.5a8 8 0 0 1 16 0" /><path d="M12 15.5l4.2-3.7" /><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none" /></svg>),
-  layers: (<svg viewBox="0 0 24 24" {...S}><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" /><path d="M4 12l8 4.5 8-4.5" /><path d="M4 16.5 12 21l8-4.5" opacity="0.45" /></svg>),
-};
-
-/* ---------- sticky local nav (Apple product-page style) ---------- */
-
-function LocalNav({ project }: { project: Project }) {
+function LocalNav() {
   const items = [['Overview', 'overview'], ['Highlights', 'highlights'], ['Try it', 'tryit'], ['Specs', 'specs']];
   return (
-    <nav
-      className="sticky top-0 z-40 border-b border-black/[0.06]"
-      style={{ background: 'rgba(250,250,250,0.72)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)' }}
-    >
-      <div className="mx-auto flex h-11 max-w-5xl items-center justify-center gap-5 px-6 text-[13px]">
-        <div className="flex items-center gap-5 text-neutral-500 sm:gap-7">
+    <nav className="sticky top-0 z-40 border-b-2 border-black bg-white">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+        <Link to="/#projects" className="text-sm font-bold uppercase tracking-[0.15em] transition-opacity hover:opacity-60">
+          ← Projects
+        </Link>
+        <div className="flex items-center gap-5 sm:gap-8">
           {items.map(([label, id]) => (
-            <a key={id} href={`#${id}`} className="transition-colors hover:text-black">{label}</a>
+            <a key={id} href={`#${id}`} className="text-xs font-bold uppercase tracking-[0.15em] opacity-50 transition-opacity hover:opacity-100 sm:text-sm">
+              {label}
+            </a>
           ))}
-          <Link
-            to={getNextProjectLink(project.id)}
-            className="rounded-full px-3.5 py-1 font-medium text-white transition-transform hover:scale-[1.04] active:scale-95"
-            style={{ background: NAVY }}
-          >
-            Next ↗
-          </Link>
         </div>
       </div>
     </nav>
@@ -124,11 +107,10 @@ function LocalNav({ project }: { project: Project }) {
 /* ---------- "Get the highlights" — horizontal snap carousel ---------- */
 
 const HIGHLIGHTS: { media: string; video?: boolean; eyebrow: string; title: string; body: string }[] = [
-  { media: '/assets/clip-inhand.mp4', video: true, eyebrow: 'Controls', title: 'Made to use blind', body: 'Turn, click and capture without looking down.' },
-  { media: '/assets/device-hero.jpg', eyebrow: 'Focus', title: 'One book, one screen', body: 'No feeds, no badges, no reason to reach for your phone.' },
-  { media: '/assets/clip-webui.mp4', video: true, eyebrow: 'Companion', title: 'Quotes, on the web', body: 'Everything you save, synced to a little local web app.' },
-  { media: '/assets/device-buttons.jpg', eyebrow: 'Capture', title: 'Keep the good lines', body: 'One press saves the last thirty seconds as text.' },
-  { media: '/assets/device-internals.jpg', eyebrow: 'Inside', title: 'A Pi, tuned to vanish', body: 'Whisper runs on-device — no account, no cloud.' },
+  { media: '/assets/clip-inhand.mp4', video: true, eyebrow: 'Controls', title: 'Intuitive mapping', body: 'Every control does the obvious thing — you work it without looking.' },
+  { media: '/assets/device-hero.jpg', eyebrow: 'Focus', title: 'Notification-free', body: 'No feeds, no badges, nothing buzzing for your attention.' },
+  { media: '/assets/clip-webui.mp4', video: true, eyebrow: 'Companion', title: 'A little web UI', body: 'A local host to upload books, see your stats, and copy out any quote or note.' },
+  { media: '/assets/clip-capture.mp4', video: true, eyebrow: 'Capture', title: 'Keep the good lines', body: 'One press saves the last thirty seconds as text.' },
   { media: '/assets/device-teardown.jpg', eyebrow: 'By hand', title: 'Soldered & serviceable', body: 'Point-to-point, packed into a printed shell.' },
 ];
 
@@ -191,7 +173,7 @@ export function AudiobookPage({ project }: { project: Project }) {
 
   return (
     <div className="bg-[#fafafa] text-[#0a0a0a]" style={{ scrollBehavior: 'smooth' }}>
-      <LocalNav project={project} />
+      <LocalNav />
 
       {/* ============ HERO ============ */}
       <header id="overview" ref={heroRef} className="relative flex min-h-[100dvh] scroll-mt-16 flex-col items-center px-6 pt-24 text-center">
@@ -221,16 +203,21 @@ export function AudiobookPage({ project }: { project: Project }) {
           </Reveal>
         </motion.div>
 
-        {/* product hero shot */}
-        <motion.div style={{ y: imgY, scale: imgScale }} className="relative mt-4 w-full max-w-[420px]">
+        {/* product hero shot on a soft platform (lifts a light device off a light bg) */}
+        <motion.div style={{ y: imgY, scale: imgScale }} className="relative mt-4 w-full max-w-[440px]">
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-2 mx-auto h-24 w-[86%]"
+            style={{ background: 'radial-gradient(60% 100% at 50% 50%, rgba(28,40,80,0.22), rgba(28,40,80,0) 72%)', filter: 'blur(6px)' }}
+            aria-hidden
+          />
           <motion.img
             src="/assets/device-hero.jpg"
             alt="The ode. audiobook player"
             initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ type: 'spring', bounce: 0.16, duration: 1.2, delay: 0.35 }}
-            className="mx-auto w-full rounded-[32px] object-contain"
-            style={{ filter: 'drop-shadow(0 50px 60px rgba(28,40,80,0.28))' }}
+            className="relative mx-auto w-full rounded-[32px] object-contain"
+            style={{ filter: 'drop-shadow(0 42px 46px rgba(28,40,80,0.32))' }}
           />
         </motion.div>
 
@@ -245,15 +232,7 @@ export function AudiobookPage({ project }: { project: Project }) {
       {/* ============ HIGHLIGHTS CAROUSEL ============ */}
       <Highlights />
 
-      {/* ============ TAKE A CLOSER LOOK — 3D explode → assemble ============ */}
-      <div className="mx-auto max-w-6xl px-6 pt-6 text-center">
-        <Reveal>
-          <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Take a closer look</div>
-          <h2 className="mx-auto mt-4 max-w-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,58px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
-            Forty parts, in the palm of your hand.
-          </h2>
-        </Reveal>
-      </div>
+      {/* ============ TAKE A CLOSER LOOK — 3D explode → assemble (own title inside) ============ */}
       <DeviceShowcase />
 
       {/* ============ THE WHY ============ */}
@@ -303,56 +282,16 @@ export function AudiobookPage({ project }: { project: Project }) {
         </div>
       </section>
 
-      {/* ============ FEATURES GRID ============ */}
-      <section className="scroll-mt-16 px-6 py-24 md:py-28">
-        <div className="mx-auto max-w-6xl">
-          <Reveal>
-            <h2 className="font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(28px,4.5vw,52px)', letterSpacing: '-0.03em' }}>
-              Everything I wished an app had.
-            </h2>
-          </Reveal>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {([
-              ['focus', 'Distraction-free', 'One book, one screen. No feeds, no badges, no reason to look at your phone.', false],
-              ['quote', 'Quote capture', 'Save the last 30 seconds as text, transcribed on-device.', true],
-              ['mic', 'Voice notes', 'Press to pause, speak a thought, and it lands with the exact timestamp.', true],
-              ['dial', 'Physical controls', 'A knurled wheel and thumb-buttons you can work without looking.', false],
-              ['gauge', 'Speed & sleep', '0.75–2× per book, a sleep timer, and resume that rewinds when you come back.', false],
-              ['layers', 'All the formats', 'MP3, M4B, AAC and FLAC, with 256 GB of room for a whole library.', false],
-            ] as [keyof typeof ICONS, string, string, boolean][]).map(([icon, title, body, teal], i) => (
-              <Reveal key={title} delay={i * 0.05}>
-                <div
-                  className="group h-full rounded-3xl border border-black/[0.06] bg-white p-7 transition-all duration-300 hover:-translate-y-1"
-                  style={{ boxShadow: '0 1px 2px rgba(28,40,80,0.04)' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 30px 60px -30px rgba(28,40,80,0.28)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.boxShadow = '0 1px 2px rgba(28,40,80,0.04)')}
-                >
-                  <div
-                    className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl [&>svg]:h-[22px] [&>svg]:w-[22px]"
-                    style={{ background: teal ? 'rgba(16,154,138,0.1)' : 'rgba(43,87,196,0.09)', color: teal ? TEAL : NAVY }}
-                    aria-hidden
-                  >
-                    {ICONS[icon]}
-                  </div>
-                  <h3 className="text-lg font-semibold" style={{ color: teal ? TEAL : INK }}>{title}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">{body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ============ TRY IT YOURSELF (real interactive simulator) ============ */}
       <section id="tryit" className="scroll-mt-16 px-6 py-24 md:py-32">
         <div className="mx-auto max-w-6xl">
           <Reveal>
-            <div className="text-center">
+            <div className="max-w-3xl">
               <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Try it yourself</div>
-              <h2 className="mx-auto mt-5 max-w-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,56px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
+              <h2 className="mt-5 font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,56px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
                 The real interface, running in your browser.
               </h2>
-              <p className="mx-auto mt-6 max-w-[56ch] text-lg leading-relaxed text-neutral-500">
+              <p className="mt-6 max-w-[56ch] text-lg leading-relaxed text-neutral-500">
                 This is the actual simulator I built to design the device — the same screen-drawing code
                 that now runs on the hardware. Turn the wheel to move, click it to play, and use the mic
                 and bookmark buttons.
@@ -494,7 +433,7 @@ export function AudiobookPage({ project }: { project: Project }) {
               [240, '×240', 'round display'],
               [5, ' hr', 'per charge'],
               [256, ' GB', 'library'],
-              [100, '%', 'offline AI'],
+              [39, ' MB', 'on-device AI'],
             ] as [number, string, string][]).map(([n, suf, label], i) => (
               <Reveal key={label} delay={i * 0.08} className="text-center">
                 <div className="font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(52px,8vw,88px)', letterSpacing: '-0.04em', color: NAVY_DEEP, lineHeight: 1 }}>

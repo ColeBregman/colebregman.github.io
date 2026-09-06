@@ -12,14 +12,14 @@ const ASM_END = 17;
 
 /** Each card is tied to the window of video time in which its part flies in. */
 const STAGES = [
-  { t0: 0,  t1: 4,  label: 'Controls', part: 'Capture · Voice · Back buttons', body: 'The button sub-assembly — three machined buttons on their springs.' },
+  { t0: 0,  t1: 4,  label: 'Controls', part: 'Capture · Voice · Back buttons', body: 'The button sub-assembly — three buttons designed and 3D-printed for a satisfying press.' },
   { t0: 4,  t1: 6,  label: 'Chassis',  part: 'Shell + 1.28″ round TFT',        body: 'The printed shell and the round screen — one book, one cover.' },
   { t0: 6,  t1: 9,  label: 'Power',    part: 'Power module',                    body: 'Regulation and USB-C charging along the spine.' },
   { t0: 9,  t1: 10, label: 'Compute',  part: 'Raspberry Pi Zero 2 W',          body: 'The quad-core brain running the player and on-device Whisper.' },
   { t0: 10, t1: 11, label: 'Audio',    part: 'DAC',                            body: 'A dedicated digital-to-analog converter for clean playback.' },
   { t0: 11, t1: 12, label: 'Capture',  part: 'Microphone',                     body: 'A MEMS mic for capturing quotes and voice notes.' },
   { t0: 12, t1: 13, label: 'Battery',  part: '1100 mAh LiPo',                  body: 'An all-day cell tucked into the base.' },
-  { t0: 13, t1: 14, label: 'Sound',    part: 'Amplifier + speaker',            body: 'Amp and speaker for listening out loud.' },
+  { t0: 13, t1: 14, label: 'Sound',    part: 'Amplifier + speaker',            body: 'Amp and speaker for listening out loud before bed.' },
   { t0: 14, t1: 15, label: 'Wheel',    part: 'Rotary encoder + knob',          body: 'The knurled wheel for scrubbing and menus.' },
   { t0: 15, t1: 17, label: 'Cover',    part: 'Back cover + screws',            body: 'The back cover and fasteners close it up by hand.' },
 ];
@@ -122,6 +122,23 @@ export function ScrollAssembly() {
       cancelAnimationFrame(raf);
       video.removeEventListener('loadedmetadata', onMeta);
     };
+  }, [mobile]);
+
+  // mobile: play the clip on a loop when it scrolls into view; if the browser
+  // blocks autoplay, fall back to the finished device rather than an empty frame
+  useEffect(() => {
+    if (!mobileRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) video.play().catch(() => {}); }),
+      { threshold: 0.2 }
+    );
+    io.observe(video);
+    const onLoaded = () => { if (video.paused) { try { video.currentTime = Math.max(0, (video.duration || 20) - 1.2); } catch { /* ignore */ } } };
+    video.addEventListener('loadeddata', onLoaded);
+    return () => { io.disconnect(); video.removeEventListener('loadeddata', onLoaded); };
   }, [mobile]);
 
   const Video = (

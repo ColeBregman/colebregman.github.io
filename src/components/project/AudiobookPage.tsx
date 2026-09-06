@@ -4,7 +4,6 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion
 import CountUp from 'react-countup';
 import type { Project } from '../../types/project';
 import { ScrollAssembly } from './ScrollAssembly';
-import { AudiobookStory } from './AudiobookStory';
 import { getNextProjectLink, getNextProjectTitle } from '../../utils/projectHelpers';
 
 const NAVY = '#2b57c4';
@@ -197,6 +196,68 @@ function Highlights() {
   );
 }
 
+/* ---------- what it fixes (problem → solution) ---------- */
+
+const FIXES: { label: string; problem: string; fix: string }[] = [
+  {
+    label: 'Distraction-free',
+    problem: 'Listening on your phone means every notification comes along for the ride.',
+    fix: 'A dedicated device you physically can’t get distracted on — leave your phone at home on a walk, at the gym, wherever you actually listen.',
+  },
+  {
+    label: 'Keep the quote',
+    problem: 'Hear a line worth keeping and there’s no easy way to save it — you rewind, scribble it down, then rewind again to be sure you didn’t miss anything.',
+    fix: 'One press grabs the last thirty seconds and transcribes it — with the book, chapter and timestamp — running Whisper on the device itself. No phone, no account, no cloud. The lines you’d have forgotten are waiting for you later.',
+  },
+  {
+    label: 'Stay present',
+    problem: 'It’s easy to drift off mid-chapter — the one thing research keeps pointing to for why audiobooks can stick less than print.',
+    fix: 'After each chapter it prompts you for a quick spoken note, with AI-generated questions that pull you back in and make the story stick.',
+  },
+  {
+    label: 'Your library, your data',
+    problem: 'No stats, no streaks — none of the fun tracking that keeps you coming back.',
+    fix: 'A little web UI, self-hosted right on the device, shows your stats, lets you upload new books, and lets you pull off every saved quote and dictated note.',
+  },
+];
+
+function WhatItFixes() {
+  return (
+    <section className="scroll-mt-16 bg-white px-6 py-28 md:py-40">
+      <div className="mx-auto max-w-6xl">
+        <Reveal>
+          <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Why it’s built this way</div>
+          <h2 className="mt-5 font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(32px,5.5vw,64px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
+            Four problems. Four fixes.
+          </h2>
+        </Reveal>
+        <div className="mt-12 md:mt-16">
+          {FIXES.map((f, i) => (
+            <Reveal key={f.label}>
+              <div className={`grid gap-5 py-10 md:grid-cols-12 md:gap-10 md:py-14 ${i === 0 ? '' : 'border-t border-black/10'}`}>
+                <div className="md:col-span-5">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-sm tabular-nums text-neutral-300">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-400">The problem</span>
+                  </div>
+                  <p className="mt-4 max-w-[42ch] text-lg leading-relaxed text-neutral-500 md:text-xl">{f.problem}</p>
+                </div>
+                <div className="md:col-span-7 md:pl-6">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.2em]" style={{ color: NAVY }}>The fix</span>
+                    <span className="rounded-full px-3 py-1 text-[11px] font-medium" style={{ background: 'rgba(43,87,196,0.09)', color: NAVY_DEEP }}>{f.label}</span>
+                  </div>
+                  <p className="mt-4 font-medium tracking-tight text-[#0a0a0a]" style={{ fontFamily: DISPLAY, fontSize: 'clamp(20px,2.3vw,29px)', lineHeight: 1.25, letterSpacing: '-0.01em', textWrap: 'pretty' }}>{f.fix}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------- the page ---------- */
 
 export function AudiobookPage({ project }: { project: Project }) {
@@ -286,31 +347,8 @@ export function AudiobookPage({ project }: { project: Project }) {
         </div>
       </section>
 
-      {/* ============ PRODUCT STORY (real photos) ============ */}
-      <AudiobookStory />
-
-      {/* ============ THE ONE FEATURE THAT STARTED IT (teal, full-bleed) ============ */}
-      <section className="relative overflow-hidden px-6 py-28 md:py-40" style={{ background: 'linear-gradient(180deg, #0b1f1c, #06110f)' }}>
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(60% 45% at 50% 42%, rgba(16,176,160,0.22), rgba(6,17,15,0) 68%)' }}
-        />
-        <div className="relative mx-auto max-w-3xl text-center">
-          <Reveal><div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: '#5fe6d2' }}>The feature I always wanted</div></Reveal>
-          <LineReveal
-            text="Hear a line worth keeping? Keep it."
-            className="mt-6 font-semibold tracking-tight text-white"
-            style={{ fontFamily: DISPLAY, fontSize: 'clamp(32px,6vw,68px)', letterSpacing: '-0.03em', lineHeight: 1.02, textWrap: 'balance' }}
-          />
-          <Reveal delay={0.15}>
-            <p className="mx-auto mt-7 max-w-[54ch] text-xl leading-relaxed" style={{ color: 'rgba(220,255,248,0.72)' }}>
-              One press grabs the last thirty seconds and transcribes it — with the book, chapter and
-              timestamp — running Whisper on the device itself. No phone, no account, no cloud. The
-              lines you'd have forgotten are waiting for you later.
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      {/* ============ WHAT IT FIXES — problems → solutions ============ */}
+      <WhatItFixes />
 
       {/* ============ TRY IT YOURSELF (real interactive simulator) ============ */}
       <section id="tryit" className="scroll-mt-16 px-6 py-24 md:py-32">
@@ -319,13 +357,8 @@ export function AudiobookPage({ project }: { project: Project }) {
             <div className="max-w-3xl">
               <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Try it yourself</div>
               <h2 className="mt-5 font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,56px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
-                The real interface, running in your browser.
+                Try the real thing.
               </h2>
-              <p className="mt-6 max-w-[56ch] text-lg leading-relaxed text-neutral-500">
-                This is the actual simulator I built to design the device — the same screen-drawing code
-                that now runs on the hardware. Turn the wheel to move, click it to play, and use the mic
-                and bookmark buttons.
-              </p>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
@@ -358,7 +391,7 @@ export function AudiobookPage({ project }: { project: Project }) {
           <Reveal>
             <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>How it was made</div>
             <h2 className="mt-5 font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,56px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
-              Simulated on a Mac, long before a wire was cut.
+              How it all came together.
             </h2>
           </Reveal>
 
@@ -384,7 +417,7 @@ export function AudiobookPage({ project }: { project: Project }) {
             <Reveal className="md:order-1">
               <div className="md:pr-4">
                 <div className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-400">02 — Bring it up for real</div>
-                <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY }}>Screen, controls, audio — one at a time.</h3>
+                <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY }}>Building the hardware one board at a time.</h3>
                 <p className="mt-4 text-lg leading-relaxed text-neutral-500 max-w-[46ch]">
                   On the breadboard I brought the system up piece by piece — learning the hardware side as I
                   went: wiring, power management, and the messy reality of real-device I/O.

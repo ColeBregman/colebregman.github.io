@@ -59,28 +59,39 @@ function LineReveal({ text, className = '', style = {} }:
   );
 }
 
-/** Image that drifts slightly as it scrolls through the viewport. */
-function ParallaxMedia({ src, alt, video = false, className = '' }:
-  { src: string; alt: string; video?: boolean; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-6%', '6%']);
+/* ---------- sticky local nav ---------- */
+
+/** Numbered heading block for a step in the build story. */
+function BuildBeat({ no, title, className = '', children }:
+  { no: string; title: string; className?: string; children: React.ReactNode }) {
   return (
-    <div ref={ref} className={`overflow-hidden rounded-[28px] ring-1 ring-black/5 bg-neutral-100 ${className}`}
-      style={{ boxShadow: '0 40px 90px -34px rgba(28,40,80,0.4)' }}>
-      <motion.div style={{ y }} className="h-full w-full">
-        {video ? (
-          <video src={src} autoPlay muted loop playsInline className="h-full w-full object-cover" />
-        ) : (
-          <img src={src} alt={alt} loading="lazy" className="h-full w-full object-cover scale-[1.12]" />
-        )}
-      </motion.div>
-    </div>
+    <Reveal className={className}>
+      <div className="max-w-[54ch]">
+        <div className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-400">{no}</div>
+        <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY }}>{title}</h3>
+        <p className="mt-4 text-lg leading-relaxed text-neutral-500">{children}</p>
+      </div>
+    </Reveal>
   );
 }
 
-/* ---------- sticky local nav ---------- */
+/** Captioned image/video tile with a consistent frame — used across the build story. */
+function Shot({ src, cap, video = false, aspect = 'aspect-[4/3]', className = '' }:
+  { src: string; cap?: string; video?: boolean; aspect?: string; className?: string }) {
+  return (
+    <div className={className}>
+      <div className={`overflow-hidden rounded-2xl ring-1 ring-black/5 bg-neutral-100 ${aspect}`}
+        style={{ boxShadow: '0 24px 50px -30px rgba(28,40,80,0.35)' }}>
+        {video ? (
+          <video src={src} autoPlay muted loop playsInline className="h-full w-full object-cover" />
+        ) : (
+          <img src={src} alt={cap || ''} loading="lazy" className="h-full w-full object-cover" />
+        )}
+      </div>
+      {cap && <div className="mt-2.5 text-center font-mono text-[11px] uppercase tracking-wider text-neutral-400">{cap}</div>}
+    </div>
+  );
+}
 
 function LocalNav() {
   const items = [['Overview', 'overview'], ['Highlights', 'highlights'], ['Try it', 'tryit'], ['Specs', 'specs']];
@@ -395,90 +406,70 @@ export function AudiobookPage({ project }: { project: Project }) {
             </h2>
           </Reveal>
 
-          {/* beat 1 — simulate */}
-          <div className="mt-16 grid items-center gap-10 md:grid-cols-2 md:gap-16">
-            <Reveal><ParallaxMedia src="/assets/audiobook-macsim.mp4" alt="Mac simulation of the interface" video /></Reveal>
-            <Reveal delay={0.1}>
-              <div className="md:pl-4">
-                <div className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-400">01 — Prove it in software</div>
-                <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY }}>The whole player, faked on my laptop.</h3>
-                <p className="mt-4 text-lg leading-relaxed text-neutral-500 max-w-[46ch]">
-                  That simulator above is where it started. Before touching a component I built the whole
-                  interface and I/O in software — so by the time I reached for a soldering iron, I knew
-                  exactly which parts I needed and how they'd behave.
-                </p>
-              </div>
-            </Reveal>
+          {/* 01 — software: photoshop mockup + mac simulation */}
+          <BuildBeat className="mt-16 md:mt-20" no="01 — Prove it in software" title="It started on a screen, not a breadboard.">
+            First a Photoshop mockup of every screen, then a full simulation of the interface and I/O on my
+            Mac — so by the time I picked up a soldering iron, I knew exactly which parts I needed and how
+            they’d behave.
+          </BuildBeat>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 md:gap-8">
+            <Reveal><Shot src="/assets/initialmockup-B6cGBnij.webp" cap="Photoshop mockup" /></Reveal>
+            <Reveal delay={0.08}><Shot src="/assets/audiobook-macsim.mp4" cap="The whole interface, simulated on macOS" video /></Reveal>
           </div>
 
-          {/* beat 2 — breadboard */}
-          <div className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
-            <Reveal delay={0.1} className="md:order-2"><ParallaxMedia src="/assets/audiobook-breadboard-1.webp" alt="First working breadboard prototype" /></Reveal>
-            <Reveal className="md:order-1">
-              <div className="md:pr-4">
-                <div className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-400">02 — Bring it up for real</div>
-                <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY }}>Building the hardware one board at a time.</h3>
-                <p className="mt-4 text-lg leading-relaxed text-neutral-500 max-w-[46ch]">
-                  On the breadboard I brought the system up piece by piece — learning the hardware side as I
-                  went: wiring, power management, and the messy reality of real-device I/O.
-                </p>
-              </div>
-            </Reveal>
+          {/* 02 — bench: breadboard + round screen */}
+          <BuildBeat className="mt-24" no="02 — Bring it up on the bench" title="Building the hardware one board at a time.">
+            On the breadboard I brought the system up piece by piece — power, audio, controls — then switched
+            from a rectangular screen to a round one, which sent everything downstream back to the drawing board.
+          </BuildBeat>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 md:gap-8">
+            <Reveal><Shot src="/assets/make-breadboard.jpg" cap="The final breadboard" /></Reveal>
+            <Reveal delay={0.08}><Shot src="/assets/make-roundscreen.jpg" cap="Switching to a round display" /></Reveal>
           </div>
 
-          {/* beat 3 — enclosure iteration (image strip) */}
-          <div className="mt-24">
-            <Reveal>
-              <div className="md:max-w-[48ch]">
-                <div className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-400">03 — Redesign until it felt right</div>
-                <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight" style={{ fontFamily: DISPLAY }}>A round screen sent the case back to the drawing board.</h3>
-                <p className="mt-4 text-lg leading-relaxed text-neutral-500">
-                  Switching to a round display meant rounds of CAD and 3D-printed enclosures — each one
-                  tested in the hand — until the form factor finally disappeared into it.
-                </p>
-              </div>
-            </Reveal>
-            <div className="mt-10 grid grid-cols-2 gap-5 md:grid-cols-4">
-              {[
-                ['/assets/initialmockup-B6cGBnij.webp', 'Photoshop mockup'],
-                ['/assets/audiobook-round-display.webp', 'Round display test'],
-                ['/assets/audiobook-iterations.webp', 'Enclosure iterations'],
-                ['/assets/audiobook-final-print.webp', 'Final print'],
-              ].map(([src, cap], i) => (
-                <Reveal key={src} delay={i * 0.07}>
-                  <div className="overflow-hidden rounded-2xl ring-1 ring-black/5 bg-neutral-100" style={{ boxShadow: '0 20px 44px -28px rgba(28,40,80,0.3)' }}>
-                    <img src={src} alt={cap} loading="lazy" className="aspect-[4/3] w-full object-cover" />
-                  </div>
-                  <div className="mt-2 text-center font-mono text-[11px] uppercase tracking-wider text-neutral-400">{cap}</div>
-                </Reveal>
-              ))}
+          {/* 03 — make it fit: CAD concepts grid */}
+          <BuildBeat className="mt-24" no="03 — Make it all fit" title="The electronics didn’t fit the first design.">
+            So I sketched concept after concept in CAD, hunting for a shape that could pack the Pi, battery,
+            audio, screen and controls into something that still felt right in the hand.
+          </BuildBeat>
+          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-5">
+            {['/assets/cad-1.jpg', '/assets/cad-2.jpg', '/assets/cad-3.jpg', '/assets/cad-4.jpg', '/assets/cad-5.jpg'].map((src, i) => (
+              <Reveal key={src} delay={i * 0.05}><Shot src={src} aspect="aspect-square" /></Reveal>
+            ))}
+          </div>
+
+          {/* 04 — print, adjust, refine */}
+          <BuildBeat className="mt-24" no="04 — Print, test, adjust" title="Real prints, real problems.">
+            The first printed concept had function issues — and was honestly ugly. The rotary encoder needed
+            room, so I stretched the body out; and I gave the buttons more travel before the click for a more
+            satisfying press.
+          </BuildBeat>
+          <div className="mt-8 grid gap-5 md:grid-cols-3 md:gap-8">
+            <Reveal><Shot src="/assets/make-print-flop.jpg" cap="First real print — ugly, and finicky" /></Reveal>
+            <Reveal delay={0.06}><Shot src="/assets/make-stretched.jpg" cap="Stretched to fit the encoder" /></Reveal>
+            <Reveal delay={0.12}><Shot src="/assets/make-buttons.jpg" cap="More travel, better press" /></Reveal>
+          </div>
+
+          {/* 05 — every version: hero flatlay */}
+          <BuildBeat className="mt-24" no="05 — Every version" title="It took a lot of tries.">
+            Every shell here is a print I held, judged, and threw back on the pile — shrinking the body,
+            nudging buttons a millimetre, and chasing the round screen until the whole thing disappeared
+            into the hand.
+          </BuildBeat>
+          <Reveal delay={0.1}>
+            <div className="mt-8 overflow-hidden rounded-[24px] ring-1 ring-black/5 bg-neutral-100" style={{ boxShadow: '0 40px 90px -34px rgba(28,40,80,0.4)' }}>
+              <img src="/assets/make-iterations.jpg" alt="Every 3D-printed prototype part across dozens of iterations" loading="lazy" className="w-full object-cover" />
             </div>
-          </div>
-        </div>
-      </section>
+          </Reveal>
 
-      {/* ============ EVERY PROTOTYPE (real iteration photo) ============ */}
-      <section className="scroll-mt-16 px-6 py-24 md:py-32">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid items-center gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-16">
-            <Reveal>
-              <div>
-                <div className="font-mono text-xs uppercase tracking-[0.24em]" style={{ color: NAVY }}>Every version</div>
-                <h2 className="mt-5 font-semibold tracking-tight" style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px,5vw,54px)', letterSpacing: '-0.03em', textWrap: 'balance' }}>
-                  It took a lot of tries.
-                </h2>
-                <p className="mt-6 max-w-[42ch] text-lg leading-relaxed text-neutral-500">
-                  Every shell here is a print I held, judged, and threw back on the pile — shrinking the
-                  body, nudging buttons a millimetre, and chasing the round screen until the whole thing
-                  finally disappeared into the hand.
-                </p>
-              </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="overflow-hidden rounded-[24px] ring-1 ring-black/5 bg-neutral-100" style={{ boxShadow: '0 40px 90px -34px rgba(28,40,80,0.4)' }}>
-                <img src="/assets/prototypes.jpg" alt="Every 3D-printed prototype shell, across dozens of iterations" loading="lazy" className="w-full object-cover" />
-              </div>
-            </Reveal>
+          {/* 06 — assembled */}
+          <BuildBeat className="mt-24" no="06 — Soldered together" title="Off the breadboard, into the shell.">
+            Everything soldered together and packed into the final printed enclosure — the device that opens
+            this page.
+          </BuildBeat>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 md:gap-8">
+            <Reveal><Shot src="/assets/make-assembly.jpg" cap="Final assembly" aspect="aspect-square" /></Reveal>
+            <Reveal delay={0.08}><Shot src="/assets/device-cover.jpg" cap="The finished ode." aspect="aspect-square" /></Reveal>
           </div>
         </div>
       </section>

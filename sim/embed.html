@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ode. · interface simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy: #2b3757; --navy-deep: #1e2740; --teal: #0a7f73; }
+    * { box-sizing: border-box; }
+    html, body { background: transparent; margin: 0; }
+    body { font-family: -apple-system, 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1d1d1f; overflow: hidden; }
+    main.embed { display: flex; align-items: center; justify-content: center; gap: 48px; height: 100vh; padding: 20px 24px; flex-wrap: wrap; }
+
+    /* ---------- the device: your vector body + interactive overlays ---------- */
+    .player { position: relative; width: min(340px, 82vw); aspect-ratio: 320 / 520; filter: drop-shadow(0 26px 46px rgba(28, 40, 80, 0.26)); }
+    .player .body { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+    /* live screen sits on the black display circle, leaving a thin bezel */
+    #lcd { position: absolute; left: 50%; top: 69.33%; transform: translate(-50%, -50%); width: 55.5%; aspect-ratio: 1; border-radius: 50%; background: #f5f3ee; cursor: pointer; }
+    #lcd.pixel { image-rendering: pixelated; }
+
+    /* front buttons — transparent hotspots with a solid navy glyph on the white face */
+    .hot { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center;
+      border: none; background: transparent; cursor: pointer; color: var(--navy); padding: 0; transition: transform 0.06s, filter 0.06s; }
+    .hot svg { width: 50%; height: 50%; }
+    .hot:active, .hot.pressed { transform: translate(-50%, -50%) scale(0.92); filter: brightness(0.82); }
+    .hot.mic { left: 19.5%; top: 12.02%; width: 28.1%; aspect-ratio: 1; }
+    .hot.mark { left: 19.4%; top: 31.06%; width: 28.1%; aspect-ratio: 1; }
+
+    /* knurled wheel — grooves run horizontally (you roll it up / down) */
+    #encoderRing { position: absolute; left: 66.6%; top: 1.6%; width: 31%; height: 19.2%; border-radius: 9px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,255,255,0.16) 22%, rgba(0,0,0,0.28) 50%, rgba(255,255,255,0.1) 78%, rgba(0,0,0,0.5)),
+        repeating-linear-gradient(0deg, #100a4d 0 2px, #3d27ae 2px 5px);
+      background-color: #12006f; background-blend-mode: overlay, normal;
+      box-shadow: 0 6px 14px rgba(15,10,60,0.42), inset 2px 0 4px rgba(255,255,255,0.2), inset -6px 0 12px rgba(0,0,0,0.5);
+      cursor: grab; touch-action: none; }
+    #encoderRing:active { cursor: grabbing; }
+    #encoderRing.pressed { filter: brightness(0.9); }
+
+    /* side back button = the vector's back sliver (white) + a larger pressable extension tab */
+    .side { position: absolute; left: -9%; top: 9%; width: 18%; height: 33%; border: none; background: transparent;
+      cursor: pointer; color: var(--navy); transition: transform 0.06s; }
+    .side::before { content: ''; position: absolute; left: 8%; top: 34%; bottom: 34%; width: 46%; border-radius: 6px 3px 3px 6px;
+      background: #f4f2ee; border: 1px solid rgba(20,26,46,0.12); box-shadow: -2px 2px 7px rgba(15,20,40,0.22); }
+    .side svg { position: absolute; left: 17%; top: 50%; transform: translateY(-50%); width: 24%; }
+    .side:active { transform: translateX(2px); }
+
+    /* ---------- side rail: hints + navigation ---------- */
+    .rail { width: 290px; max-width: 88vw; display: flex; flex-direction: column; gap: 14px; }
+    .rail .hint { margin: 0; font-size: 13px; line-height: 1.6; color: #4b4a45; }
+    .rail .hint b { color: #1d1d1f; font-weight: 600; }
+    .rail .hint .navy { color: var(--navy); font-weight: 600; }
+    .rail .hint .teal { color: var(--teal); font-weight: 600; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chips button { background: rgba(29, 29, 31, 0.04); border: 1px solid rgba(29, 29, 31, 0.1); color: #85837b; border-radius: 999px;
+      padding: 5px 12px; font-size: 11.5px; font-family: inherit; cursor: pointer; transition: color 0.12s, border-color 0.12s; }
+    .chips button:hover { color: #1c3f96; border-color: #2b57c4; }
+    .opts { font-size: 12.5px; color: #85837b; }
+    .opts summary { cursor: pointer; letter-spacing: 0.16em; text-transform: uppercase; font-size: 10.5px; font-weight: 600; }
+    .opts label { display: flex; align-items: center; gap: 9px; padding: 7px 0 0; cursor: pointer; }
+    .opts input { accent-color: #2b57c4; }
+
+    @media (max-width: 900px) {
+      main.embed { flex-direction: column; gap: 26px; height: auto; padding: 24px 16px 34px; overflow: visible; }
+      .rail { width: 340px; }
+    }
+  </style>
+</head>
+<body class="embed-body">
+  <main class="embed">
+    <div class="player" id="device">
+      <!-- device body, drawn from vectorink-download.svg -->
+      <svg class="body" viewBox="588 206 320 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient x1="850.16293" y1="216.21136" x2="849.4834" y2="311.90419" gradientUnits="userSpaceOnUse" id="wheelgrad">
+            <stop offset="0" stop-color="#12006f" /><stop offset="0.15" stop-color="#3d27ae" /><stop offset="0.61" stop-color="#12006f" />
+            <stop offset="0.81" stop-color="#12006f" /><stop offset="0.98" stop-color="#3d27ae" /><stop offset="1" stop-color="#12006f" />
+          </linearGradient>
+        </defs>
+        <g fill="none" fill-rule="nonzero">
+          <path d="M698,266.5c0,-20.22479 12.00809,-37.64495 29.28362,-45.51981h-71.88259h-4.90103h-4.90103c-23.93084,2.45296 -42.59897,22.67151 -42.59897,47.25023v176.44895c8.1036,-16.68086 25.20899,-28.17937 45,-28.17937c27.61424,0 50,-22.38576 50,-50v-98.26958z" fill="#242e4a" />
+          <path d="M598,616.5v-150c0,-27.61424 22.38576,-50 50,-50c27.61424,0 50,-22.38576 50,-50v-100c0,-27.61424 22.38576,-50 50,-50h50v50v50h100v300c0,55.22847 -44.77153,100 -100,100h-100c-55.22847,0 -100,-44.77153 -100,-100z" fill="#f4f2ee" />
+          <path d="M803,311.5v-95h95v95z" fill="url(#wheelgrad)" />
+          <path d="M647.97979,566.52021c0,-55.23964 44.78057,-100.02021 100.02021,-100.02021c55.23964,0 100.02021,44.78057 100.02021,100.02021c0,55.23964 -44.78057,100.02021 -100.02021,100.02021c-55.23964,0 -100.02021,-44.78057 -100.02021,-100.02021z" fill="#0b0d12" />
+          <path d="M605.5,268.5c0,-24.85281 20.14719,-45 45,-45c24.85281,0 45,20.14719 45,45c0,24.85281 -20.14719,45 -45,45c-24.85281,0 -45,-20.14719 -45,-45z" fill="#eceae4" />
+          <path d="M605,367.5c0,-24.85281 20.14719,-45 45,-45c24.85281,0 45,20.14719 45,45c0,24.85281 -20.14719,45 -45,45c-24.85281,0 -45,-20.14719 -45,-45z" fill="#eceae4" />
+          <path d="M603,416.41256h-5v-149.91256c0,-27.61424 22.38576,-50 50,-50l50,-0.08744v4.56763h-52.40103c-23.93084,2.45296 -42.59897,22.67151 -42.59897,47.25023z" fill="#eceae4" />
+        </g>
+      </svg>
+
+      <!-- live screen -->
+      <canvas id="lcd" width="480" height="480"></canvas>
+
+      <!-- microphone = record a voice note (solid navy) -->
+      <button class="hot mic" id="btnNote" title="Record a voice note (mic)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 11a7 7 0 0 0 14 0h-2a5 5 0 0 1-10 0H5z" /><rect x="11" y="18" width="2" height="4" rx="1" /><rect x="8" y="21" width="8" height="2" rx="1" /></svg>
+      </button>
+      <!-- bookmark = save a quote (solid navy) -->
+      <button class="hot mark" id="btnQuote" title="Save a quote — last 30 s (bookmark)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.4L5 22V3a1 1 0 0 1 1-1z" /></svg>
+      </button>
+      <!-- easy-to-click side button: back 30 s (tap) / menu (hold) -->
+      <button class="side" id="btnSkip" title="Back 30 s · hold for menu">
+        <svg viewBox="0 0 24 24"><path d="M14 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <!-- wheel: turn / click = OK / hold = lock -->
+      <div id="encoderRing" title="Turn to move · click = OK / play · hold to lock"></div>
+    </div>
+
+    <div class="rail">
+      <p class="hint">
+        <b>Turn or scroll the wheel</b> to move — scrub on Now&nbsp;Playing, or through lists
+        (press-and-turn with <b>Shift</b> for volume). <span class="navy">Click it</span> to play / pause
+        and select; <span class="navy">hold it</span> to lock. The <b>mic</b> records a <span class="teal">voice note</span>,
+        the <b>bookmark</b> saves a <span class="teal">quote</span>, and the side button skips back 30&nbsp;s (hold&nbsp;=&nbsp;menu).
+      </p>
+      <div class="chips">
+        <button data-screen="home">Now Playing</button>
+        <button data-screen="menu">Menu</button>
+        <button data-screen="library">Library</button>
+        <button data-screen="chapters">Chapters</button>
+        <button data-screen="quotes">Quotes</button>
+        <button data-screen="notes">Notes</button>
+        <button data-screen="recall">Recall</button>
+        <button data-screen="speed">Speed</button>
+        <button data-screen="sleep">Sleep</button>
+        <button data-screen="settings">Settings</button>
+        <button data-screen="finished">Finished</button>
+      </div>
+      <details class="opts">
+        <summary>Options</summary>
+        <label><input type="checkbox" id="wiredToggle" checked /> Headphones plugged in (unplug = auto-pause)</label>
+        <label><input type="checkbox" id="sndToggle" checked /> Encoder detent sounds</label>
+        <label><input type="checkbox" id="pixToggle" /> True 240×240 pixels (real density)</label>
+      </details>
+    </div>
+  </main>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
